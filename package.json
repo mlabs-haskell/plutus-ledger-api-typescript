@@ -1,0 +1,27 @@
+{
+  "name": "plutus-ledger-api",
+  "version": "1.0.0",
+  "description": "Plutus Ledger API types",
+  "type": "module",
+  "exports": {
+    ".": "./dist/PlutusLedgerApi/Plutus.js",
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "npx tsc -b src/PlutusLedgerApi",
+    "test": "npx tsc -b src/Tests && node --test"
+  },
+  "author": "Jared Pon",
+  "license": "ISC",
+  "files": [
+    "./dist/PlutusLedgerApi/**/*"
+  ],
+  "devDependencies": {
+    "@types/node": "^20.8.10",
+    "fast-check": "^3.14.0",
+    "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "prelude": "https://github.com/mlabs-haskell/prelude-typescript/releases/download/v1.0.0/prelude-1.0.0.tgz"
+  }
+}
