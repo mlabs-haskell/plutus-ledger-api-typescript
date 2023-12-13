@@ -4,7 +4,12 @@
   "description": "Plutus Ledger API types",
   "type": "module",
   "exports": {
-    ".": "./dist/PlutusLedgerApi/Plutus.js",
+    "./Hex.js": "./dist/PlutusLedgerApi/Runtime/Hex.js",
+    "./Prelude/Instances.js": "./dist/PlutusLedgerApi/Runtime/Prelude/Instances.js",
+    "./V1.js": "./dist/PlutusLedgerApi/Runtime/PlutusLedgerApi/V1.js",
+    "./V2.js": "./dist/PlutusLedgerApi/Runtime/PlutusLedgerApi/V2.js",
+    "./PlutusData.js": "./dist/PlutusLedgerApi/Runtime/PlutusLedgerApi/PlutusData.js",
+    "./AssocMap.js": "./dist/PlutusLedgerApi/Runtime/PlutusLedgerApi/AssocMap.js",
     "./package.json": "./package.json"
   },
   "scripts": {
