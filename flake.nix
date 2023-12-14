@@ -4,7 +4,7 @@
     flake-parts.url = "github:hercules-ci/flake-parts";
     pre-commit-hooks-nix.url = "github:cachix/pre-commit-hooks.nix";
     pre-commit-hooks-nix.inputs.nixpkgs.follows = "nixpkgs";
-    hercules-ci-effects.url = "github:hercules-ci/hercules-ci-effects";
+    hci-effects.url = "github:hercules-ci/hercules-ci-effects";
   };
 
   outputs = inputs@{ flake-parts, ... }:
@@ -12,9 +12,7 @@
       {
         systems = [ "x86_64-linux" "x86_64-darwin" ];
         imports = [
-          inputs.pre-commit-hooks-nix.flakeModule
-          inputs.hercules-ci-effects.flakeModule
-
+          ./hercules-ci.nix
           ./pre-commit.nix
         ];
         perSystem = { pkgs, config, ... }:
@@ -41,6 +39,14 @@
                   ''
                     tgzFile=$(npm --log-level=verbose pack | tail -n 1)
                     mv $tgzFile $out
+                  '';
+              }));
+
+              docs = config.packages.default.overrideAttrs (_self: (_super: {
+                npmBuildScript = "docs";
+                installPhase =
+                  ''
+                    mv ./docs $out
                   '';
               }));
             };
