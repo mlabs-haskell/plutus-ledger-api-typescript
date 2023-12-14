@@ -15,7 +15,7 @@
   "scripts": {
     "build": "npx tsc -b src/PlutusLedgerApi",
     "test": "npx tsc -b src/Tests && node --test",
-    "docs": "npx typedoc src/PlutusLedgerApi/Runtime/Hex.ts src/PlutusLedgerApi/Runtime/Prelude/Instances.ts src/PlutusLedgerApi/Runtime/PlutusLedgerApi/V1.ts src/PlutusLedgerApi/Runtime/PlutusLedgerApi/V2.ts src/PlutusLedgerApi/Runtime/PlutusLedgerApi/PlutusData.ts src/PlutusLedgerApi/Runtime/PlutusLedgerApi/AssocMap.ts --tsconfig src/tsconfig-base.json"
+    "docs": "npx typedoc"
   },
   "author": "Jared Pon",
   "license": "ISC",
