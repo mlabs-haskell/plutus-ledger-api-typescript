@@ -3,7 +3,7 @@ import { JsonError } from "prelude";
 import { IsPlutusDataError } from "../PlutusData.js";
 import * as LbHex from "../../Hex.js";
 import type { IsPlutusData } from "../PlutusData.js";
-import type { Bytes, Json } from "prelude";
+import type { Bytes, Eq, Json } from "prelude";
 
 // https://github.com/input-output-hk/plutus/blob/1.16.0.0/plutus-ledger-api/src/PlutusLedgerApi/V1/Bytes.hs
 
@@ -17,7 +17,7 @@ export type LedgerBytes = Bytes;
 /**
  * {@link Eq} instance for {@link LedgerBytes}
  */
-export const eqLedgerBytes = Prelude.eqBytes;
+export const eqLedgerBytes: Eq<LedgerBytes> = Prelude.eqBytes;
 
 /**
  * {@link Json} instance for {@link LedgerBytes}.

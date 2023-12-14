@@ -28,7 +28,7 @@
                   pname = packageJson.name;
                   version = packageJson.version;
                   src = ./.;
-                  npmDepsHash = "sha256-3cWo4lh53+7D5NQQnSl7P27lzqxkQ+SaStbnapbsjrE=";
+                  npmDepsHash = "sha256-9ZhoyDjVNmOvcJbZ37CDhvD3cXvT7T+YeEcyRkUqsDA=";
                 };
 
               # Tarball created from `npm pack`
