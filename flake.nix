@@ -37,8 +37,8 @@
                 makeCacheWritable = true;
                 installPhase =
                   ''
-                    tgzFile=$(npm --log-level=verbose pack | tail -n 1)
-                    mv $tgzFile $out
+                    mkdir -p $out/tarballs
+                    npm pack --pack-destination $out/tarballs
                   '';
               }));
 
