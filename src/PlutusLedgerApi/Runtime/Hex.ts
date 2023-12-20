@@ -11,7 +11,7 @@ export class HexError extends Error {
  * Given a (case insensitive) hex encoded (base 16) string, return the
  * corresponding bytes.
  *
- * @see {@link https://github.com/input-output-hk/plutus/blob/1.16.0.0/plutus-ledger-api/src/PlutusLedgerApi/V1/Bytes.hs#L39-L68 | the original algorithm }
+ * @see {@link https://github.com/input-output-hk/plutus/blob/1.16.0.0/plutus-ledger-api/src/PlutusLedgerApi/V1/Bytes.hs#L39-L68 }
  *
  * @throws
  * {@link HexError} is thrown if there is an odd number of hex digits or there

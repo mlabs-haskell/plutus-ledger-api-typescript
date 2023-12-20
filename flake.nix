@@ -63,6 +63,8 @@
                 # directory and point npm to the temporary directory.
                 shellHook =
                   ''
+                    ${config.devShells.dev-pre-commit.shellHook}
+
                     # Copy the cache produced by nix somewhere else
                     # s.t. npm may write to it
                     TMP_DIR=$(mktemp -d)
