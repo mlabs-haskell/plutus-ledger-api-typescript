@@ -29,6 +29,6 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
-    "prelude": "https://github.com/mlabs-haskell/prelude-typescript/releases/download/v1.0.0/prelude-1.0.0.tgz"
+    "prelude": "file:extra-dependencies/prelude-1.0.1.tgz"
   }
 }

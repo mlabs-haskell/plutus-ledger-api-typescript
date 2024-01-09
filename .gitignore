@@ -1,4 +1,18 @@
+################
+# Extra dependencies .gitignore
+################
+extra-dependencies
+
+################
+# pre-commit .gitignore
+################
 .pre-commit-config.yaml
+
+################
+# Js .gitignore
+################
+
+
 # Logs
 logs
 *.log
