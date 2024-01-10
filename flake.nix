@@ -40,6 +40,7 @@
 
               # Documentation
               docs = tsFlake.packages.plutus-ledger-api-typescript.overrideAttrs (_self: (_super: {
+                name = "docs";
                 npmBuildScript = "docs";
                 installPhase =
                   ''
