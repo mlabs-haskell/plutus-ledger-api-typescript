@@ -8,6 +8,7 @@
     "./src/PlutusLedgerApi/Runtime/PlutusLedgerApi/AssocMap.ts"
   ],
   "tsconfig": "./src/tsconfig-base.json",
+  "basePath": "./",
   "sourceLinkTemplate": "https://github.com/mlabs-haskell/plutus-ledger-api-typescript/blob/main/{path}#L{line}",
   "disableGit": true,
   "out": "docs"
