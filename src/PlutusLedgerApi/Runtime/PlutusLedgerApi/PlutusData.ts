@@ -176,19 +176,23 @@ export const jsonPlutusData: Json<PlutusData> = {
           const elemsValue = ctorFields[0]!;
           return {
             name: "Map",
-            fields: Prelude.caseJsonArray("Map", (kv) => {
-              if (!(Prelude.isJsonArray(kv) && kv.length == 2)) {
-                throw new JsonError(
-                  `Expected JSON Array with 2 elements but got ${
-                    Prelude.stringify(kv)
-                  }`,
-                );
-              }
-              return Prelude.caseJsonArray(
-                "KeyValue",
-                jsonPlutusData.fromJson,
-                kv,
-              ) as [PlutusData, PlutusData];
+            fields: Prelude.caseJsonArray("Map", (arr) => {
+              return arr.map((kv) => {
+                if (!(Prelude.isJsonArray(kv) && kv.length == 2)) {
+                  throw new JsonError(
+                    `Expected JSON Array with 2 elements but got ${
+                      Prelude.stringify(kv)
+                    }`,
+                  );
+                }
+                return Prelude.caseJsonArray(
+                  "KeyValue",
+                  (arr) => {
+                    return arr.map(jsonPlutusData.fromJson);
+                  },
+                  kv,
+                ) as [PlutusData, PlutusData];
+              });
             }, elemsValue),
           };
         } else {
@@ -206,7 +210,9 @@ export const jsonPlutusData: Json<PlutusData> = {
             name: "List",
             fields: Prelude.caseJsonArray(
               "List",
-              jsonPlutusData.fromJson,
+              (arr) => {
+                return arr.map(jsonPlutusData.fromJson);
+              },
               listValue,
             ),
           };
