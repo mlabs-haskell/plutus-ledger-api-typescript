@@ -10925,11 +10925,11 @@
         "pre-commit-hooks-nix": "pre-commit-hooks-nix_3"
       },
       "locked": {
-        "lastModified": 1706262239,
-        "narHash": "sha256-tjBRmed5uv5vXrLI8JSgClCn9VnjbsjqAvsH9+Qqh3s=",
+        "lastModified": 1706266075,
+        "narHash": "sha256-2mbsZHWx18BZsaSS0biiYWrQcUnz4TT3/7a96jzYIyA=",
         "owner": "mlabs-haskell",
         "repo": "prelude-typescript",
-        "rev": "3b97a7bc3f99cbc7da24a63c51e14aa468427599",
+        "rev": "026102e5caffa92da027ff258d59ba1191cd949b",
         "type": "github"
       },
       "original": {
