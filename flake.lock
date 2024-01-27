@@ -25508,15 +25508,16 @@
         "pre-commit-hooks-nix": "pre-commit-hooks-nix_8"
       },
       "locked": {
-        "lastModified": 1706350068,
-        "narHash": "sha256-9IQg1jyItkg+ehRtC+REvTTxmPnOvEjQrt35gyjSumQ=",
+        "lastModified": 1706365191,
+        "narHash": "sha256-VhrVZY/TnPOQ8A9i4UZPDcNjwqS7qMcN0JuFJd4WEjM=",
         "owner": "mlabs-haskell",
         "repo": "prelude-typescript",
-        "rev": "41bf7472016811fdb2c40b1eecbc07dffe070d85",
+        "rev": "d554c6ada4313ffdcf162430d76f9716945a7c13",
         "type": "github"
       },
       "original": {
         "owner": "mlabs-haskell",
+        "ref": "jared/testing",
         "repo": "prelude-typescript",
         "type": "github"
       }

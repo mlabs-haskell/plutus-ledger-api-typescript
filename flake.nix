@@ -6,7 +6,8 @@
     pre-commit-hooks-nix.inputs.nixpkgs.follows = "nixpkgs";
     hci-effects.url = "github:hercules-ci/hercules-ci-effects";
     flake-lang.url = "github:mlabs-haskell/flake-lang.nix";
-    prelude-typescript.url = "github:mlabs-haskell/prelude-typescript";
+
+    prelude-typescript.url = "github:mlabs-haskell/prelude-typescript/jared/testing";
   };
 
   outputs = inputs@{ flake-parts, ... }:
