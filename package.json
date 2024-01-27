@@ -20,7 +20,8 @@
   "author": "Jared Pon",
   "license": "ISC",
   "files": [
-    "./dist/PlutusLedgerApi/**/*"
+    "./dist/PlutusLedgerApi/**/*",
+    "./.extra-dependencies/**/*"
   ],
   "devDependencies": {
     "@types/node": "^20.8.10",
@@ -29,6 +30,6 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
-    "prelude": "file:extra-dependencies/prelude-1.0.1.tgz"
+    "prelude": "file:./.extra-dependencies/prelude-1.0.1.tgz"
   }
 }

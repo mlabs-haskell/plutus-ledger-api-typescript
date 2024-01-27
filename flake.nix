@@ -35,9 +35,6 @@
               # Tarball of the package
               tgz = tsFlake.packages.plutus-ledger-api-typescript-tgz;
 
-              # Tarball of the package
-              node2nix = tsFlake.packages.plutus-ledger-api-typescript-node2nix;
-
               # Documentation
               docs = tsFlake.packages.plutus-ledger-api-typescript.overrideAttrs (_self: (_super: {
                 name = "docs";
