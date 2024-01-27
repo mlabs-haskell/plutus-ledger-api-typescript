@@ -30,6 +30,6 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
-    "prelude": "file:./.extra-dependencies/prelude-1.0.1.tgz"
+    "prelude": "file:.extra-dependencies/prelude-1.0.1.tgz"
   }
 }
