@@ -71,11 +71,11 @@ export function isPlutusDataInterval<A>(
   return {
     toData: (interval) => {
       return {
-        name: "Constr",
         fields: [0n, [
           isPlutusDataLowerBound(dictA).toData(interval.ivFrom),
           isPlutusDataUpperBound(dictA).toData(interval.ivTo),
         ]],
+        name: "Constr",
       };
     },
     fromData: (plutusData) => {
@@ -180,7 +180,7 @@ export function jsonExtended<A>(dictA: Json<A>): Json<Extended<A>> {
           if (ctorfields.length !== 1) {
             throw new JsonError("Expected JSON array with 1 elements");
           }
-          return { name: "Finite", fields: dictA.fromJson(ctorfields[0]!) };
+          return { fields: dictA.fromJson(ctorfields[0]!), name: "Finite" };
         },
       }, value);
     },
@@ -197,14 +197,14 @@ export function isPlutusDataExtended<A>(
     toData: (extended) => {
       switch (extended.name) {
         case "NegInf":
-          return { name: "Constr", fields: [0n, []] };
+          return { fields: [0n, []], name: "Constr" };
         case "Finite":
           return {
-            name: "Constr",
             fields: [1n, [dictA.toData(extended.fields)]],
+            name: "Constr",
           };
         case "PosInf":
-          return { name: "Constr", fields: [2n, []] };
+          return { fields: [2n, []], name: "Constr" };
       }
     },
     fromData: (plutusData) => {
@@ -218,8 +218,8 @@ export function isPlutusDataExtended<A>(
             plutusData.fields[0] === 1n && plutusData.fields[1].length === 1
           ) {
             return {
-              name: "Finite",
               fields: dictA.fromData(plutusData.fields[1][0]!),
+              name: "Finite",
             };
           } else if (
             plutusData.fields[0] === 2n && plutusData.fields[1].length === 0

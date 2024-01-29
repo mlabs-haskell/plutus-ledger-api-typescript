@@ -20,7 +20,7 @@ export type TxId = LbBytes.LedgerBytes & { __compileTimeOnlyTxId: TxId };
  */
 export function txIdFromBytes(bytes: LbBytes.LedgerBytes): Maybe<TxId> {
   if (bytes.length === 32) {
-    return { name: "Just", fields: bytes as TxId };
+    return { fields: bytes as TxId, name: "Just" };
   } else {
     return { name: "Nothing" };
   }
@@ -53,8 +53,8 @@ export const jsonTxId: Json<TxId> = {
 export const isPlutusDataTxId: IsPlutusData<TxId> = {
   toData: (txid) => {
     return {
-      name: "Constr",
       fields: [0n, [LbBytes.isPlutusDataLedgerBytes.toData(txid)]],
+      name: "Constr",
     };
   },
 
@@ -105,8 +105,8 @@ export const eqTxOutRef: Eq<TxOutRef> = {
 export const jsonTxOutRef: Json<TxOutRef> = {
   toJson: (txoutRef) => {
     return {
-      "transaction_id": jsonTxId.toJson(txoutRef.txOutRefId),
       "index": Prelude.jsonInteger.toJson(txoutRef.txOutRefIdx),
+      "transaction_id": jsonTxId.toJson(txoutRef.txOutRefId),
     };
   },
   fromJson: (value) => {
@@ -130,11 +130,11 @@ export const jsonTxOutRef: Json<TxOutRef> = {
 export const isPlutusDataTxOutRef: IsPlutusData<TxOutRef> = {
   toData: (txoutref) => {
     return {
-      name: "Constr",
       fields: [0n, [
         isPlutusDataTxId.toData(txoutref.txOutRefId),
         PreludeInstances.isPlutusDataInteger.toData(txoutref.txOutRefIdx),
       ]],
+      name: "Constr",
     };
   },
   fromData: (plutusData) => {

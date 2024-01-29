@@ -26,7 +26,7 @@ export function currencySymbolFromBytes(
   bytes: LbBytes.LedgerBytes,
 ): Maybe<CurrencySymbol> {
   if (bytes.length === 28) {
-    return { name: "Just", fields: bytes as CurrencySymbol };
+    return { fields: bytes as CurrencySymbol, name: "Just" };
   } else {
     return { name: "Nothing" };
   }
@@ -76,7 +76,7 @@ export function tokenNameFromBytes(
   bytes: LbBytes.LedgerBytes,
 ): Maybe<TokenName> {
   if (bytes.length <= 32) {
-    return { name: "Just", fields: bytes as TokenName };
+    return { fields: bytes as TokenName, name: "Just" };
   } else {
     return { name: "Nothing" };
   }

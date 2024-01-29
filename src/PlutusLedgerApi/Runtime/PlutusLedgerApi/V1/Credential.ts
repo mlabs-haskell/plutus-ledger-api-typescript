@@ -57,14 +57,14 @@ export const jsonStakingCredential: Json<StakingCredential> = {
         ]);
       case "StakingPtr":
         return Prelude.jsonConstructor(stakingCredential.name, [{
+          "certificate_index": Prelude.jsonInteger.toJson(
+            stakingCredential.fields[2],
+          ),
           "slot_number": Prelude.jsonInteger.toJson(
             stakingCredential.fields[0],
           ),
           "transaction_index": Prelude.jsonInteger.toJson(
             stakingCredential.fields[1],
-          ),
-          "certificate_index": Prelude.jsonInteger.toJson(
-            stakingCredential.fields[2],
           ),
         }]);
     }
@@ -78,8 +78,8 @@ export const jsonStakingCredential: Json<StakingCredential> = {
             throw new JsonError(`Expected one field`);
           }
           return {
-            name: "StakingHash",
             fields: jsonCredential.fromJson(ctorFields[0]!),
+            name: "StakingHash",
           };
         },
         "StakingPtr": (ctorFields) => {
@@ -106,8 +106,8 @@ export const jsonStakingCredential: Json<StakingCredential> = {
           );
 
           return {
-            name: "StakingPtr",
             fields: [slotNumber, transactionIndex, certificateIndex],
+            name: "StakingPtr",
           };
         },
       },
@@ -124,14 +124,13 @@ export const isPlutusDataStakingCredential: IsPlutusData<StakingCredential> = {
     switch (stakingCredential.name) {
       case "StakingHash":
         return {
-          name: "Constr",
           fields: [0n, [
             isPlutusDataCredential.toData(stakingCredential.fields),
           ]],
+          name: "Constr",
         };
       case "StakingPtr":
         return {
-          name: "Constr",
           fields: [1n, [
             PreludeInstances.isPlutusDataInteger.toData(
               stakingCredential.fields[0],
@@ -143,6 +142,7 @@ export const isPlutusDataStakingCredential: IsPlutusData<StakingCredential> = {
               stakingCredential.fields[2],
             ),
           ]],
+          name: "Constr",
         };
     }
   },
@@ -239,8 +239,8 @@ export const jsonCredential: Json<Credential> = {
           throw new JsonError(`Expected one field`);
         }
         return {
-          name: "PubKeyCredential",
           fields: LbCrypto.jsonPubKeyHash.fromJson(ctorFields[0]!),
+          name: "PubKeyCredential",
         };
       },
       "ScriptCredential": (ctorFields) => {
@@ -248,8 +248,8 @@ export const jsonCredential: Json<Credential> = {
           throw new JsonError(`Expected one field`);
         }
         return {
-          name: "ScriptCredential",
           fields: LbScript.jsonScriptHash.fromJson(ctorFields[0]!),
+          name: "ScriptCredential",
         };
       },
     }, value);
@@ -264,17 +264,17 @@ export const isPlutusDataCredential: IsPlutusData<Credential> = {
     switch (credential.name) {
       case "PubKeyCredential":
         return {
-          name: "Constr",
           fields: [0n, [
             LbCrypto.isPlutusDataPubKeyHash.toData(credential.fields),
           ]],
+          name: "Constr",
         };
       case "ScriptCredential":
         return {
-          name: "Constr",
           fields: [1n, [
             LbScript.isPlutusDataScriptHash.toData(credential.fields),
           ]],
+          name: "Constr",
         };
     }
   },
@@ -284,19 +284,19 @@ export const isPlutusDataCredential: IsPlutusData<Credential> = {
       case "Constr": {
         if (plutusData.fields[0] === 0n && plutusData.fields[1].length === 1) {
           return {
-            name: "PubKeyCredential",
             fields: LbCrypto.isPlutusDataPubKeyHash.fromData(
               plutusData.fields[1][0]!,
             ),
+            name: "PubKeyCredential",
           };
         } else if (
           plutusData.fields[0] === 1n && plutusData.fields[1].length === 1
         ) {
           return {
-            name: "ScriptCredential",
             fields: LbScript.isPlutusDataScriptHash.fromData(
               plutusData.fields[1][0]!,
             ),
+            name: "ScriptCredential",
           };
         } else {
           break;

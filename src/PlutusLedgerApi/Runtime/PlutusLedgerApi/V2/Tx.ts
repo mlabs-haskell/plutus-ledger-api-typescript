@@ -106,20 +106,20 @@ export const isPlutusDataOutputDatum: IsPlutusData<OutputDatum> = {
   toData: (outputDatum) => {
     switch (outputDatum.name) {
       case "NoOutputDatum":
-        return { name: "Constr", fields: [0n, []] };
+        return { fields: [0n, []], name: "Constr" };
       case "OutputDatumHash":
         return {
-          name: "Constr",
           fields: [1n, [
             LbScripts.isPlutusDataDatumHash.toData(outputDatum.fields),
           ]],
+          name: "Constr",
         };
       case "OutputDatum":
         return {
-          name: "Constr",
           fields: [2n, [
             LbScripts.isPlutusDataDatum.toData(outputDatum.fields),
           ]],
+          name: "Constr",
         };
     }
   },
@@ -133,19 +133,19 @@ export const isPlutusDataOutputDatum: IsPlutusData<OutputDatum> = {
           plutusData.fields[0] === 1n && plutusData.fields[1].length === 1
         ) {
           return {
-            name: "OutputDatumHash",
             fields: LbScripts.isPlutusDataDatumHash.fromData(
               plutusData.fields[1][0]!,
             ),
+            name: "OutputDatumHash",
           };
         } else if (
           plutusData.fields[0] === 2n && plutusData.fields[1].length === 1
         ) {
           return {
-            name: "OutputDatum",
             fields: LbScripts.isPlutusDataDatum.fromData(
               plutusData.fields[1][0]!,
             ),
+            name: "OutputDatum",
           };
         }
         break;
@@ -199,11 +199,11 @@ export const jsonTxOut: Json<TxOut> = {
   toJson: (txout) => {
     return {
       "address": LbAddress.jsonAddress.toJson(txout.txOutAddress),
-      "value": LbValue.jsonValue.toJson(txout.txOutValue),
       "datum": jsonOutputDatum.toJson(txout.txOutDatum),
       "reference_script": Prelude.jsonMaybe(LbScripts.jsonScriptHash).toJson(
         txout.txOutReferenceScript,
       ),
+      "value": LbValue.jsonValue.toJson(txout.txOutValue),
     };
   },
   fromJson: (value) => {
@@ -243,7 +243,6 @@ export const jsonTxOut: Json<TxOut> = {
 export const isPlutusDataTxOut: IsPlutusData<TxOut> = {
   toData: (txout) => {
     return {
-      name: "Constr",
       fields: [0n, [
         LbAddress.isPlutusDataAddress.toData(txout.txOutAddress),
         LbValue.isPlutusDataValue.toData(txout.txOutValue),
@@ -253,6 +252,7 @@ export const isPlutusDataTxOut: IsPlutusData<TxOut> = {
             txout.txOutReferenceScript,
           ),
       ]],
+      name: "Constr",
     };
   },
 

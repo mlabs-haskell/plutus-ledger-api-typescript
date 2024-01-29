@@ -83,13 +83,13 @@ export const jsonAddress: Json<Address> = {
 export const isPlutusDataAddress: IsPlutusData<Address> = {
   toData: (address) => {
     return {
-      name: "Constr",
       fields: [0n, [
         LbCredential.isPlutusDataCredential.toData(address.addressCredential),
         PreludeInstances
           .isPlutusDataMaybe(LbCredential.isPlutusDataStakingCredential)
           .toData(address.addressStakingCredential),
       ]],
+      name: "Constr",
     };
   },
 
