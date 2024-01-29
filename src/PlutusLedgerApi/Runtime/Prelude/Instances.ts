@@ -9,9 +9,9 @@ import type { Bool, Either, Integer, List, Maybe, Pair } from "prelude";
 export const isPlutusDataBool: IsPlutusData<Bool> = {
   toData: (arg) => {
     if (arg) {
-      return { name: "Constr", fields: [1n, []] };
+      return { fields: [1n, []], name: "Constr" };
     } else {
-      return { name: "Constr", fields: [0n, []] };
+      return { fields: [0n, []], name: "Constr" };
     }
   },
 
@@ -39,7 +39,7 @@ export const isPlutusDataBool: IsPlutusData<Bool> = {
  */
 export const isPlutusDataInteger: IsPlutusData<Integer> = {
   toData: (arg) => {
-    return { name: "Integer", fields: arg };
+    return { fields: arg, name: "Integer" };
   },
 
   fromData: (plutusData) => {
@@ -61,9 +61,9 @@ export function isPlutusDataMaybe<A>(
   return {
     toData: (arg) => {
       if (arg.name === "Nothing") {
-        return { name: "Constr", fields: [1n, []] };
+        return { fields: [1n, []], name: "Constr" };
       } else {
-        return { name: "Constr", fields: [0n, [dict.toData(arg.fields)]] };
+        return { fields: [0n, [dict.toData(arg.fields)]], name: "Constr" };
       }
     },
 
@@ -77,8 +77,8 @@ export function isPlutusDataMaybe<A>(
               throw new IsPlutusDataError("Malformed Constr" + plutusData);
             }
             return {
-              name: "Just",
               fields: dict.fromData(plutusData.fields[1][0]!),
+              name: "Just",
             };
           } else {
             throw new IsPlutusDataError("Malformed Constr" + plutusData);
@@ -98,7 +98,7 @@ export function isPlutusDataList<A>(
 ): IsPlutusData<List<A>> {
   return {
     toData: (arg) => {
-      return { name: "List", fields: arg.map(dict.toData) };
+      return { fields: arg.map(dict.toData), name: "List" };
     },
     fromData: (plutusData) => {
       switch (plutusData.name) {
@@ -122,9 +122,9 @@ export function isPlutusDataEither<A, B>(
     toData: (arg) => {
       switch (arg.name) {
         case "Left":
-          return { name: "Constr", fields: [0n, [dictA.toData(arg.fields)]] };
+          return { fields: [0n, [dictA.toData(arg.fields)]], name: "Constr" };
         case "Right":
-          return { name: "Constr", fields: [1n, [dictB.toData(arg.fields)]] };
+          return { fields: [1n, [dictB.toData(arg.fields)]], name: "Constr" };
       }
     },
 
@@ -170,8 +170,8 @@ export function isPlutusDataPairWithTag<A, B>(
   return {
     toData: (arg) => {
       return {
-        name: "Constr",
         fields: [0n, [dictA.toData(arg[0]), dictB.toData(arg[1])]],
+        name: "Constr",
       };
     },
 
@@ -208,8 +208,8 @@ export function isPlutusDataPairWithoutTag<A, B>(
   return {
     toData: (arg) => {
       return {
-        name: "List",
         fields: [dictA.toData(arg[0]), dictB.toData(arg[1])],
+        name: "List",
       };
     },
     fromData: (plutusData) => {

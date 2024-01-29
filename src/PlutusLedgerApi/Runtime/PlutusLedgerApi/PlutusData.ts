@@ -99,8 +99,8 @@ export const jsonPlutusData: Json<PlutusData> = {
           plutusData.fields[1],
         );
         return Prelude.jsonConstructor(plutusData.name, [{
-          index: Prelude.jsonInteger.toJson(plutusData.fields[0]),
           fields: fields,
+          index: Prelude.jsonInteger.toJson(plutusData.fields[0]),
         }]);
       }
       case "Map": {

@@ -46,7 +46,7 @@ export function datumHashFromBytes(
   bytes: LbBytes.LedgerBytes,
 ): Maybe<DatumHash> {
   if (bytes.length === 32) {
-    return { name: "Just", fields: bytes as DatumHash };
+    return { fields: bytes as DatumHash, name: "Just" };
   } else {
     return { name: "Nothing" };
   }
@@ -86,7 +86,7 @@ export function redeemerHashFromBytes(
   bytes: LbBytes.LedgerBytes,
 ): Maybe<RedeemerHash> {
   if (bytes.length === 32) {
-    return { name: "Just", fields: bytes as RedeemerHash };
+    return { fields: bytes as RedeemerHash, name: "Just" };
   } else {
     return { name: "Nothing" };
   }
@@ -128,7 +128,7 @@ export function scriptHashFromBytes(
   bytes: LbBytes.LedgerBytes,
 ): Maybe<ScriptHash> {
   if (bytes.length === 28) {
-    return { name: "Just", fields: bytes as ScriptHash };
+    return { fields: bytes as ScriptHash, name: "Just" };
   } else {
     return { name: "Nothing" };
   }

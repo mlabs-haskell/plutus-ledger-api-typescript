@@ -22,7 +22,7 @@ export function pubKeyHashFromBytes(
   bytes: LbBytes.LedgerBytes,
 ): Maybe<PubKeyHash> {
   if (bytes.length === 28) {
-    return { name: "Just", fields: bytes as PubKeyHash };
+    return { fields: bytes as PubKeyHash, name: "Just" };
   } else {
     return { name: "Nothing" };
   }

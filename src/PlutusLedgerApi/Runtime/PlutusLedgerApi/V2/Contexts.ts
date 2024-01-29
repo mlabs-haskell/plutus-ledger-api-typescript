@@ -36,8 +36,8 @@ export const eqTxInInfo: Eq<TxInInfo> = {
 export const jsonTxInInfo: Json<TxInInfo> = {
   toJson: (txininfo) => {
     return {
-      "reference": V1Tx.jsonTxOutRef.toJson(txininfo.txInInfoOutRef),
       "output": V2Tx.jsonTxOut.toJson(txininfo.txInInfoResolved),
+      "reference": V1Tx.jsonTxOutRef.toJson(txininfo.txInInfoOutRef),
     };
   },
   fromJson: (value) => {
@@ -61,11 +61,11 @@ export const jsonTxInInfo: Json<TxInInfo> = {
 export const isPlutusDataTxInInfo: IsPlutusData<TxInInfo> = {
   toData: (txininfo) => {
     return {
-      name: "Constr",
       fields: [0n, [
         V1Tx.isPlutusDataTxOutRef.toData(txininfo.txInInfoOutRef),
         V2Tx.isPlutusDataTxOut.toData(txininfo.txInInfoResolved),
       ]],
+      name: "Constr",
     };
   },
 

@@ -41,7 +41,7 @@ export const jsonLedgerBytes: Json<LedgerBytes> = {
  */
 export const isPlutusDataLedgerBytes: IsPlutusData<LedgerBytes> = {
   toData: (bytes) => {
-    return { name: "Bytes", fields: bytes };
+    return { fields: bytes, name: "Bytes" };
   },
   fromData: (plutusData) => {
     switch (plutusData.name) {
