@@ -20,12 +20,12 @@ export type CurrencySymbol = LbBytes.LedgerBytes & {
 };
 
 /**
- * Checks if the bytes are 28 bytes long.
+ * Checks if the bytes are 28 bytes long (or it is the ada {@link CurrencySymbol})
  */
 export function currencySymbolFromBytes(
   bytes: LbBytes.LedgerBytes,
 ): Maybe<CurrencySymbol> {
-  if (bytes.length === 28) {
+  if (bytes.length === 28 || bytes.length === 0) {
     return { fields: bytes as CurrencySymbol, name: "Just" };
   } else {
     return { name: "Nothing" };
@@ -46,7 +46,7 @@ export const jsonCurrencySymbol: Json<CurrencySymbol> = {
   fromJson: (value) => {
     const bs = currencySymbolFromBytes(LbBytes.jsonLedgerBytes.fromJson(value));
     if (bs.name === "Nothing") {
-      throw new JsonError("CurrencySymbol should be 28 bytes");
+      throw new JsonError("CurrencySymbol should be 28 bytes or 0 bytes");
     }
     return bs.fields;
   },
