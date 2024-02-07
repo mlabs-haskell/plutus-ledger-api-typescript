@@ -7,7 +7,14 @@
     hci-effects.url = "github:hercules-ci/hercules-ci-effects";
     flake-lang.url = "github:mlabs-haskell/flake-lang.nix";
 
-    prelude-typescript.url = "github:mlabs-haskell/prelude-typescript";
+    prelude-typescript =
+      {
+        url = "github:mlabs-haskell/prelude-typescript";
+        inputs = {
+          nixpkgs.follows = "nixpkgs";
+          flake-lang.follows = "flake-lang";
+        };
+      };
   };
 
   outputs = inputs@{ flake-parts, ... }:
