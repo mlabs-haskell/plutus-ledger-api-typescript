@@ -1,7 +1,7 @@
 // Some utility functions to make testing easier.
 
-import type { IsPlutusData } from "../PlutusLedgerApi/Runtime/PlutusLedgerApi/PlutusData.js";
-import * as LbPlutusData from "../PlutusLedgerApi/Runtime/PlutusLedgerApi/PlutusData.js";
+import type { IsPlutusData } from "../Lib/PlutusData.js";
+import * as LbPlutusData from "../Lib/PlutusData.js";
 import * as Prelude from "prelude";
 import type { Bool, Eq, Json } from "prelude";
 

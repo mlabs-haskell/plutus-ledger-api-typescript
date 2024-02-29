@@ -1,13 +1,14 @@
+/**
+ * @see {@link https://github.com/input-output-hk/plutus/blob/1.16.0.0/plutus-ledger-api/src/PlutusLedgerApi/V1/Address.hs}
+ */
 import { IsPlutusDataError } from "../PlutusData.js";
 import type { IsPlutusData } from "../PlutusData.js";
 import type { Eq, Json, Maybe } from "prelude";
 import * as Prelude from "prelude";
-import * as PreludeInstances from "../../Prelude/Instances.js";
+import * as PreludeInstances from "../Prelude/Instances.js";
 
 import type { Credential, StakingCredential } from "./Credential.js";
 import * as LbCredential from "./Credential.js";
-
-// https://github.com/input-output-hk/plutus/blob/1.16.0.0/plutus-ledger-api/src/PlutusLedgerApi/V1/Address.hs
 
 /**
  * An {@link Address} that may contain two credentials.

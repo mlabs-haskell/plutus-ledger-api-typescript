@@ -1,6 +1,6 @@
 // // Tests for the instances for `Bool`
 import * as Prelude from "prelude";
-import * as PreludeInstances from "../PlutusLedgerApi/Runtime/Prelude/Instances.js";
+import * as PreludeInstances from "../Lib/Prelude/Instances.js";
 
 import { describe, it } from "node:test";
 

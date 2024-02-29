@@ -1,7 +1,7 @@
 // Tests for the instances for `TxOut`
-import * as LbAssocMap from "../PlutusLedgerApi/Runtime/PlutusLedgerApi/AssocMap.js";
-import * as V1 from "../PlutusLedgerApi/Runtime/PlutusLedgerApi/V1.js";
-import * as V2 from "../PlutusLedgerApi/Runtime/PlutusLedgerApi/V2.js";
+import * as LbAssocMap from "../Lib/AssocMap.js";
+import * as V1 from "../Lib/V1.js";
+import * as V2 from "../Lib/V2.js";
 import * as Prelude from "prelude";
 
 import { describe, it } from "node:test";

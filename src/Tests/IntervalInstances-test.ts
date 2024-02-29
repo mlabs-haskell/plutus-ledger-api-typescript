@@ -1,5 +1,5 @@
 // Tests for the instances for various types in the `V1/Interval.js` file
-import * as V1 from "../PlutusLedgerApi/Runtime/PlutusLedgerApi/V1.js";
+import * as V1 from "../Lib/V1.js";
 import * as Prelude from "prelude";
 
 import { describe, it } from "node:test";

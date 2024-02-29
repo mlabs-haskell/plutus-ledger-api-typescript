@@ -1,12 +1,14 @@
+/**
+ * @see {@link https://github.com/input-output-hk/plutus/blob/1.16.0.0/plutus-ledger-api/src/PlutusLedgerApi/V1/Tx.hs}
+ */
+
 import type { Eq, Integer, Json, Maybe } from "prelude";
 import type { IsPlutusData } from "../PlutusData.js";
 import { IsPlutusDataError } from "../PlutusData.js";
-import * as PreludeInstances from "../../Prelude/Instances.js";
+import * as PreludeInstances from "../Prelude/Instances.js";
 import * as Prelude from "prelude";
 import { JsonError } from "prelude";
 import * as LbBytes from "./Bytes.js";
-
-// https://github.com/input-output-hk/plutus/blob/1.16.0.0/plutus-ledger-api/src/PlutusLedgerApi/V1/Tx.hs
 
 /**
  * {@link TxId} is a transaction id i.e., the hash of a transaction. 32 bytes.

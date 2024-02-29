@@ -1,4 +1,22 @@
 /**
+ * Types and functions for translating between {@link Uint8Array} and strings
+ * of hex data.
+ *
+ * @example
+ * ```ts
+ * import * as PlaHex from 'plutus-ledger-api/Hex.js'
+ *
+ * const myHexString = "aa";
+ *
+ * const bytes = PlaHex.bytesFromHex(myHexString)
+ *
+ * console.log(PlaHex.bytesToHex(bytes))
+ * ```
+ *
+ * @module plutus-ledger-api/Hex.js
+ */
+
+/**
  * Class for the error thrown from {@link bytesFromHex}
  */
 export class HexError extends Error {

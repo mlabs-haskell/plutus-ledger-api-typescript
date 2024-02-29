@@ -1,3 +1,6 @@
+/**
+ * @see {@link https://github.com/input-output-hk/plutus/blob/1.16.0.0/plutus-ledger-api/src/PlutusLedgerApi/V2/Contexts.hs}
+ */
 import type { TxOutRef } from "../V1/Tx.js";
 import * as V1Tx from "../V1/Tx.js";
 import type { IsPlutusData } from "../PlutusData.js";
@@ -6,8 +9,6 @@ import type { Eq, Json } from "prelude";
 import * as Prelude from "prelude";
 import type { TxOut } from "./Tx.js";
 import * as V2Tx from "./Tx.js";
-
-// https://github.com/input-output-hk/plutus/blob/1.16.0.0/plutus-ledger-api/src/PlutusLedgerApi/V2/Contexts.hs
 
 /**
  * {@link TxInInfo} is an input of a pending transaction.

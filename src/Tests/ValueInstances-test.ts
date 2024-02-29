@@ -1,6 +1,6 @@
 // Tests for the instances for various types in the `V1/Value.js` file
-import * as V1 from "../PlutusLedgerApi/Runtime/PlutusLedgerApi/V1.js";
-import * as LbAssocMap from "../PlutusLedgerApi/Runtime/PlutusLedgerApi/AssocMap.js";
+import * as V1 from "../Lib/V1.js";
+import * as LbAssocMap from "../Lib/AssocMap.js";
 import * as Prelude from "prelude";
 
 import { describe, it } from "node:test";

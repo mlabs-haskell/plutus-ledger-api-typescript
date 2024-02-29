@@ -1,10 +1,11 @@
+/**
+ * @see {@link https://github.com/input-output-hk/plutus/blob/1.16.0.0/plutus-ledger-api/src/PlutusLedgerApi/V1/Time.hs}
+ */
 import type { Interval } from "./Interval.js";
 import * as LbInterval from "./Interval.js";
 import type { Integer } from "prelude";
 import * as Prelude from "prelude";
-import * as PreludeInstances from "../../Prelude/Instances.js";
-
-// https://github.com/input-output-hk/plutus/blob/1.16.0.0/plutus-ledger-api/src/PlutusLedgerApi/V1/Time.hs
+import * as PreludeInstances from "../Prelude/Instances.js";
 
 /**
  * {@link POSIXTime} wraps {@link Integer} and measures the number of

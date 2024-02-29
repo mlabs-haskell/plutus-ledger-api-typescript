@@ -1,4 +1,8 @@
-import * as PreludeInstances from "../../Prelude/Instances.js";
+/**
+ * @see {@link https://github.com/input-output-hk/plutus/blob/1.16.0.0/plutus-ledger-api/src/PlutusLedgerApi/V1/Value.hs}
+ */
+
+import * as PreludeInstances from "../Prelude/Instances.js";
 import type { IsPlutusData } from "../PlutusData.js";
 import type { Map } from "../AssocMap.js";
 import * as AssocMap from "../AssocMap.js";
@@ -8,13 +12,11 @@ import { JsonError } from "prelude";
 import type { Maybe } from "prelude";
 import * as LbBytes from "./Bytes.js";
 
-// https://github.com/input-output-hk/plutus/blob/1.16.0.0/plutus-ledger-api/src/PlutusLedgerApi/V1/Value.hs
 /**
  * {@link CurrencySymbol} represetns the currency. It is empty for Ada or 28 bytes for `MintingPolicyHash`.
  *
  * @see {@link https://github.com/input-output-hk/plutus/blob/1.16.0.0/plutus-ledger-api/src/PlutusLedgerApi/V1/Value.hs#L75-L92}
  */
-
 export type CurrencySymbol = LbBytes.LedgerBytes & {
   __compileTimeOnlyCurrencySymbol: CurrencySymbol;
 };

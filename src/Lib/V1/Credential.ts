@@ -1,3 +1,7 @@
+/**
+ * @see {@link https://github.com/input-output-hk/plutus/blob/1.16.0.0/plutus-ledger-api/src/PlutusLedgerApi/V1/Credential.hs}
+ */
+
 import { IsPlutusDataError } from "../PlutusData.js";
 import type { IsPlutusData } from "../PlutusData.js";
 import type { Integer } from "prelude";
@@ -7,10 +11,8 @@ import * as LbCrypto from "./Crypto.js";
 import * as LbScript from "./Scripts.js";
 import type { Eq, Json } from "prelude";
 import * as Prelude from "prelude";
-import * as PreludeInstances from "../../Prelude/Instances.js";
+import * as PreludeInstances from "../Prelude/Instances.js";
 import { JsonError } from "prelude";
-
-// https://github.com/input-output-hk/plutus/blob/1.16.0.0/plutus-ledger-api/src/PlutusLedgerApi/V1/Credential.hs
 
 /**
  * {@link StakingCredential} used to assign rewards

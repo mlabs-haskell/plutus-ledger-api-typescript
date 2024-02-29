@@ -1,5 +1,10 @@
-import { IsPlutusDataError } from "../PlutusLedgerApi/PlutusData.js";
-import type { IsPlutusData } from "../PlutusLedgerApi/PlutusData.js";
+/**
+ * {@link IsPlutusData} instances for Prelude types.
+ *
+ * @module plutus-ledger-api/Prelude/Instances.js
+ */
+import { IsPlutusDataError } from "../PlutusData.js";
+import type { IsPlutusData } from "../PlutusData.js";
 
 import type { Bool, Either, Integer, List, Maybe, Pair } from "prelude";
 

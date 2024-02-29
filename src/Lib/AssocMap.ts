@@ -1,5 +1,17 @@
+/**
+ * TypeScript implementation for {@link *https://github.com/input-output-hk/plutus/blob/1.16.0.0/plutus-tx/src/PlutusTx/AssocMap.hs }
+ *
+ * @example
+ * ```ts
+ * import * as PlaMap from 'plutus-ledger-api/AssocMap.js'
+ *
+ * // ...
+ * ```
+ *
+ * @module plutus-ledger-api/AssocMap.js
+ */
 import * as Prelude from "prelude";
-import * as PreludeInstances from "../Prelude/Instances.js";
+import * as PreludeInstances from "./Prelude/Instances.js";
 import type { Bool, Eq, Json, List, Maybe } from "prelude";
 import { IsPlutusDataError } from "./PlutusData.js";
 import type { IsPlutusData, PlutusData } from "./PlutusData.js";
@@ -22,16 +34,19 @@ export function empty<K, V>(): Map<K, V> {
 /**
  * {@link Eq} instance for {@link Map}. Note that we follow Haskell's implementation which
  * unintuitively is "structurally equal" so
- * ```
- * let mapA : Map<Integer,Integer> = []
- * insert(eqInteger, 1, 2, mapA)
- * insert(eqInteger, 2, 1, mapA)
+ * ```ts
+ * import * as PlaMap from 'plutus-ledger-api/AssocMap.js'
+ * import { eqInteger } from 'prelude'
+ *
+ * let mapA : PlaMap.Map<Integer,Integer> = PlaMap.empty()
+ * PlaMap.insert(eqInteger, 1, 2, mapA)
+ * PlaMap.insert(eqInteger, 2, 1, mapA)
  * ```
  * and
- * ```
- * let mapB : Map<Integer,Integer> = []
- * insert(eqInteger, 2, 1, mapB)
- * insert(eqInteger, 1, 2, mapB)
+ * ```ts
+ * let mapB : PlaMap.Map<Integer,Integer> = PlaMap.empty()
+ * PlaMap.insert(eqInteger, 2, 1, mapB)
+ * PlaMap.insert(eqInteger, 1, 2, mapB)
  * ```
  * are considered _not_ equal.
  */
