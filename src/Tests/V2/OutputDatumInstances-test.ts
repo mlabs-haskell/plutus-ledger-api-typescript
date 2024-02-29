@@ -1,16 +1,16 @@
 // Tests for the instances for `OutputDatum`
-import * as V1 from "../Lib/V1.js";
-import * as V2 from "../Lib/V2.js";
-import * as LbPlutusData from "../Lib/PlutusData.js";
+import * as V1 from "../../Lib/V1.js";
+import * as V2 from "../../Lib/V2.js";
+import * as LbPlutusData from "../../Lib/PlutusData.js";
 import * as Prelude from "prelude";
 
 import { describe, it } from "node:test";
 
-import * as TestUtils from "./TestUtils.js";
+import * as TestUtils from "../TestUtils.js";
 import fc from "fast-check";
 
-import * as TestDatum from "./DatumInstances-test.js";
-import * as TestDatumHash from "./DatumHashInstances-test.js";
+import * as TestDatum from "../V1/DatumInstances-test.js";
+import * as TestDatumHash from "../V1/DatumHashInstances-test.js";
 
 export const datumHash1: V1.DatumHash = Prelude.fromJust(
   V1.datumHashFromBytes(

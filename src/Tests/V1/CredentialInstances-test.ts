@@ -1,10 +1,10 @@
 // // Tests for the instances for `Credential`
-import * as V1 from "../Lib/V1.js";
+import * as V1 from "../../Lib/V1.js";
 import * as Prelude from "prelude";
 
 import { describe, it } from "node:test";
 
-import * as TestUtils from "./TestUtils.js";
+import * as TestUtils from "../TestUtils.js";
 import fc from "fast-check";
 
 import * as TestPubKeyHash from "./PubKeyHashInstances-test.js";

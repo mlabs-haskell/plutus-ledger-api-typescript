@@ -1,10 +1,10 @@
 // Tests for the instances for `PubKeyHash`
-import * as V1 from "../Lib/V1.js";
+import * as V1 from "../../Lib/V1.js";
 import * as Prelude from "prelude";
 
 import { describe, it } from "node:test";
 
-import * as TestUtils from "./TestUtils.js";
+import * as TestUtils from "../TestUtils.js";
 import fc from "fast-check";
 
 // `pubKeyHash1` is distinct from `pubKeyHash2`
