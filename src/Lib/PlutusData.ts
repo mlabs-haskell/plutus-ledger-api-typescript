@@ -1,7 +1,20 @@
+/**
+ * A TypeScript implementation of {@link https://github.com/input-output-hk/plutus/blob/1.16.0.0/plutus-core/plutus-core/src/PlutusCore/Data.hs#L33-L48 | `Data`}
+ *
+ * @example
+ * ```ts
+ * import * as PlaPd from 'plutus-ledger-api/PlutusData.js'
+ *
+ * // ...
+ * ```
+ *
+ * @module plutus-ledger-api/PlutusData.js
+ */
+
 import type { Bytes, Eq, Integer, Json, List } from "prelude";
 import { JsonError } from "prelude";
 import * as Prelude from "prelude";
-import * as LbHex from "../Hex.js";
+import * as LbHex from "./Hex.js";
 
 /**
  * {@link PlutusData} is a generic "data" type.

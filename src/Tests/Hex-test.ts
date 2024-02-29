@@ -1,4 +1,4 @@
-import * as LbHex from "../PlutusLedgerApi/Runtime/Hex.js";
+import * as LbHex from "../Lib/Hex.js";
 
 import { describe, it } from "node:test";
 import * as assert from "node:assert/strict";

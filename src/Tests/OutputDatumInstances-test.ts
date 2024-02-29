@@ -1,7 +1,7 @@
 // Tests for the instances for `OutputDatum`
-import * as V1 from "../PlutusLedgerApi/Runtime/PlutusLedgerApi/V1.js";
-import * as V2 from "../PlutusLedgerApi/Runtime/PlutusLedgerApi/V2.js";
-import * as LbPlutusData from "../PlutusLedgerApi/Runtime/PlutusLedgerApi/PlutusData.js";
+import * as V1 from "../Lib/V1.js";
+import * as V2 from "../Lib/V2.js";
+import * as LbPlutusData from "../Lib/PlutusData.js";
 import * as Prelude from "prelude";
 
 import { describe, it } from "node:test";

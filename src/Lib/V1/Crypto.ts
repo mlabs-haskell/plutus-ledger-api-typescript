@@ -1,9 +1,11 @@
+/**
+ * @see {@link https://github.com/input-output-hk/plutus/blob/1.16.0.0/plutus-ledger-api/src/PlutusLedgerApi/V1/Crypto.hs}
+ */
+
 import * as LbBytes from "./Bytes.js";
 import type { Eq, Json, Maybe } from "prelude";
 import { JsonError } from "prelude";
 import type { IsPlutusData } from "../PlutusData.js";
-
-// https://github.com/input-output-hk/plutus/blob/1.16.0.0/plutus-ledger-api/src/PlutusLedgerApi/V1/Crypto.hs
 
 /**
  * {@link PubKeyHash}

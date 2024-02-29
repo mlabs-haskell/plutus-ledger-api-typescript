@@ -1,6 +1,6 @@
-import * as LbAssocMap from "../PlutusLedgerApi/Runtime/PlutusLedgerApi/AssocMap.js";
+import * as LbAssocMap from "../Lib/AssocMap.js";
 import * as Prelude from "prelude";
-import * as V1 from "../PlutusLedgerApi/Runtime/PlutusLedgerApi/V1.js";
+import * as V1 from "../Lib/V1.js";
 
 import { describe, it } from "node:test";
 import * as TestUtils from "./TestUtils.js";

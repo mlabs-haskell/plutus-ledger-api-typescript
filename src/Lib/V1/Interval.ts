@@ -1,11 +1,12 @@
+/**
+ * @see {@link https://github.com/input-output-hk/plutus/blob/1.16.0.0/plutus-ledger-api/src/PlutusLedgerApi/V1/Interval.hs}
+ */
 import { IsPlutusDataError } from "../PlutusData.js";
 import type { IsPlutusData } from "../PlutusData.js";
-import * as PreludeInstances from "../../Prelude/Instances.js";
+import * as PreludeInstances from "../Prelude/Instances.js";
 import type { Bool, Eq, Json } from "prelude";
 import * as Prelude from "prelude";
 import { JsonError } from "prelude";
-
-// https://github.com/input-output-hk/plutus/blob/1.16.0.0/plutus-ledger-api/src/PlutusLedgerApi/V1/Interval.hs
 
 /**
  * {@link Interval} of `A`s

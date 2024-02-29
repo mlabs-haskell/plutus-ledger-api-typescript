@@ -1,3 +1,7 @@
+/**
+ * @see {@link  https://github.com/input-output-hk/plutus/blob/1.16.0.0/plutus-ledger-api/src/PlutusLedgerApi/V2/Tx.hs}
+ */
+
 import type { Datum, DatumHash, ScriptHash } from "../V1/Scripts.js";
 import * as LbScripts from "../V1/Scripts.js";
 import type { Eq, Json, Maybe } from "prelude";
@@ -5,13 +9,11 @@ import * as Prelude from "prelude";
 import { JsonError } from "prelude";
 import type { IsPlutusData } from "../PlutusData.js";
 import { IsPlutusDataError } from "../PlutusData.js";
-import * as PreludeInstances from "../../Prelude/Instances.js";
+import * as PreludeInstances from "../Prelude/Instances.js";
 import type { Address } from "../V1/Address.js";
 import * as LbAddress from "../V1/Address.js";
 import type { Value } from "../V1/Value.js";
 import * as LbValue from "../V1/Value.js";
-
-// https://github.com/input-output-hk/plutus/blob/1.16.0.0/plutus-ledger-api/src/PlutusLedgerApi/V2/Tx.hs
 
 /**
  * {@link OutputDatum} the datum attached to an output.

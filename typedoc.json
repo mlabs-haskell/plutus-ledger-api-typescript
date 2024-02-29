@@ -1,15 +1,15 @@
 {
   "entryPoints": [
-    "./src/PlutusLedgerApi/Runtime/Hex.ts",
-    "./src/PlutusLedgerApi/Runtime/Prelude/Instances.ts",
-    "./src/PlutusLedgerApi/Runtime/PlutusLedgerApi/V1.ts",
-    "./src/PlutusLedgerApi/Runtime/PlutusLedgerApi/V2.ts",
-    "./src/PlutusLedgerApi/Runtime/PlutusLedgerApi/PlutusData.ts",
-    "./src/PlutusLedgerApi/Runtime/PlutusLedgerApi/AssocMap.ts"
+    "./src/Lib/Hex.ts",
+    "./src/Lib/Prelude/Instances.ts",
+    "./src/Lib/V1.ts",
+    "./src/Lib/V2.ts",
+    "./src/Lib/PlutusData.ts",
+    "./src/Lib/AssocMap.ts"
   ],
   "tsconfig": "./src/tsconfig-base.json",
-  "basePath": "./",
-  "sourceLinkTemplate": "https://github.com/mlabs-haskell/plutus-ledger-api-typescript/blob/main/{path}#L{line}",
+  "basePath": "./src/Lib",
+  "sourceLinkTemplate": "https://github.com/mlabs-haskell/plutus-ledger-api-typescript/blob/main/src/Lib/{path}#L{line}",
   "disableGit": true,
   "out": "docs"
 }
