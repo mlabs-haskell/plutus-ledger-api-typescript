@@ -102,7 +102,7 @@ export function fcTxOutRef(): fc.Arbitrary<V1.TxOutRef> {
 }
 
 describe("TxOutRef tests", () => {
-  describe("Eq Credential tests", () => {
+  describe("Eq TxOutRef tests", () => {
     const dict = V1.eqTxOutRef;
 
     // Same address

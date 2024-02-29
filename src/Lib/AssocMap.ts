@@ -1,5 +1,5 @@
 /**
- * TypeScript implementation for {@link *https://github.com/input-output-hk/plutus/blob/1.16.0.0/plutus-tx/src/PlutusTx/AssocMap.hs }
+ * TypeScript implementation for {@link https://github.com/input-output-hk/plutus/blob/1.16.0.0/plutus-tx/src/PlutusTx/AssocMap.hs }
  *
  * @example
  * ```ts

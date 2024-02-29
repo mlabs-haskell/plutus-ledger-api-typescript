@@ -166,8 +166,6 @@ export const isPlutusDataTxOutRef: IsPlutusData<TxOutRef> = {
   },
 };
 
-//////////////////////////////////////////////////
-
 /**
  * {@link TxOut} a transaction output consisting of a target address, a value,
  * and optionally a datum hash.

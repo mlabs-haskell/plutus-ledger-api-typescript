@@ -19,4 +19,6 @@ export * from "./V1/Scripts.js";
 export * from "./V1/Time.js";
 export * from "./V1/Tx.js";
 export * from "./V1/Value.js";
+export * from "./V1/DCert.js";
+export * from "./V1/Contexts.js";
 export * from "./Prelude/Instances.js";
