@@ -19,7 +19,7 @@ import * as LbHex from "./Hex.js";
 /**
  * {@link PlutusData} is a generic "data" type.
  *
- * @see {@link https://github.com/input-output-hk/plutus/blob/1.16.0.0/plutus-core/plutus-core/src/PlutusCore/Data.hs#L33-L48 | `Data`}
+ * @see {@link https://github.com/input-output-hk/plutus/blob/1.16.0.0/plutus-core/plutus-core/src/PlutusCore/Data.hs#L33-L48 }
  */
 export type PlutusData =
   | { name: "Constr"; fields: [Integer, List<PlutusData>] }

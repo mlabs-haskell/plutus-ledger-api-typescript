@@ -1,15 +1,15 @@
 // Tests for the instances for `TxInInfo`
-import * as LbAssocMap from "../Lib/AssocMap.js";
-import * as V1 from "../Lib/V1.js";
-import * as V2 from "../Lib/V2.js";
+import * as LbAssocMap from "../../Lib/AssocMap.js";
+import * as V1 from "../../Lib/V1.js";
+import * as V2 from "../../Lib/V2.js";
 import * as Prelude from "prelude";
 
 import { describe, it } from "node:test";
 
-import * as TestUtils from "./TestUtils.js";
+import * as TestUtils from "../TestUtils.js";
 import fc from "fast-check";
 
-import * as TestTxOutRef from "./TxOutRefInstances-test.js";
+import * as TestTxOutRef from "../V1/TxOutRefInstances-test.js";
 import * as TestTxOut from "./TxOutInstances-test.js";
 
 export function fcTxInInfo(): fc.Arbitrary<V2.TxInInfo> {

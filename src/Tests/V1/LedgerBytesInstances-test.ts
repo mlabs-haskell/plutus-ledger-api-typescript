@@ -1,9 +1,9 @@
 // Tests for the instances for `LedgerBytes`
-import * as V1 from "../Lib/V1.js";
+import * as V1 from "../../Lib/V1.js";
 
 import { describe, it } from "node:test";
 
-import * as TestUtils from "./TestUtils.js";
+import * as TestUtils from "../TestUtils.js";
 import fc from "fast-check";
 
 describe("LedgerBytes tests", () => {

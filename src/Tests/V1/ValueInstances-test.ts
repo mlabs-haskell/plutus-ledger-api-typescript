@@ -1,12 +1,12 @@
 // Tests for the instances for various types in the `V1/Value.js` file
-import * as V1 from "../Lib/V1.js";
-import * as LbAssocMap from "../Lib/AssocMap.js";
+import * as V1 from "../../Lib/V1.js";
+import * as LbAssocMap from "../../Lib/AssocMap.js";
 import * as Prelude from "prelude";
 
 import { describe, it } from "node:test";
 
-import * as TestUtils from "./TestUtils.js";
-import * as TestAssocMap from "./AssocMap-test.js";
+import * as TestUtils from "../TestUtils.js";
+import * as TestAssocMap from "../AssocMap-test.js";
 import fc from "fast-check";
 
 // `currencySymbol1` is distinct from `currencySymbol2`

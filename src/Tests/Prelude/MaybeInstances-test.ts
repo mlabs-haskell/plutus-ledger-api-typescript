@@ -1,10 +1,10 @@
 // // Tests for the instances for `Maybe`
 import * as Prelude from "prelude";
-import * as PreludeInstances from "../Lib/Prelude/Instances.js";
+import * as PreludeInstances from "../../Lib/Prelude/Instances.js";
 
 import { describe, it } from "node:test";
 
-import * as TestUtils from "./TestUtils.js";
+import * as TestUtils from "../TestUtils.js";
 import fc from "fast-check";
 
 export function fcMaybe<A>(

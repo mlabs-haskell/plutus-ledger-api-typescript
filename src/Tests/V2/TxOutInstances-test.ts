@@ -1,19 +1,19 @@
 // Tests for the instances for `TxOut`
-import * as LbAssocMap from "../Lib/AssocMap.js";
-import * as V1 from "../Lib/V1.js";
-import * as V2 from "../Lib/V2.js";
+import * as LbAssocMap from "../../Lib/AssocMap.js";
+import * as V1 from "../../Lib/V1.js";
+import * as V2 from "../../Lib/V2.js";
 import * as Prelude from "prelude";
 
 import { describe, it } from "node:test";
 
-import * as TestUtils from "./TestUtils.js";
+import * as TestUtils from "../TestUtils.js";
 import fc from "fast-check";
 
-import * as TestAddress from "./AddressInstances-test.js";
-import * as TestValue from "./ValueInstances-test.js";
+import * as TestAddress from "../V1/AddressInstances-test.js";
+import * as TestValue from "../V1/ValueInstances-test.js";
 import * as TestOutputDatum from "./OutputDatumInstances-test.js";
-import * as TestMaybe from "./MaybeInstances-test.js";
-import * as TestScriptHash from "./ScriptHashInstances-test.js";
+import * as TestMaybe from "../Prelude/MaybeInstances-test.js";
+import * as TestScriptHash from "../V1/ScriptHashInstances-test.js";
 
 export function fcTxOut(): fc.Arbitrary<V2.TxOut> {
   return fc.record({

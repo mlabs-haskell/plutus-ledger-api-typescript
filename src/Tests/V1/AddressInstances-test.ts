@@ -1,15 +1,15 @@
 // Tests for the instances for `Address`
-import * as V1 from "../Lib/V1.js";
+import * as V1 from "../../Lib/V1.js";
 import * as Prelude from "prelude";
 
 import { describe, it } from "node:test";
 
-import * as TestUtils from "./TestUtils.js";
+import * as TestUtils from "../TestUtils.js";
 import fc from "fast-check";
 
 import * as TestCredential from "./CredentialInstances-test.js";
 import * as TestStakingCredential from "./StakingCredentialInstances-test.js";
-import * as TestMaybe from "./MaybeInstances-test.js";
+import * as TestMaybe from "../Prelude/MaybeInstances-test.js";
 
 const pubKeyHash1 = Prelude.fromJust(
   V1.pubKeyHashFromBytes(
