@@ -5,11 +5,11 @@
     pre-commit-hooks-nix.url = "github:cachix/pre-commit-hooks.nix";
     pre-commit-hooks-nix.inputs.nixpkgs.follows = "nixpkgs";
     hci-effects.url = "github:hercules-ci/hercules-ci-effects";
-    flake-lang.url = "github:mlabs-haskell/flake-lang.nix";
+    flake-lang.url = "github:mlabs-haskell/flake-lang.nix?ref=jared/ts-tgz-to-folder";
 
     prelude-typescript =
       {
-        url = "github:mlabs-haskell/prelude-typescript";
+        url = "github:mlabs-haskell/prelude-typescript?ref=jared/update-flake-lang";
         inputs = {
           nixpkgs.follows = "nixpkgs";
           flake-lang.follows = "flake-lang";
@@ -31,7 +31,7 @@
               {
                 name = "plutus-ledger-api";
                 src = ./.;
-                npmExtraDependencies = [ inputs'.prelude-typescript.packages.tgz ];
+                npmExtraDependencies = [ inputs'.prelude-typescript.packages.lib ];
                 devShellHook =
                   ''
                     ${config.devShells.dev-pre-commit.shellHook}
@@ -42,6 +42,9 @@
             packages = {
               # Tarball of the package
               tgz = tsFlake.packages.plutus-ledger-api-typescript-tgz;
+
+              # Unpacked tarball of the package
+              lib = tsFlake.packages.plutus-ledger-api-typescript-lib;
 
               # Documentation
               docs = tsFlake.packages.plutus-ledger-api-typescript.overrideAttrs (_self: (_super: {

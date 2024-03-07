@@ -1843,15 +1843,16 @@
         "rust-overlay": "rust-overlay"
       },
       "locked": {
-        "lastModified": 1708954293,
-        "narHash": "sha256-nTK+QP3j6Q1ZDUrUXcEW91jh7+1nSPsibZNKqY/bkqY=",
+        "lastModified": 1709792119,
+        "narHash": "sha256-7L5d7l3dV5TfWATnbgzmSWc3JqtBfeyUSLLNepx/45g=",
         "owner": "mlabs-haskell",
         "repo": "flake-lang.nix",
-        "rev": "c03a156798238e67823fed7e8f5e7539ed8bceb7",
+        "rev": "986f4eda475bf29e7eb969e7a1fa933e1d3da99b",
         "type": "github"
       },
       "original": {
         "owner": "mlabs-haskell",
+        "ref": "jared/ts-tgz-to-folder",
         "repo": "flake-lang.nix",
         "type": "github"
       }
@@ -8094,15 +8095,16 @@
         "pre-commit-hooks-nix": "pre-commit-hooks-nix_5"
       },
       "locked": {
-        "lastModified": 1709168728,
-        "narHash": "sha256-PZKW7VchYV+J5Z0+VAjN8469M4++UvWYQmCPVzYcr08=",
+        "lastModified": 1709792607,
+        "narHash": "sha256-9xG4Z5tckSN4UEL8735x+wIsaYfRVoqJiXkOB2MFGu0=",
         "owner": "mlabs-haskell",
         "repo": "prelude-typescript",
-        "rev": "ff809e8427f7528d4e22a0e23ed031c93199102e",
+        "rev": "9a6071c3e07e171b96d5984c768bb7aba18a7f56",
         "type": "github"
       },
       "original": {
         "owner": "mlabs-haskell",
+        "ref": "jared/update-flake-lang",
         "repo": "prelude-typescript",
         "type": "github"
       }
