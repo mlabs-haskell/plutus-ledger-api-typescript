@@ -8095,11 +8095,11 @@
         "pre-commit-hooks-nix": "pre-commit-hooks-nix_5"
       },
       "locked": {
-        "lastModified": 1709792607,
-        "narHash": "sha256-9xG4Z5tckSN4UEL8735x+wIsaYfRVoqJiXkOB2MFGu0=",
+        "lastModified": 1709797052,
+        "narHash": "sha256-qqD+zG+2r1PN6iq5Rm1i6uDhCZ3clRIKg+OILs8MgrU=",
         "owner": "mlabs-haskell",
         "repo": "prelude-typescript",
-        "rev": "9a6071c3e07e171b96d5984c768bb7aba18a7f56",
+        "rev": "bee89d2150b6fc507657fd7c7f26a78a7bd6c137",
         "type": "github"
       },
       "original": {
