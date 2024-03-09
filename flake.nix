@@ -5,11 +5,11 @@
     pre-commit-hooks-nix.url = "github:cachix/pre-commit-hooks.nix";
     pre-commit-hooks-nix.inputs.nixpkgs.follows = "nixpkgs";
     hci-effects.url = "github:hercules-ci/hercules-ci-effects";
-    flake-lang.url = "github:mlabs-haskell/flake-lang.nix?ref=jared/ts-tgz-to-folder";
+    flake-lang.url = "github:mlabs-haskell/flake-lang.nix";
 
     prelude-typescript =
       {
-        url = "github:mlabs-haskell/prelude-typescript?ref=jared/update-flake-lang";
+        url = "github:mlabs-haskell/prelude-typescript";
         inputs = {
           nixpkgs.follows = "nixpkgs";
           flake-lang.follows = "flake-lang";
