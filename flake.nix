@@ -31,7 +31,7 @@
               {
                 name = "plutus-ledger-api";
                 src = ./.;
-                npmExtraDependencies = [ inputs'.prelude-typescript.packages.tgz ];
+                npmExtraDependencies = [ inputs'.prelude-typescript.packages.lib ];
                 devShellHook =
                   ''
                     ${config.devShells.dev-pre-commit.shellHook}
@@ -42,6 +42,9 @@
             packages = {
               # Tarball of the package
               tgz = tsFlake.packages.plutus-ledger-api-typescript-tgz;
+
+              # Unpacked tarball of the package
+              lib = tsFlake.packages.plutus-ledger-api-typescript-lib;
 
               # Documentation
               docs = tsFlake.packages.plutus-ledger-api-typescript.overrideAttrs (_self: (_super: {

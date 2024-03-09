@@ -6,10 +6,10 @@
   "exports": {
     "./Hex.js": "./dist/Lib/Hex.js",
     "./Prelude/Instances.js": "./dist/Lib/Prelude/Instances.js",
-    "./V1.js": "./dist/Lib/PlutusLedgerApi/V1.js",
-    "./V2.js": "./dist/Lib/PlutusLedgerApi/V2.js",
-    "./PlutusData.js": "./dist/Lib/PlutusLedgerApi/PlutusData.js",
-    "./AssocMap.js": "./dist/Lib/PlutusLedgerApi/AssocMap.js",
+    "./V1.js": "./dist/Lib/V1.js",
+    "./V2.js": "./dist/Lib/V2.js",
+    "./PlutusData.js": "./dist/Lib/PlutusData.js",
+    "./AssocMap.js": "./dist/Lib/AssocMap.js",
     "./package.json": "./package.json"
   },
   "scripts": {
@@ -20,7 +20,7 @@
   "author": "Jared Pon",
   "license": "ISC",
   "files": [
-    "./dist/PlutusLedgerApi/**/*",
+    "./dist/Lib/**/*",
     "./.extra-dependencies/**/*"
   ],
   "devDependencies": {
@@ -30,6 +30,6 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
-    "prelude": "file:.extra-dependencies/prelude-1.0.1.tgz"
+    "prelude": "file:.extra-dependencies/prelude"
   }
 }
