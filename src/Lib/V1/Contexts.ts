@@ -598,7 +598,7 @@ export const isPlutusDataScriptPurpose: IsPlutusData<ScriptPurpose> = {
 /**
  * The context that the currently-executing script can access.
  *
- * @see {@link https://github.com/IntersectMBO/plutus/blob/1.16.0.0/plutus-ledger-api/src/PlutusLedgerApi/V2/Contexts.hs#L112-L115}
+ * @see {@link https://github.com/IntersectMBO/plutus/blob/1.16.0.0/plutus-ledger-api/src/PlutusLedgerApi/V1/Contexts.hs#L130-L134 }
  */
 export type ScriptContext = {
   scriptContextTxInfo: TxInfo;
