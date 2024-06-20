@@ -428,3 +428,114 @@ export const isPlutusDataTxInfo: IsPlutusData<TxInfo> = {
     throw new IsPlutusDataError("Unexpected data");
   },
 };
+
+/**
+ * The context that the currently-executing script can access.
+ *
+ * @see {@link https://github.com/IntersectMBO/plutus/blob/1.16.0.0/plutus-ledger-api/src/PlutusLedgerApi/V2/Contexts.hs#L112-L115}
+ */
+export type ScriptContext = {
+  scriptContextTxInfo: TxInfo;
+  scriptContextPurpose: ScriptPurpose;
+};
+
+/**
+ * {@link Eq} instance for {@link ScriptContext}
+ */
+export const eqScriptContext: Eq<ScriptContext> = {
+  eq: (l, r) => {
+    return (
+      eqTxInfo.eq(l.scriptContextTxInfo, r.scriptContextTxInfo),
+        V1Context.eqScriptPurpose.eq(
+          l.scriptContextPurpose,
+          r.scriptContextPurpose,
+        )
+    );
+  },
+  neq: (l, r) => {
+    return (
+      eqTxInfo.neq(l.scriptContextTxInfo, r.scriptContextTxInfo),
+        V1Context.eqScriptPurpose.neq(
+          l.scriptContextPurpose,
+          r.scriptContextPurpose,
+        )
+    );
+  },
+};
+
+/**
+ * {@link Json} instance for {@link ScriptContext}
+ */
+export const jsonScriptContext: Json<ScriptContext> = {
+  toJson: (scriptContext) => {
+    return {
+      tx_info: jsonTxInfo.toJson(scriptContext.scriptContextTxInfo),
+      purpose: V1Context.jsonScriptPurpose.toJson(
+        scriptContext.scriptContextPurpose,
+      ),
+    };
+  },
+  fromJson: (value) => {
+    const scriptContextTxInfo = Prelude.caseFieldWithValue(
+      "tx_info",
+      jsonTxInfo.fromJson,
+      value,
+    );
+    const scriptContextPurpose = Prelude.caseFieldWithValue(
+      "purpose",
+      V1Context.jsonScriptPurpose.fromJson,
+      value,
+    );
+
+    return {
+      scriptContextTxInfo,
+      scriptContextPurpose,
+    };
+  },
+};
+
+/**
+ * {@link IsPlutusData} instance for {@link ScriptContext}
+ */
+export const isPlutusDataScriptContext: IsPlutusData<ScriptContext> = {
+  toData: (scriptContext) => {
+    return {
+      fields: [
+        0n,
+        [
+          isPlutusDataTxInfo.toData(scriptContext.scriptContextTxInfo),
+          V1Context.isPlutusDataScriptPurpose.toData(
+            scriptContext.scriptContextPurpose,
+          ),
+        ],
+      ],
+      name: "Constr",
+    };
+  },
+
+  fromData: (plutusData) => {
+    switch (plutusData.name) {
+      case "Constr": {
+        if (plutusData.fields[0] === 0n && plutusData.fields[1].length === 2) {
+          const scriptContextTxInfo = isPlutusDataTxInfo.fromData(
+            plutusData.fields[1][0]!,
+          );
+          const scriptContextPurpose = V1Context.isPlutusDataScriptPurpose
+            .fromData(
+              plutusData.fields[1][1]!,
+            );
+
+          return {
+            scriptContextTxInfo,
+            scriptContextPurpose,
+          };
+        } else {
+          break;
+        }
+      }
+      default:
+        break;
+    }
+    throw new IsPlutusDataError("Unexpected data");
+  },
+};
