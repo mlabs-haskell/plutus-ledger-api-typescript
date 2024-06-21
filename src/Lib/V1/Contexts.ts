@@ -195,25 +195,25 @@ export const eqTxInfo: Eq<TxInfo> = {
 export const jsonTxInfo: Json<TxInfo> = {
   toJson: (txInfo) => {
     return {
-      inputs: Prelude.jsonList(jsonTxInInfo).toJson(txInfo.txInfoInputs),
-      outputs: Prelude.jsonList(LbTx.jsonTxOut).toJson(txInfo.txInfoOutputs),
-      fee: LbValue.jsonValue.toJson(txInfo.txInfoFee),
-      mint: LbValue.jsonValue.toJson(txInfo.txInfoMint),
       d_cert: Prelude.jsonList(LbDCert.jsonDCert).toJson(txInfo.txInfoDCert),
+      datums: Prelude.jsonList(
+        Prelude.jsonPair(LbScripts.jsonDatumHash, LbScripts.jsonDatum),
+      ).toJson(txInfo.txInfoData),
+      fee: LbValue.jsonValue.toJson(txInfo.txInfoFee),
+      id: LbTx.jsonTxId.toJson(txInfo.txInfoId),
+      inputs: Prelude.jsonList(jsonTxInInfo).toJson(txInfo.txInfoInputs),
+      mint: LbValue.jsonValue.toJson(txInfo.txInfoMint),
+      outputs: Prelude.jsonList(LbTx.jsonTxOut).toJson(txInfo.txInfoOutputs),
+      signatories: Prelude.jsonList(LbCrypto.jsonPubKeyHash).toJson(
+        txInfo.txInfoSignatories,
+      ),
+      valid_range: LbTime.jsonPOSIXTimeRange.toJson(txInfo.txInfoValidRange),
       wdrl: Prelude.jsonList(
         Prelude.jsonPair(
           LbCredential.jsonStakingCredential,
           Prelude.jsonInteger,
         ),
       ).toJson(txInfo.txInfoWdrl),
-      valid_range: LbTime.jsonPOSIXTimeRange.toJson(txInfo.txInfoValidRange),
-      signatories: Prelude.jsonList(LbCrypto.jsonPubKeyHash).toJson(
-        txInfo.txInfoSignatories,
-      ),
-      datums: Prelude.jsonList(
-        Prelude.jsonPair(LbScripts.jsonDatumHash, LbScripts.jsonDatum),
-      ).toJson(txInfo.txInfoData),
-      id: LbTx.jsonTxId.toJson(txInfo.txInfoId),
     };
   },
   fromJson: (value) => {
@@ -473,8 +473,8 @@ export const jsonScriptPurpose: Json<ScriptPurpose> = {
             throw new JsonError("Expected one field");
           }
           return {
-            name: "Minting",
             fields: LbValue.jsonCurrencySymbol.fromJson(ctorFields[0]!),
+            name: "Minting",
           };
         },
         Spending: (ctorFields) => {
@@ -482,8 +482,8 @@ export const jsonScriptPurpose: Json<ScriptPurpose> = {
             throw new JsonError("Expected one field");
           }
           return {
-            name: "Spending",
             fields: LbTx.jsonTxOutRef.fromJson(ctorFields[0]!),
+            name: "Spending",
           };
         },
         Rewarding: (ctorFields) => {
@@ -491,8 +491,8 @@ export const jsonScriptPurpose: Json<ScriptPurpose> = {
             throw new JsonError("Expected one field");
           }
           return {
-            name: "Rewarding",
             fields: LbCredential.jsonStakingCredential.fromJson(ctorFields[0]!),
+            name: "Rewarding",
           };
         },
         Certifying: (ctorFields) => {
@@ -500,8 +500,8 @@ export const jsonScriptPurpose: Json<ScriptPurpose> = {
             throw new JsonError("Expected one field");
           }
           return {
-            name: "Certifying",
             fields: LbDCert.jsonDCert.fromJson(ctorFields[0]!),
+            name: "Certifying",
           };
         },
       },
@@ -567,25 +567,25 @@ export const isPlutusDataScriptPurpose: IsPlutusData<ScriptPurpose> = {
           switch (plutusData.fields[0]) {
             case 0n:
               return {
-                name: "Minting",
                 fields: LbValue.isPlutusDataCurrencySymbol.fromData(field),
+                name: "Minting",
               };
             case 1n:
               return {
-                name: "Spending",
                 fields: LbTx.isPlutusDataTxOutRef.fromData(field),
+                name: "Spending",
               };
             case 2n:
               return {
-                name: "Rewarding",
                 fields: LbCredential.isPlutusDataStakingCredential.fromData(
                   field,
                 ),
+                name: "Rewarding",
               };
             case 3n:
               return {
-                name: "Certifying",
                 fields: LbDCert.isPlutusDataDCert.fromData(field),
+                name: "Certifying",
               };
           }
         }

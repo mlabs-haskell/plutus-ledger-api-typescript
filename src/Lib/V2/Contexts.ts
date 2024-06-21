@@ -131,6 +131,7 @@ export const isPlutusDataTxInInfo: IsPlutusData<TxInInfo> = {
  */
 export type TxInfo = {
   txInfoInputs: TxInInfo[];
+  txInfoReferenceInputs: TxInInfo[];
   txInfoOutputs: TxOut[];
   txInfoFee: Value;
   txInfoMint: Value;
@@ -150,6 +151,10 @@ export const eqTxInfo: Eq<TxInfo> = {
   eq: (l, r) => {
     return (
       Prelude.eqList(eqTxInInfo).eq(l.txInfoInputs, r.txInfoInputs) &&
+      Prelude.eqList(eqTxInInfo).eq(
+        l.txInfoReferenceInputs,
+        r.txInfoReferenceInputs,
+      ) &&
       Prelude.eqList(V2Tx.eqTxOut).eq(l.txInfoOutputs, r.txInfoOutputs) &&
       V1Value.eqValue.eq(l.txInfoFee, r.txInfoFee) &&
       V1Value.eqValue.eq(l.txInfoMint, r.txInfoMint) &&
@@ -174,6 +179,10 @@ export const eqTxInfo: Eq<TxInfo> = {
   neq: (l, r) => {
     return (
       Prelude.eqList(eqTxInInfo).neq(l.txInfoInputs, r.txInfoInputs) ||
+      Prelude.eqList(eqTxInInfo).neq(
+        l.txInfoReferenceInputs,
+        r.txInfoReferenceInputs,
+      ) ||
       Prelude.eqList(V2Tx.eqTxOut).neq(l.txInfoOutputs, r.txInfoOutputs) ||
       V1Value.eqValue.neq(l.txInfoFee, r.txInfoFee) ||
       V1Value.eqValue.neq(l.txInfoMint, r.txInfoMint) ||
@@ -203,33 +212,41 @@ export const eqTxInfo: Eq<TxInfo> = {
 export const jsonTxInfo: Json<TxInfo> = {
   toJson: (txInfo) => {
     return {
-      inputs: Prelude.jsonList(jsonTxInInfo).toJson(txInfo.txInfoInputs),
-      outputs: Prelude.jsonList(V2Tx.jsonTxOut).toJson(txInfo.txInfoOutputs),
-      fee: V1Value.jsonValue.toJson(txInfo.txInfoFee),
-      mint: V1Value.jsonValue.toJson(txInfo.txInfoMint),
       d_cert: Prelude.jsonList(V1DCert.jsonDCert).toJson(txInfo.txInfoDCert),
+      datums: Prelude.jsonList(
+        Prelude.jsonPair(V1Scripts.jsonDatumHash, V1Scripts.jsonDatum),
+      ).toJson(txInfo.txInfoData),
+      fee: V1Value.jsonValue.toJson(txInfo.txInfoFee),
+      id: V1Tx.jsonTxId.toJson(txInfo.txInfoId),
+      inputs: Prelude.jsonList(jsonTxInInfo).toJson(txInfo.txInfoInputs),
+      mint: V1Value.jsonValue.toJson(txInfo.txInfoMint),
+      outputs: Prelude.jsonList(V2Tx.jsonTxOut).toJson(txInfo.txInfoOutputs),
+      redeemers: Prelude.jsonList(
+        Prelude.jsonPair(V1Context.jsonScriptPurpose, V1Scripts.jsonRedeemer),
+      ).toJson(txInfo.txInfoRedeemers),
+      reference_inputs: Prelude.jsonList(jsonTxInInfo).toJson(
+        txInfo.txInfoReferenceInputs,
+      ),
+      signatories: Prelude.jsonList(V1Crypto.jsonPubKeyHash).toJson(
+        txInfo.txInfoSignatories,
+      ),
+      valid_range: V1Time.jsonPOSIXTimeRange.toJson(txInfo.txInfoValidRange),
       wdrl: Prelude.jsonList(
         Prelude.jsonPair(
           V1Credential.jsonStakingCredential,
           Prelude.jsonInteger,
         ),
       ).toJson(txInfo.txInfoWdrl),
-      valid_range: V1Time.jsonPOSIXTimeRange.toJson(txInfo.txInfoValidRange),
-      signatories: Prelude.jsonList(V1Crypto.jsonPubKeyHash).toJson(
-        txInfo.txInfoSignatories,
-      ),
-      redeemers: Prelude.jsonList(
-        Prelude.jsonPair(V1Context.jsonScriptPurpose, V1Scripts.jsonRedeemer),
-      ).toJson(txInfo.txInfoRedeemers),
-      datums: Prelude.jsonList(
-        Prelude.jsonPair(V1Scripts.jsonDatumHash, V1Scripts.jsonDatum),
-      ).toJson(txInfo.txInfoData),
-      id: V1Tx.jsonTxId.toJson(txInfo.txInfoId),
     };
   },
   fromJson: (value) => {
     const txInfoInputs = Prelude.caseFieldWithValue(
       "inputs",
+      Prelude.jsonList(jsonTxInInfo).fromJson,
+      value,
+    );
+    const txInfoReferenceInputs = Prelude.caseFieldWithValue(
+      "reference_inputs",
       Prelude.jsonList(jsonTxInInfo).fromJson,
       value,
     );
@@ -295,6 +312,7 @@ export const jsonTxInfo: Json<TxInfo> = {
 
     return {
       txInfoInputs,
+      txInfoReferenceInputs,
       txInfoOutputs,
       txInfoFee,
       txInfoMint,
@@ -320,6 +338,9 @@ export const isPlutusDataTxInfo: IsPlutusData<TxInfo> = {
         [
           PreludeInstances.isPlutusDataList(isPlutusDataTxInInfo).toData(
             txInfo.txInfoInputs,
+          ),
+          PreludeInstances.isPlutusDataList(isPlutusDataTxInInfo).toData(
+            txInfo.txInfoReferenceInputs,
           ),
           PreludeInstances.isPlutusDataList(V2Tx.isPlutusDataTxOut).toData(
             txInfo.txInfoOutputs,
@@ -361,52 +382,56 @@ export const isPlutusDataTxInfo: IsPlutusData<TxInfo> = {
   fromData: (plutusData) => {
     switch (plutusData.name) {
       case "Constr": {
-        if (plutusData.fields[0] === 0n && plutusData.fields[1].length === 11) {
+        if (plutusData.fields[0] === 0n && plutusData.fields[1].length === 12) {
           const txInfoInputs = PreludeInstances.isPlutusDataList(
             isPlutusDataTxInInfo,
           ).fromData(plutusData.fields[1][0]!);
+          const txInfoReferenceInputs = PreludeInstances.isPlutusDataList(
+            isPlutusDataTxInInfo,
+          ).fromData(plutusData.fields[1][1]!);
           const txInfoOutputs = PreludeInstances.isPlutusDataList(
             V2Tx.isPlutusDataTxOut,
-          ).fromData(plutusData.fields[1][1]!);
+          ).fromData(plutusData.fields[1][2]!);
           const txInfoFee = V1Value.isPlutusDataValue.fromData(
-            plutusData.fields[1][2]!,
+            plutusData.fields[1][3]!,
           );
           const txInfoMint = V1Value.isPlutusDataValue.fromData(
-            plutusData.fields[1][3]!,
+            plutusData.fields[1][4]!,
           );
           const txInfoDCert = PreludeInstances.isPlutusDataList(
             V1DCert.isPlutusDataDCert,
-          ).fromData(plutusData.fields[1][4]!);
+          ).fromData(plutusData.fields[1][5]!);
           const txInfoWdrl = PreludeInstances.isPlutusDataList(
             PreludeInstances.isPlutusDataPairWithTag(
               V1Credential.isPlutusDataStakingCredential,
               PreludeInstances.isPlutusDataInteger,
             ),
-          ).fromData(plutusData.fields[1][5]!);
+          ).fromData(plutusData.fields[1][6]!);
           const txInfoValidRange = V1Time.isPlutusDataPOSIXTimeRange.fromData(
-            plutusData.fields[1][6]!,
+            plutusData.fields[1][7]!,
           );
           const txInfoSignatories = PreludeInstances.isPlutusDataList(
             V1Crypto.isPlutusDataPubKeyHash,
-          ).fromData(plutusData.fields[1][7]!);
+          ).fromData(plutusData.fields[1][8]!);
           const txInfoRedeemers = PreludeInstances.isPlutusDataList(
             PreludeInstances.isPlutusDataPairWithTag(
               V1Context.isPlutusDataScriptPurpose,
               V1Scripts.isPlutusDataRedeemer,
             ),
-          ).fromData(plutusData.fields[1][8]!);
+          ).fromData(plutusData.fields[1][9]!);
           const txInfoData = PreludeInstances.isPlutusDataList(
             PreludeInstances.isPlutusDataPairWithTag(
               V1Scripts.isPlutusDataDatumHash,
               V1Scripts.isPlutusDataDatum,
             ),
-          ).fromData(plutusData.fields[1][9]!);
+          ).fromData(plutusData.fields[1][10]!);
           const txInfoId = V1Tx.isPlutusDataTxId.fromData(
-            plutusData.fields[1][10]!,
+            plutusData.fields[1][11]!,
           );
 
           return {
             txInfoInputs,
+            txInfoReferenceInputs,
             txInfoOutputs,
             txInfoFee,
             txInfoMint,
@@ -469,10 +494,10 @@ export const eqScriptContext: Eq<ScriptContext> = {
 export const jsonScriptContext: Json<ScriptContext> = {
   toJson: (scriptContext) => {
     return {
-      tx_info: jsonTxInfo.toJson(scriptContext.scriptContextTxInfo),
       purpose: V1Context.jsonScriptPurpose.toJson(
         scriptContext.scriptContextPurpose,
       ),
+      tx_info: jsonTxInfo.toJson(scriptContext.scriptContextTxInfo),
     };
   },
   fromJson: (value) => {
