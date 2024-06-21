@@ -34,6 +34,10 @@ import * as V1Scripts from "../V1/Scripts.js";
 
 import type { ScriptPurpose } from "../V1/Contexts.js";
 import * as V1Context from "../V1/Contexts.js";
+
+import type { Map } from "../AssocMap.js";
+import * as AssocMap from "../AssocMap.js";
+
 /**
  * {@link TxInInfo} is an input of a pending transaction.
  *
@@ -136,11 +140,11 @@ export type TxInfo = {
   txInfoFee: Value;
   txInfoMint: Value;
   txInfoDCert: DCert[];
-  txInfoWdrl: [StakingCredential, Integer][];
+  txInfoWdrl: Map<StakingCredential, Integer>;
   txInfoValidRange: POSIXTimeRange;
   txInfoSignatories: PubKeyHash[];
-  txInfoRedeemers: [ScriptPurpose, Redeemer][];
-  txInfoData: [DatumHash, Datum][];
+  txInfoRedeemers: Map<ScriptPurpose, Redeemer>;
+  txInfoData: Map<DatumHash, Datum>;
   txInfoId: TxId;
 };
 
@@ -159,20 +163,23 @@ export const eqTxInfo: Eq<TxInfo> = {
       V1Value.eqValue.eq(l.txInfoFee, r.txInfoFee) &&
       V1Value.eqValue.eq(l.txInfoMint, r.txInfoMint) &&
       Prelude.eqList(V1DCert.eqDCert).eq(l.txInfoDCert, r.txInfoDCert) &&
-      Prelude.eqList(
-        Prelude.eqPair(V1Credential.eqStakingCredential, Prelude.eqInteger),
-      ).eq(l.txInfoWdrl, r.txInfoWdrl) &&
+      AssocMap.eqMap(V1Credential.eqStakingCredential, Prelude.eqInteger).eq(
+        l.txInfoWdrl,
+        r.txInfoWdrl,
+      ) &&
       V1Time.eqPOSIXTimeRange.eq(l.txInfoValidRange, r.txInfoValidRange) &&
       Prelude.eqList(V1Crypto.eqPubKeyHash).eq(
         l.txInfoSignatories,
         r.txInfoSignatories,
       ) &&
-      Prelude.eqList(
-        Prelude.eqPair(V1Context.eqScriptPurpose, V1Scripts.eqRedeemer),
-      ).eq(l.txInfoRedeemers, r.txInfoRedeemers) &&
-      Prelude.eqList(
-        Prelude.eqPair(V1Scripts.eqDatumHash, V1Scripts.eqDatum),
-      ).eq(l.txInfoData, r.txInfoData) &&
+      AssocMap.eqMap(V1Context.eqScriptPurpose, V1Scripts.eqRedeemer).eq(
+        l.txInfoRedeemers,
+        r.txInfoRedeemers,
+      ) &&
+      AssocMap.eqMap(V1Scripts.eqDatumHash, V1Scripts.eqDatum).eq(
+        l.txInfoData,
+        r.txInfoData,
+      ) &&
       V1Tx.eqTxId.eq(l.txInfoId, r.txInfoId)
     );
   },
@@ -187,20 +194,23 @@ export const eqTxInfo: Eq<TxInfo> = {
       V1Value.eqValue.neq(l.txInfoFee, r.txInfoFee) ||
       V1Value.eqValue.neq(l.txInfoMint, r.txInfoMint) ||
       Prelude.eqList(V1DCert.eqDCert).neq(l.txInfoDCert, r.txInfoDCert) ||
-      Prelude.eqList(
-        Prelude.eqPair(V1Credential.eqStakingCredential, Prelude.eqInteger),
-      ).neq(l.txInfoWdrl, r.txInfoWdrl) ||
+      AssocMap.eqMap(V1Credential.eqStakingCredential, Prelude.eqInteger).neq(
+        l.txInfoWdrl,
+        r.txInfoWdrl,
+      ) ||
       V1Time.eqPOSIXTimeRange.neq(l.txInfoValidRange, r.txInfoValidRange) ||
       Prelude.eqList(V1Crypto.eqPubKeyHash).neq(
         l.txInfoSignatories,
         r.txInfoSignatories,
       ) ||
-      Prelude.eqList(
-        Prelude.eqPair(V1Context.eqScriptPurpose, V1Scripts.eqRedeemer),
-      ).neq(l.txInfoRedeemers, r.txInfoRedeemers) ||
-      Prelude.eqList(
-        Prelude.eqPair(V1Scripts.eqDatumHash, V1Scripts.eqDatum),
-      ).neq(l.txInfoData, r.txInfoData) ||
+      AssocMap.eqMap(V1Context.eqScriptPurpose, V1Scripts.eqRedeemer).neq(
+        l.txInfoRedeemers,
+        r.txInfoRedeemers,
+      ) ||
+      AssocMap.eqMap(V1Scripts.eqDatumHash, V1Scripts.eqDatum).neq(
+        l.txInfoData,
+        r.txInfoData,
+      ) ||
       V1Tx.eqTxId.neq(l.txInfoId, r.txInfoId)
     );
   },
@@ -213,16 +223,18 @@ export const jsonTxInfo: Json<TxInfo> = {
   toJson: (txInfo) => {
     return {
       d_cert: Prelude.jsonList(V1DCert.jsonDCert).toJson(txInfo.txInfoDCert),
-      datums: Prelude.jsonList(
-        Prelude.jsonPair(V1Scripts.jsonDatumHash, V1Scripts.jsonDatum),
+      datums: AssocMap.jsonMap(
+        V1Scripts.jsonDatumHash,
+        V1Scripts.jsonDatum,
       ).toJson(txInfo.txInfoData),
       fee: V1Value.jsonValue.toJson(txInfo.txInfoFee),
       id: V1Tx.jsonTxId.toJson(txInfo.txInfoId),
       inputs: Prelude.jsonList(jsonTxInInfo).toJson(txInfo.txInfoInputs),
       mint: V1Value.jsonValue.toJson(txInfo.txInfoMint),
       outputs: Prelude.jsonList(V2Tx.jsonTxOut).toJson(txInfo.txInfoOutputs),
-      redeemers: Prelude.jsonList(
-        Prelude.jsonPair(V1Context.jsonScriptPurpose, V1Scripts.jsonRedeemer),
+      redeemers: AssocMap.jsonMap(
+        V1Context.jsonScriptPurpose,
+        V1Scripts.jsonRedeemer,
       ).toJson(txInfo.txInfoRedeemers),
       reference_inputs: Prelude.jsonList(jsonTxInInfo).toJson(
         txInfo.txInfoReferenceInputs,
@@ -231,11 +243,9 @@ export const jsonTxInfo: Json<TxInfo> = {
         txInfo.txInfoSignatories,
       ),
       valid_range: V1Time.jsonPOSIXTimeRange.toJson(txInfo.txInfoValidRange),
-      wdrl: Prelude.jsonList(
-        Prelude.jsonPair(
-          V1Credential.jsonStakingCredential,
-          Prelude.jsonInteger,
-        ),
+      wdrl: AssocMap.jsonMap(
+        V1Credential.jsonStakingCredential,
+        Prelude.jsonInteger,
       ).toJson(txInfo.txInfoWdrl),
     };
   },
@@ -272,12 +282,8 @@ export const jsonTxInfo: Json<TxInfo> = {
     );
     const txInfoWdrl = Prelude.caseFieldWithValue(
       "wdrl",
-      Prelude.jsonList(
-        Prelude.jsonPair(
-          V1Credential.jsonStakingCredential,
-          Prelude.jsonInteger,
-        ),
-      ).fromJson,
+      AssocMap.jsonMap(V1Credential.jsonStakingCredential, Prelude.jsonInteger)
+        .fromJson,
       value,
     );
     const txInfoValidRange = Prelude.caseFieldWithValue(
@@ -292,16 +298,13 @@ export const jsonTxInfo: Json<TxInfo> = {
     );
     const txInfoRedeemers = Prelude.caseFieldWithValue(
       "redeemers",
-      Prelude.jsonList(
-        Prelude.jsonPair(V1Context.jsonScriptPurpose, V1Scripts.jsonRedeemer),
-      ).fromJson,
+      AssocMap.jsonMap(V1Context.jsonScriptPurpose, V1Scripts.jsonRedeemer)
+        .fromJson,
       value,
     );
     const txInfoData = Prelude.caseFieldWithValue(
       "datums",
-      Prelude.jsonList(
-        Prelude.jsonPair(V1Scripts.jsonDatumHash, V1Scripts.jsonDatum),
-      ).fromJson,
+      AssocMap.jsonMap(V1Scripts.jsonDatumHash, V1Scripts.jsonDatum).fromJson,
       value,
     );
     const txInfoId = Prelude.caseFieldWithValue(
@@ -350,27 +353,21 @@ export const isPlutusDataTxInfo: IsPlutusData<TxInfo> = {
           PreludeInstances.isPlutusDataList(V1DCert.isPlutusDataDCert).toData(
             txInfo.txInfoDCert,
           ),
-          PreludeInstances.isPlutusDataList(
-            PreludeInstances.isPlutusDataPairWithTag(
-              V1Credential.isPlutusDataStakingCredential,
-              PreludeInstances.isPlutusDataInteger,
-            ),
+          AssocMap.isPlutusDataMap(
+            V1Credential.isPlutusDataStakingCredential,
+            PreludeInstances.isPlutusDataInteger,
           ).toData(txInfo.txInfoWdrl),
           V1Time.isPlutusDataPOSIXTimeRange.toData(txInfo.txInfoValidRange),
           PreludeInstances.isPlutusDataList(
             V1Crypto.isPlutusDataPubKeyHash,
           ).toData(txInfo.txInfoSignatories),
-          PreludeInstances.isPlutusDataList(
-            PreludeInstances.isPlutusDataPairWithTag(
-              V1Context.isPlutusDataScriptPurpose,
-              V1Scripts.isPlutusDataRedeemer,
-            ),
+          AssocMap.isPlutusDataMap(
+            V1Context.isPlutusDataScriptPurpose,
+            V1Scripts.isPlutusDataRedeemer,
           ).toData(txInfo.txInfoRedeemers),
-          PreludeInstances.isPlutusDataList(
-            PreludeInstances.isPlutusDataPairWithTag(
-              V1Scripts.isPlutusDataDatumHash,
-              V1Scripts.isPlutusDataDatum,
-            ),
+          AssocMap.isPlutusDataMap(
+            V1Scripts.isPlutusDataDatumHash,
+            V1Scripts.isPlutusDataDatum,
           ).toData(txInfo.txInfoData),
           V1Tx.isPlutusDataTxId.toData(txInfo.txInfoId),
         ],
@@ -401,11 +398,9 @@ export const isPlutusDataTxInfo: IsPlutusData<TxInfo> = {
           const txInfoDCert = PreludeInstances.isPlutusDataList(
             V1DCert.isPlutusDataDCert,
           ).fromData(plutusData.fields[1][5]!);
-          const txInfoWdrl = PreludeInstances.isPlutusDataList(
-            PreludeInstances.isPlutusDataPairWithTag(
-              V1Credential.isPlutusDataStakingCredential,
-              PreludeInstances.isPlutusDataInteger,
-            ),
+          const txInfoWdrl = AssocMap.isPlutusDataMap(
+            V1Credential.isPlutusDataStakingCredential,
+            PreludeInstances.isPlutusDataInteger,
           ).fromData(plutusData.fields[1][6]!);
           const txInfoValidRange = V1Time.isPlutusDataPOSIXTimeRange.fromData(
             plutusData.fields[1][7]!,
@@ -413,17 +408,13 @@ export const isPlutusDataTxInfo: IsPlutusData<TxInfo> = {
           const txInfoSignatories = PreludeInstances.isPlutusDataList(
             V1Crypto.isPlutusDataPubKeyHash,
           ).fromData(plutusData.fields[1][8]!);
-          const txInfoRedeemers = PreludeInstances.isPlutusDataList(
-            PreludeInstances.isPlutusDataPairWithTag(
-              V1Context.isPlutusDataScriptPurpose,
-              V1Scripts.isPlutusDataRedeemer,
-            ),
+          const txInfoRedeemers = AssocMap.isPlutusDataMap(
+            V1Context.isPlutusDataScriptPurpose,
+            V1Scripts.isPlutusDataRedeemer,
           ).fromData(plutusData.fields[1][9]!);
-          const txInfoData = PreludeInstances.isPlutusDataList(
-            PreludeInstances.isPlutusDataPairWithTag(
-              V1Scripts.isPlutusDataDatumHash,
-              V1Scripts.isPlutusDataDatum,
-            ),
+          const txInfoData = AssocMap.isPlutusDataMap(
+            V1Scripts.isPlutusDataDatumHash,
+            V1Scripts.isPlutusDataDatum,
           ).fromData(plutusData.fields[1][10]!);
           const txInfoId = V1Tx.isPlutusDataTxId.fromData(
             plutusData.fields[1][11]!,
