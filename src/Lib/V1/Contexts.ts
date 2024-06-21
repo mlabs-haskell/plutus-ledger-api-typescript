@@ -629,8 +629,8 @@ export const eqScriptContext: Eq<ScriptContext> = {
 export const jsonScriptContext: Json<ScriptContext> = {
   toJson: (scriptContext) => {
     return {
-      tx_info: jsonTxInfo.toJson(scriptContext.scriptContextTxInfo),
       purpose: jsonScriptPurpose.toJson(scriptContext.scriptContextPurpose),
+      tx_info: jsonTxInfo.toJson(scriptContext.scriptContextTxInfo),
     };
   },
   fromJson: (value) => {

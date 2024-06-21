@@ -20,69 +20,69 @@ import * as PreludeInstances from "../Prelude/Instances.js";
  * @see {@link https://github.com/IntersectMBO/plutus/blob/1.16.0.0/plutus-ledger-api/src/PlutusLedgerApi/V1/DCert.hs#L22-L46}
  */
 export type DCert =
-  | { name: "DCertDelegRegKey"; fields: StakingCredential }
-  | { name: "DCertDelegDeRegKey"; fields: StakingCredential }
-  | { name: "DCertDelegDelegate"; fields: [StakingCredential, PubKeyHash] }
-  | { name: "DCertPoolRegister"; fields: [PubKeyHash, PubKeyHash] }
-  | { name: "DCertPoolRetire"; fields: [PubKeyHash, Integer] }
-  | { name: "DCertGenesis" }
-  | { name: "DCertMir" };
+  | { name: "DelegRegKey"; fields: StakingCredential }
+  | { name: "DelegDeRegKey"; fields: StakingCredential }
+  | { name: "DelegDelegate"; fields: [StakingCredential, PubKeyHash] }
+  | { name: "PoolRegister"; fields: [PubKeyHash, PubKeyHash] }
+  | { name: "PoolRetire"; fields: [PubKeyHash, Integer] }
+  | { name: "Genesis" }
+  | { name: "Mir" };
 
 /**
  * {@link Eq} instance for {@link DCert}
  */
 export const eqDCert: Eq<DCert> = {
   eq: (l, r) => {
-    if (l.name === "DCertDelegRegKey" && r.name === "DCertDelegRegKey") {
+    if (l.name === "DelegRegKey" && r.name === "DelegRegKey") {
       return LbCredential.eqStakingCredential.eq(l.fields, r.fields);
     } else if (
-      l.name === "DCertDelegDeRegKey" && r.name === "DCertDelegDeRegKey"
+      l.name === "DelegDeRegKey" && r.name === "DelegDeRegKey"
     ) {
       return LbCredential.eqStakingCredential.eq(l.fields, r.fields);
     } else if (
-      l.name === "DCertDelegDelegate" && r.name === "DCertDelegDelegate"
+      l.name === "DelegDelegate" && r.name === "DelegDelegate"
     ) {
       return LbCredential.eqStakingCredential.eq(l.fields[0], r.fields[0]) &&
         LbCrypto.eqPubKeyHash.eq(l.fields[1], r.fields[1]);
     } else if (
-      l.name === "DCertPoolRegister" && r.name === "DCertPoolRegister"
+      l.name === "PoolRegister" && r.name === "PoolRegister"
     ) {
       return LbCrypto.eqPubKeyHash.eq(l.fields[0], r.fields[0]) &&
         LbCrypto.eqPubKeyHash.eq(l.fields[1], r.fields[1]);
-    } else if (l.name === "DCertPoolRetire" && r.name === "DCertPoolRetire") {
+    } else if (l.name === "PoolRetire" && r.name === "PoolRetire") {
       return LbCrypto.eqPubKeyHash.eq(l.fields[0], r.fields[0]) &&
         Prelude.eqInteger.eq(l.fields[1], r.fields[1]);
-    } else if (l.name === "DCertGenesis" && r.name === "DCertGenesis") {
+    } else if (l.name === "Genesis" && r.name === "Genesis") {
       return true;
-    } else if (l.name === "DCertMir" && r.name === "DCertMir") {
+    } else if (l.name === "Mir" && r.name === "Mir") {
       return true;
     } else {
       return false;
     }
   },
   neq: (l, r) => {
-    if (l.name === "DCertDelegRegKey" && r.name === "DCertDelegRegKey") {
+    if (l.name === "DelegRegKey" && r.name === "DelegRegKey") {
       return LbCredential.eqStakingCredential.neq(l.fields, r.fields);
     } else if (
-      l.name === "DCertDelegDeRegKey" && r.name === "DCertDelegDeRegKey"
+      l.name === "DelegDeRegKey" && r.name === "DelegDeRegKey"
     ) {
       return LbCredential.eqStakingCredential.neq(l.fields, r.fields);
     } else if (
-      l.name === "DCertDelegDelegate" && r.name === "DCertDelegDelegate"
+      l.name === "DelegDelegate" && r.name === "DelegDelegate"
     ) {
       return LbCredential.eqStakingCredential.neq(l.fields[0], r.fields[0]) ||
         LbCrypto.eqPubKeyHash.neq(l.fields[1], r.fields[1]);
     } else if (
-      l.name === "DCertPoolRegister" && r.name === "DCertPoolRegister"
+      l.name === "PoolRegister" && r.name === "PoolRegister"
     ) {
       return LbCrypto.eqPubKeyHash.neq(l.fields[0], r.fields[0]) ||
         LbCrypto.eqPubKeyHash.neq(l.fields[1], r.fields[1]);
-    } else if (l.name === "DCertPoolRetire" && r.name === "DCertPoolRetire") {
+    } else if (l.name === "PoolRetire" && r.name === "PoolRetire") {
       return LbCrypto.eqPubKeyHash.neq(l.fields[0], r.fields[0]) ||
         Prelude.eqInteger.neq(l.fields[1], r.fields[1]);
-    } else if (l.name === "DCertGenesis" && r.name === "DCertGenesis") {
+    } else if (l.name === "Genesis" && r.name === "Genesis") {
       return false;
-    } else if (l.name === "DCertMir" && r.name === "DCertMir") {
+    } else if (l.name === "Mir" && r.name === "Mir") {
       return false;
     } else {
       return true;
@@ -95,30 +95,30 @@ export const eqDCert: Eq<DCert> = {
  */
 export const jsonDCert: Json<DCert> = {
   toJson: (dcert) => {
-    if (dcert.name === `DCertDelegRegKey`) {
+    if (dcert.name === `DelegRegKey`) {
       return PJson.jsonConstructor(dcert.name, [
         LbCredential.jsonStakingCredential.toJson(dcert.fields),
       ]);
-    } else if (dcert.name === `DCertDelegDeRegKey`) {
+    } else if (dcert.name === `DelegDeRegKey`) {
       return PJson.jsonConstructor(dcert.name, [
         LbCredential.jsonStakingCredential.toJson(dcert.fields),
       ]);
-    } else if (dcert.name === `DCertDelegDelegate`) {
+    } else if (dcert.name === `DelegDelegate`) {
       return PJson.jsonConstructor(dcert.name, [
         LbCredential.jsonStakingCredential.toJson(dcert.fields[0]),
         LbCrypto.jsonPubKeyHash.toJson(dcert.fields[1]),
       ]);
-    } else if (dcert.name === `DCertPoolRegister`) {
+    } else if (dcert.name === `PoolRegister`) {
       return PJson.jsonConstructor(dcert.name, [
         LbCrypto.jsonPubKeyHash.toJson(dcert.fields[0]),
         LbCrypto.jsonPubKeyHash.toJson(dcert.fields[1]),
       ]);
-    } else if (dcert.name === `DCertPoolRetire`) {
+    } else if (dcert.name === `PoolRetire`) {
       return PJson.jsonConstructor(dcert.name, [
         LbCrypto.jsonPubKeyHash.toJson(dcert.fields[0]),
         Prelude.jsonInteger.toJson(dcert.fields[1]),
       ]);
-    } else if (dcert.name === `DCertGenesis`) {
+    } else if (dcert.name === `Genesis`) {
       return PJson.jsonConstructor(dcert.name, []);
     } else {
       // else if (dcert.name === `DCertMir`) {
@@ -127,11 +127,11 @@ export const jsonDCert: Json<DCert> = {
   },
   fromJson: (value) => {
     return PJson.caseJsonConstructor<DCert>("DCert", {
-      "DCertDelegRegKey": (ctorFields) => {
+      "DelegRegKey": (ctorFields) => {
         if (ctorFields.length === 1) {
           return {
             fields: LbCredential.jsonStakingCredential.fromJson(ctorFields[0]!),
-            name: "DCertDelegRegKey",
+            name: "DelegRegKey",
           };
         } else {
           throw new JsonError(
@@ -140,11 +140,11 @@ export const jsonDCert: Json<DCert> = {
           );
         }
       },
-      "DCertDelegDeRegKey": (ctorFields) => {
+      "DelegDeRegKey": (ctorFields) => {
         if (ctorFields.length === 1) {
           return {
             fields: LbCredential.jsonStakingCredential.fromJson(ctorFields[0]!),
-            name: "DCertDelegDeRegKey",
+            name: "DelegDeRegKey",
           };
         } else {
           throw new JsonError(
@@ -153,14 +153,14 @@ export const jsonDCert: Json<DCert> = {
           );
         }
       },
-      "DCertDelegDelegate": (ctorFields) => {
+      "DelegDelegate": (ctorFields) => {
         if (ctorFields.length === 2) {
           return {
             fields: [
               LbCredential.jsonStakingCredential.fromJson(ctorFields[0]!),
               LbCrypto.jsonPubKeyHash.fromJson(ctorFields[1]!),
             ],
-            name: "DCertDelegDelegate",
+            name: "DelegDelegate",
           };
         } else {
           throw new JsonError(
@@ -170,14 +170,14 @@ export const jsonDCert: Json<DCert> = {
         }
       },
 
-      "DCertPoolRegister": (ctorFields) => {
+      "PoolRegister": (ctorFields) => {
         if (ctorFields.length === 2) {
           return {
             fields: [
               LbCrypto.jsonPubKeyHash.fromJson(ctorFields[0]!),
               LbCrypto.jsonPubKeyHash.fromJson(ctorFields[1]!),
             ],
-            name: "DCertPoolRegister",
+            name: "PoolRegister",
           };
         } else {
           throw new JsonError(
@@ -187,14 +187,14 @@ export const jsonDCert: Json<DCert> = {
         }
       },
 
-      "DCertPoolRetire": (ctorFields) => {
+      "PoolRetire": (ctorFields) => {
         if (ctorFields.length === 2) {
           return {
             fields: [
               LbCrypto.jsonPubKeyHash.fromJson(ctorFields[0]!),
               Prelude.jsonInteger.fromJson(ctorFields[1]!),
             ],
-            name: "DCertPoolRetire",
+            name: "PoolRetire",
           };
         } else {
           throw new JsonError(
@@ -203,9 +203,9 @@ export const jsonDCert: Json<DCert> = {
           );
         }
       },
-      "DCertGenesis": (ctorFields) => {
+      "Genesis": (ctorFields) => {
         if (ctorFields.length === 0) {
-          return { name: "DCertGenesis" };
+          return { name: "Genesis" };
         } else {
           throw new JsonError(
             "Expected JSON Array with 1 fields but got" +
@@ -213,9 +213,9 @@ export const jsonDCert: Json<DCert> = {
           );
         }
       },
-      "DCertMir": (ctorFields) => {
+      "Mir": (ctorFields) => {
         if (ctorFields.length === 0) {
-          return { name: "DCertMir" };
+          return { name: "Mir" };
         } else {
           throw new JsonError(
             "Expected JSON Array with 1 fields but got" +
@@ -232,21 +232,21 @@ export const jsonDCert: Json<DCert> = {
  */
 export const isPlutusDataDCert: IsPlutusData<DCert> = {
   toData: (dcert) => {
-    if (dcert.name === `DCertDelegRegKey`) {
+    if (dcert.name === `DelegRegKey`) {
       return {
         fields: [0n, [
           LbCredential.isPlutusDataStakingCredential.toData(dcert.fields),
         ]],
         name: "Constr",
       };
-    } else if (dcert.name === `DCertDelegDeRegKey`) {
+    } else if (dcert.name === `DelegDeRegKey`) {
       return {
         fields: [1n, [
           LbCredential.isPlutusDataStakingCredential.toData(dcert.fields),
         ]],
         name: "Constr",
       };
-    } else if (dcert.name === `DCertDelegDelegate`) {
+    } else if (dcert.name === `DelegDelegate`) {
       return {
         fields: [2n, [
           LbCredential.isPlutusDataStakingCredential.toData(dcert.fields[0]),
@@ -254,7 +254,7 @@ export const isPlutusDataDCert: IsPlutusData<DCert> = {
         ]],
         name: "Constr",
       };
-    } else if (dcert.name === `DCertPoolRegister`) {
+    } else if (dcert.name === `PoolRegister`) {
       return {
         fields: [3n, [
           LbCrypto.isPlutusDataPubKeyHash.toData(dcert.fields[0]),
@@ -262,7 +262,7 @@ export const isPlutusDataDCert: IsPlutusData<DCert> = {
         ]],
         name: "Constr",
       };
-    } else if (dcert.name === `DCertPoolRetire`) {
+    } else if (dcert.name === `PoolRetire`) {
       return {
         fields: [4n, [
           LbCrypto.isPlutusDataPubKeyHash.toData(dcert.fields[0]),
@@ -270,7 +270,7 @@ export const isPlutusDataDCert: IsPlutusData<DCert> = {
         ]],
         name: "Constr",
       };
-    } else if (dcert.name === `DCertGenesis`) {
+    } else if (dcert.name === `Genesis`) {
       return { fields: [5n, []], name: "Constr" };
     } else {
       // else if (dcert.name === `DCertMir`) {
@@ -286,7 +286,7 @@ export const isPlutusDataDCert: IsPlutusData<DCert> = {
             fields: LbCredential.isPlutusDataStakingCredential.fromData(
               plutusData.fields[1][0]!,
             ),
-            name: "DCertDelegRegKey",
+            name: "DelegRegKey",
           };
         } else if (
           plutusData.fields[0] === 1n && plutusData.fields[1].length === 1
@@ -295,7 +295,7 @@ export const isPlutusDataDCert: IsPlutusData<DCert> = {
             fields: LbCredential.isPlutusDataStakingCredential.fromData(
               plutusData.fields[1][0]!,
             ),
-            name: "DCertDelegDeRegKey",
+            name: "DelegDeRegKey",
           };
         } else if (
           plutusData.fields[0] === 2n && plutusData.fields[1].length === 2
@@ -309,7 +309,7 @@ export const isPlutusDataDCert: IsPlutusData<DCert> = {
                 plutusData.fields[1][1]!,
               ),
             ],
-            name: "DCertDelegDelegate",
+            name: "DelegDelegate",
           };
         } else if (
           plutusData.fields[0] === 3n && plutusData.fields[1].length === 2
@@ -323,7 +323,7 @@ export const isPlutusDataDCert: IsPlutusData<DCert> = {
                 plutusData.fields[1][1]!,
               ),
             ],
-            name: "DCertPoolRegister",
+            name: "PoolRegister",
           };
         } else if (
           plutusData.fields[0] === 4n && plutusData.fields[1].length === 2
@@ -337,16 +337,16 @@ export const isPlutusDataDCert: IsPlutusData<DCert> = {
                 plutusData.fields[1][1]!,
               ),
             ],
-            name: "DCertPoolRetire",
+            name: "PoolRetire",
           };
         } else if (
           plutusData.fields[0] === 5n && plutusData.fields[1].length === 0
         ) {
-          return { name: "DCertGenesis" };
+          return { name: "Genesis" };
         } else if (
           plutusData.fields[0] === 6n && plutusData.fields[1].length === 0
         ) {
-          return { name: "DCertMir" };
+          return { name: "Mir" };
         }
         break;
     }
