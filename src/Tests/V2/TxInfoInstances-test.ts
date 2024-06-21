@@ -1,6 +1,8 @@
 // Tests for the instances for `TxInfo`
 import * as V2 from "../../Lib/V2.js";
 
+import * as V1 from "../../Lib/V1.js";
+
 import * as TestUtils from "../TestUtils.js";
 import fc from "fast-check";
 
@@ -18,6 +20,7 @@ import * as TestDatum from "../V1/DatumInstances-test.js";
 import * as TestTxId from "../V1/TxIdInstances-test.js";
 import * as TestScriptPurpose from "../V1/ScriptPurposeInstances-test.js";
 import * as TestRedeemer from "../V1/RedeemerInstances-test.js";
+import * as TestAssocMap from "../AssocMap-test.js";
 
 export function fcTxInfo(): fc.Arbitrary<V2.TxInfo> {
   return fc.record({
@@ -27,16 +30,22 @@ export function fcTxInfo(): fc.Arbitrary<V2.TxInfo> {
     txInfoFee: TestValue.fcValue(),
     txInfoMint: TestValue.fcValue(),
     txInfoDCert: fc.array(TestDCert.fcDCert()),
-    txInfoWdrl: fc.array(
-      fc.tuple(TestStakingCredential.fcStakingCredential(), fc.bigInt()),
+    txInfoWdrl: TestAssocMap.fcAssocMap(
+      V1.eqStakingCredential,
+      TestStakingCredential.fcStakingCredential(),
+      fc.bigInt(),
     ),
     txInfoValidRange: TestInterval.fcInterval(fc.bigInt()),
     txInfoSignatories: fc.array(TestPubKeyHash.fcPubKeyHash()),
-    txInfoRedeemers: fc.array(
-      fc.tuple(TestScriptPurpose.fcScriptPurpose(), TestRedeemer.fcRedeemer()),
+    txInfoRedeemers: TestAssocMap.fcAssocMap(
+      V1.eqScriptPurpose,
+      TestScriptPurpose.fcScriptPurpose(),
+      TestRedeemer.fcRedeemer(),
     ),
-    txInfoData: fc.array(
-      fc.tuple(TestDatumHash.fcDatumHash(), TestDatum.fcDatum()),
+    txInfoData: TestAssocMap.fcAssocMap(
+      V1.eqDatumHash,
+      TestDatumHash.fcDatumHash(),
+      TestDatum.fcDatum(),
     ),
     txInfoId: TestTxId.fcTxId(),
   });
