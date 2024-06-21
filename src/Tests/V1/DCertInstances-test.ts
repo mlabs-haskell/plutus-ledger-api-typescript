@@ -11,19 +11,19 @@ export function fcDCert(): fc.Arbitrary<V1.DCert> {
   return fc.oneof(
     fc.record(
       {
-        name: fc.constant("DCertDelegRegKey"),
+        name: fc.constant("DelegRegKey"),
         fields: TestStakingCredential.fcStakingCredential(),
       },
     ),
     fc.record(
       {
-        name: fc.constant("DCertDelegDeRegKey"),
+        name: fc.constant("DelegDeRegKey"),
         fields: TestStakingCredential.fcStakingCredential(),
       },
     ),
     fc.record(
       {
-        name: fc.constant("DCertDelegDelegate"),
+        name: fc.constant("DelegDelegate"),
         fields: fc.tuple(
           TestStakingCredential.fcStakingCredential(),
           TestPubKeyHash.fcPubKeyHash(),
@@ -32,7 +32,7 @@ export function fcDCert(): fc.Arbitrary<V1.DCert> {
     ),
     fc.record(
       {
-        name: fc.constant("DCertPoolRegister"),
+        name: fc.constant("PoolRegister"),
         fields: fc.tuple(
           TestPubKeyHash.fcPubKeyHash(),
           TestPubKeyHash.fcPubKeyHash(),
@@ -41,15 +41,15 @@ export function fcDCert(): fc.Arbitrary<V1.DCert> {
     ),
     fc.record(
       {
-        name: fc.constant("DCertPoolRetire"),
+        name: fc.constant("PoolRetire"),
         fields: fc.tuple(TestPubKeyHash.fcPubKeyHash(), fc.bigInt()),
       },
     ),
     fc.record(
-      { name: fc.constant("DCertGenesis") },
+      { name: fc.constant("Genesis") },
     ),
     fc.record(
-      { name: fc.constant("DCertMir") },
+      { name: fc.constant("Mir") },
     ),
   ) as fc.Arbitrary<V1.DCert>;
 }
