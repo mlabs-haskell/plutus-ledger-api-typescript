@@ -1,3 +1,6 @@
+/**
+ * @see {@link https://github.com/IntersectMBO/plutus/blob/1.36.0.0/plutus-ledger-api/src/PlutusLedgerApi/V3/Contexts.hs}
+ */
 import {
   caseFieldWithValue,
   caseJsonConstructor,
@@ -64,19 +67,40 @@ import {
   isPlutusDataMaybe,
 } from "../V1.js";
 
-// import { isPlutusDataInteger, isPlutusDataMaybe } from "../V1.js";
-
+/**
+ * Cold credential of a constitutional committee.
+ *
+ * @see {@link https://github.com/IntersectMBO/plutus/blob/1.36.0.0/plutus-ledger-api/src/PlutusLedgerApi/V3/Contexts.hs#L78}
+ */
 export type ColdCommitteeCredential = Credential;
 
+/**
+ * Hot credential of a constitutional committee.
+ *
+ * @see {@link https://github.com/IntersectMBO/plutus/blob/1.36.0.0/plutus-ledger-api/src/PlutusLedgerApi/V3/Contexts.hs#L102}
+ */
 export type HotCommitteeCredential = Credential;
 
+/**
+ * Credential of a delegated representative.
+ *
+ * @see {@link https://github.com/IntersectMBO/plutus/blob/1.36.0.0/plutus-ledger-api/src/PlutusLedgerApi/V3/Contexts.hs#L126}
+ */
 export type DRepCredential = Credential;
 
+/**
+ * Delegated representative, or the two predefined voting options.
+ *
+ * @see {@link https://github.com/IntersectMBO/plutus/blob/1.36.0.0/plutus-ledger-api/src/PlutusLedgerApi/V3/Contexts.hs#L150-L153}
+ */
 export type DRep =
   | { name: "DRep"; fields: DRepCredential }
   | { name: "AlwaysAbstain" }
   | { name: "AlwaysNoConfidence" };
 
+/**
+ * {@link Eq} instance for {@link DRep}
+ */
 export const eqDRep: Eq<DRep> = {
   eq: (l, r) => {
     if (l.name === "DRep" && r.name === "DRep") {
@@ -108,6 +132,9 @@ export const eqDRep: Eq<DRep> = {
   },
 };
 
+/**
+ * {@link Json} instance for {@link DRep}
+ */
 export const jsonDRep: Json<DRep> = {
   toJson: (dRep) => {
     switch (dRep.name) {
@@ -156,6 +183,9 @@ export const jsonDRep: Json<DRep> = {
   },
 };
 
+/**
+ * {@link IsPlutusData} instance for {@link DRep}
+ */
 export const isPlutusDataDRep: IsPlutusData<DRep> = {
   toData: (dRep) => {
     switch (dRep.name) {
@@ -205,11 +235,17 @@ export const isPlutusDataDRep: IsPlutusData<DRep> = {
   },
 };
 
+/**
+ * @see {@link https://github.com/IntersectMBO/plutus/blob/1.36.0.0/plutus-ledger-api/src/PlutusLedgerApi/V3/Contexts.hs#L165-L168}
+ */
 export type Delegatee =
   | { name: "Stake"; fields: PubKeyHash }
   | { name: "Vote"; fields: DRep }
   | { name: "StakeVote"; fields: [PubKeyHash, DRep] };
 
+/**
+ * {@link Eq} instance for {@link Delegatee}
+ */
 export const eqDelegatee: Eq<Delegatee> = {
   eq: (l, r) => {
     if (l.name == "Stake" && r.name == "Stake") {
@@ -237,6 +273,9 @@ export const eqDelegatee: Eq<Delegatee> = {
   },
 };
 
+/**
+ * {@link Json} instance for {@link Delegatee}
+ */
 export const jsonDelegatee: Json<Delegatee> = {
   toJson: (delegatee) => {
     switch (delegatee.name) {
@@ -295,6 +334,9 @@ export const jsonDelegatee: Json<Delegatee> = {
   },
 };
 
+/**
+ * {@link IsPlutusData} instance for {@link Delegatee}
+ */
 export const isPlutusDataDelegatee: IsPlutusData<Delegatee> = {
   toData: (delegatee) => {
     switch (delegatee.name) {
@@ -358,6 +400,9 @@ export const isPlutusDataDelegatee: IsPlutusData<Delegatee> = {
   },
 };
 
+/**
+ * @see {@link https://github.com/IntersectMBO/plutus/blob/1.36.0.0/plutus-ledger-api/src/PlutusLedgerApi/V3/Contexts.hs#L181-L207}
+ */
 export type TxCert =
   | {
     name: "RegStaking";
@@ -400,6 +445,9 @@ export type TxCert =
     fields: ColdCommitteeCredential;
   };
 
+/**
+ * {@link Eq} instance for {@link TxCert}
+ */
 export const eqTxCert: Eq<TxCert> = {
   eq: (l, r) => {
     if (l.name === "RegStaking" && r.name === "RegStaking") {
@@ -499,6 +547,9 @@ export const eqTxCert: Eq<TxCert> = {
   },
 };
 
+/**
+ * {@link Json} instance for {@link TxCert}
+ */
 export const jsonTxCert: Json<TxCert> = {
   toJson: (txCert) => {
     switch (txCert.name) {
@@ -688,6 +739,9 @@ export const jsonTxCert: Json<TxCert> = {
   },
 };
 
+/**
+ * {@link IsPlutusData} instance for {@link TxCert}
+ */
 export const isPlutusDataTxCert: IsPlutusData<TxCert> = {
   toData: (txCert) => {
     switch (txCert.name) {
@@ -888,11 +942,19 @@ export const isPlutusDataTxCert: IsPlutusData<TxCert> = {
   },
 };
 
+/**
+ * {@link Voter} represents a body with voting power.
+ *
+ * @see {@link https://github.com/IntersectMBO/plutus/blob/1.36.0.0/plutus-ledger-api/src/PlutusLedgerApi/V3/Contexts.hs#L234-L237}
+ */
 export type Voter =
   | { name: "CommitteeVoter"; fields: HotCommitteeCredential }
   | { name: "DRepVoter"; fields: DRepCredential }
   | { name: "StakePoolVoter"; fields: PubKeyHash };
 
+/**
+ * {@link Eq} instance for {@link Voter}
+ */
 export const eqVoter: Eq<Voter> = {
   eq: (l, r) => {
     if (l.name === "CommitteeVoter" && r.name === "CommitteeVoter") {
@@ -914,6 +976,9 @@ export const eqVoter: Eq<Voter> = {
   },
 };
 
+/**
+ * {@link Json} instance for {@link Voter}
+ */
 export const jsonVoter: Json<Voter> = {
   toJson: (voter) => {
     switch (voter.name) {
@@ -968,6 +1033,9 @@ export const jsonVoter: Json<Voter> = {
   },
 };
 
+/**
+ * {@link IsPlutusData} instance for {@link Voter}
+ */
 export const isPlutusDataVoter: IsPlutusData<Voter> = {
   toData: (voter) => {
     switch (voter.name) {
@@ -1024,11 +1092,19 @@ export const isPlutusDataVoter: IsPlutusData<Voter> = {
   },
 };
 
+/**
+ * {@link Voter} represents the different voting options: yes, no or abstain.
+ *
+ * @see {@link https://github.com/IntersectMBO/plutus/blob/1.36.0.0/plutus-ledger-api/src/PlutusLedgerApi/V3/Contexts.hs#L234-L237}
+ */
 export type Vote =
   | { name: "VoteNo" }
   | { name: "VoteYes" }
   | { name: "Abstain" };
 
+/**
+ * {@link Eq} instance for {@link Vote}
+ */
 export const eqVote: Eq<Vote> = {
   eq: (l, r) => {
     return l.name === r.name;
@@ -1038,6 +1114,9 @@ export const eqVote: Eq<Vote> = {
   },
 };
 
+/**
+ * {@link Json} instance for {@link Vote}
+ */
 export const jsonVote: Json<Vote> = {
   toJson: (vote) => {
     return jsonConstructor(vote.name, []);
@@ -1076,6 +1155,9 @@ export const jsonVote: Json<Vote> = {
   },
 };
 
+/**
+ * {@link IsPlutusData} instance for {@link Vote}
+ */
 export const isPlutusDataVote: IsPlutusData<Vote> = {
   toData: (vote) => {
     switch (vote.name) {
@@ -1120,11 +1202,17 @@ export const isPlutusDataVote: IsPlutusData<Vote> = {
   },
 };
 
+/**
+ * @see {@link https://github.com/IntersectMBO/plutus/blob/1.36.0.0/plutus-ledger-api/src/PlutusLedgerApi/V3/Contexts.hs#L269-L272}
+ */
 export type GovernanceActionId = {
   gaidTxId: TxId;
   gaidGovActionIx: Integer;
 };
 
+/**
+ * {@link Eq} instance for {@link GovernanceActionId}
+ */
 export const eqGovernanceActionId: Eq<GovernanceActionId> = {
   eq: (l, r) => {
     return (
@@ -1140,6 +1228,9 @@ export const eqGovernanceActionId: Eq<GovernanceActionId> = {
   },
 };
 
+/**
+ * {@link Json} instance for {@link GovernanceActionId}
+ */
 export const jsonGovernanceActionId: Json<GovernanceActionId> = {
   toJson: (governanceActionId) => {
     return {
@@ -1166,6 +1257,9 @@ export const jsonGovernanceActionId: Json<GovernanceActionId> = {
   },
 };
 
+/**
+ * {@link IsPlutusData} instance for {@link GovernanceActionId}
+ */
 export const isPlutusDataGovernanceActionId: IsPlutusData<GovernanceActionId> =
   {
     toData: (governanceActionId) => {
@@ -1199,11 +1293,17 @@ export const isPlutusDataGovernanceActionId: IsPlutusData<GovernanceActionId> =
     },
   };
 
+/**
+ * @see {@link https://github.com/IntersectMBO/plutus/blob/1.36.0.0/plutus-ledger-api/src/PlutusLedgerApi/V3/Contexts.hs#L288-L293}
+ */
 export type Committee = {
   committeeMembers: Map<ColdCommitteeCredential, Integer>;
   committeeQuorum: Integer;
 };
 
+/**
+ * {@link Eq} instance for {@link Committee}
+ */
 export const eqCommittee: Eq<Committee> = {
   eq: (l, r) => {
     return (
@@ -1223,6 +1323,9 @@ export const eqCommittee: Eq<Committee> = {
   },
 };
 
+/**
+ * {@link Json} instance for {@link Committee}
+ */
 export const jsonCommittee: Json<Committee> = {
   toJson: (committee) => {
     return {
@@ -1251,6 +1354,9 @@ export const jsonCommittee: Json<Committee> = {
   },
 };
 
+/**
+ * {@link IsPlutusData} instance for {@link Committee}
+ */
 export const isPlutusDataCommittee: IsPlutusData<Committee> = {
   toData: (committee) => {
     return {
@@ -1290,10 +1396,16 @@ export const isPlutusDataCommittee: IsPlutusData<Committee> = {
   },
 };
 
+/**
+ * @see {@link https://github.com/IntersectMBO/plutus/blob/1.36.0.0/plutus-ledger-api/src/PlutusLedgerApi/V3/Contexts.hs#L305}
+ */
 export type Constitution = {
   constitutionScript: Maybe<ScriptHash>;
 };
 
+/**
+ * {@link Eq} instance for {@link Constitution}
+ */
 export const eqConstitution: Eq<Constitution> = {
   eq: (l, r) => {
     return eqMaybe(V1Scripts.eqScriptHash).eq(
@@ -1309,6 +1421,9 @@ export const eqConstitution: Eq<Constitution> = {
   },
 };
 
+/**
+ * {@link Json} instance for {@link Constitution}
+ */
 export const jsonConstitution: Json<Constitution> = {
   toJson: (constitution) => {
     return {
@@ -1330,6 +1445,9 @@ export const jsonConstitution: Json<Constitution> = {
   },
 };
 
+/**
+ * {@link IsPlutusData} instance for {@link Constitution}
+ */
 export const isPlutusDataConstitution: IsPlutusData<Constitution> = {
   toData: (constitution) => {
     return {
@@ -1363,11 +1481,17 @@ export const isPlutusDataConstitution: IsPlutusData<Constitution> = {
   },
 };
 
+/**
+ * @see {@link https://github.com/IntersectMBO/plutus/blob/1.36.0.0/plutus-ledger-api/src/PlutusLedgerApi/V3/Contexts.hs#L319-L322}
+ */
 export type ProtocolVersion = {
   pvMajor: Integer;
   pvMinor: Integer;
 };
 
+/**
+ * {@link Eq} instance for {@link ProtocolVersion}
+ */
 export const eqProtocolVersion: Eq<ProtocolVersion> = {
   eq: (l, r) => {
     return (
@@ -1381,6 +1505,9 @@ export const eqProtocolVersion: Eq<ProtocolVersion> = {
   },
 };
 
+/**
+ * {@link Json} instance for {@link ProtocolVersion}
+ */
 export const jsonProtocolVersion: Json<ProtocolVersion> = {
   toJson: (protocolVersion) => {
     return {
@@ -1398,6 +1525,9 @@ export const jsonProtocolVersion: Json<ProtocolVersion> = {
   },
 };
 
+/**
+ * {@link IsPlutusData} instance for {@link ProtocolVersion}
+ */
 export const isPlutusDataProtocolVersion: IsPlutusData<ProtocolVersion> = {
   toData: (protocolVersion) => {
     return {
@@ -1429,8 +1559,16 @@ export const isPlutusDataProtocolVersion: IsPlutusData<ProtocolVersion> = {
   },
 };
 
+/**
+ * {@link ChangedParameters} is a Plutus Data object containing proposed parameter changes.
+ *
+ * @see {@link https://github.com/IntersectMBO/plutus/blob/1.36.0.0/plutus-ledger-api/src/PlutusLedgerApi/V3/Contexts.hs#L365}
+ */
 export type ChangedParameters = PlutusData;
 
+/**
+ * @see {@link https://github.com/IntersectMBO/plutus/blob/1.36.0.0/plutus-ledger-api/src/PlutusLedgerApi/V3/Contexts.hs#L381-L403}
+ */
 export type GovernanceAction =
   | {
     name: "ParameterChange";
@@ -1463,6 +1601,9 @@ export type GovernanceAction =
   }
   | { name: "InfoAction" };
 
+/**
+ * {@link Eq} instance for {@link GovernanceAction}
+ */
 export const eqGovernanceAction: Eq<GovernanceAction> = {
   eq: (l, r) => {
     if (l.name === "ParameterChange" && r.name === "ParameterChange") {
@@ -1554,6 +1695,9 @@ export const eqGovernanceAction: Eq<GovernanceAction> = {
   },
 };
 
+/**
+ * {@link Json} instance for {@link GovernanceAction}
+ */
 export const jsonGovernanceAction: Json<GovernanceAction> = {
   toJson: (governanceAction) => {
     switch (governanceAction.name) {
@@ -1692,6 +1836,9 @@ export const jsonGovernanceAction: Json<GovernanceAction> = {
   },
 };
 
+/**
+ * {@link IsPlutusData} instance for {@link GovernanceAction}
+ */
 export const isPlutusDataGovernanceAction: IsPlutusData<GovernanceAction> = {
   toData: (governanceAction) => {
     switch (governanceAction.name) {
@@ -1881,12 +2028,18 @@ export const isPlutusDataGovernanceAction: IsPlutusData<GovernanceAction> = {
   },
 };
 
+/**
+ * @see {@link https://github.com/IntersectMBO/plutus/blob/1.36.0.0/plutus-ledger-api/src/PlutusLedgerApi/V3/Contexts.hs#L409-L413}
+ */
 export type ProposalProcedure = {
   ppDeposit: Lovelace;
   ppReturnAddr: Credential;
   ppGovernanceAction: GovernanceAction;
 };
 
+/**
+ * {@link Eq} instance for {@link ProposalProcedure}
+ */
 export const eqProposalProcedure: Eq<ProposalProcedure> = {
   eq: (l, r) => {
     return (
@@ -1904,6 +2057,9 @@ export const eqProposalProcedure: Eq<ProposalProcedure> = {
   },
 };
 
+/**
+ * {@link Json} instance for {@link ProposalProcedure}
+ */
 export const jsonProposalProcedure: Json<ProposalProcedure> = {
   toJson: (proposalProcedure) => {
     return {
@@ -1941,6 +2097,9 @@ export const jsonProposalProcedure: Json<ProposalProcedure> = {
   },
 };
 
+/**
+ * {@link IsPlutusData} instance for {@link ProposalProcedure}
+ */
 export const isPlutusDataProposalProcedure: IsPlutusData<ProposalProcedure> = {
   toData: (protocolProcedure) => {
     return {
@@ -1980,6 +2139,11 @@ export const isPlutusDataProposalProcedure: IsPlutusData<ProposalProcedure> = {
   },
 };
 
+/**
+ * {@link ScriptPurpose} uniquely identifies a Plutus script within a transaction.
+ *
+ * @see {@link https://github.com/IntersectMBO/plutus/blob/1.36.0.0/plutus-ledger-api/src/PlutusLedgerApi/V3/Contexts.hs#L426-L438}
+ */
 export type ScriptPurpose =
   | { name: "Minting"; fields: CurrencySymbol }
   | { name: "Spending"; fields: TxOutRef }
@@ -1988,6 +2152,9 @@ export type ScriptPurpose =
   | { name: "Voting"; fields: Voter }
   | { name: "Proposing"; fields: [Integer, ProposalProcedure] };
 
+/**
+ * {@link Eq} instance for {@link ScriptPurpose}
+ */
 export const eqScriptPurpose: Eq<ScriptPurpose> = {
   eq: (l, r) => {
     if (l.name === "Minting" && r.name === "Minting") {
@@ -2033,6 +2200,9 @@ export const eqScriptPurpose: Eq<ScriptPurpose> = {
   },
 };
 
+/**
+ * {@link Json} instance for {@link ScriptPurpose}
+ */
 export const jsonScriptPurpose: Json<ScriptPurpose> = {
   toJson: (scriptPurpose) => {
     switch (scriptPurpose.name) {
@@ -2136,6 +2306,9 @@ export const jsonScriptPurpose: Json<ScriptPurpose> = {
   },
 };
 
+/**
+ * {@link IsPlutusData} instance for {@link ScriptPurpose}
+ */
 export const isPlutusDataScriptPurpose: IsPlutusData<ScriptPurpose> = {
   toData: (scriptPurpose) => {
     switch (scriptPurpose.name) {
@@ -2242,6 +2415,11 @@ export const isPlutusDataScriptPurpose: IsPlutusData<ScriptPurpose> = {
   },
 };
 
+/**
+ * {@link ScriptInfo} is like {@link ScriptPurpose} but with an optional datum for spending scripts.
+ *
+ * @see {@link https://github.com/IntersectMBO/plutus/blob/1.36.0.0/plutus-ledger-api/src/PlutusLedgerApi/V3/Contexts.hs#L444-L456}
+ */
 export type ScriptInfo =
   | { name: "Minting"; fields: CurrencySymbol }
   | { name: "Spending"; fields: [TxOutRef, Maybe<Datum>] }
@@ -2250,6 +2428,9 @@ export type ScriptInfo =
   | { name: "Voting"; fields: Voter }
   | { name: "Proposing"; fields: [Integer, ProposalProcedure] };
 
+/**
+ * {@link Eq} instance for {@link ScriptInfo}
+ */
 export const eqScriptInfo: Eq<ScriptInfo> = {
   eq: (l, r) => {
     if (l.name === "Minting" && r.name === "Minting") {
@@ -2301,6 +2482,9 @@ export const eqScriptInfo: Eq<ScriptInfo> = {
   },
 };
 
+/**
+ * {@link Json} instance for {@link ScriptInfo}
+ */
 export const jsonScriptInfo: Json<ScriptInfo> = {
   toJson: (scriptPurpose) => {
     switch (scriptPurpose.name) {
@@ -2408,6 +2592,9 @@ export const jsonScriptInfo: Json<ScriptInfo> = {
   },
 };
 
+/**
+ * {@link IsPlutusData} instance for {@link ScriptInfo}
+ */
 export const isPlutusDataScriptInfo: IsPlutusData<ScriptInfo> = {
   toData: (scriptPurpose) => {
     switch (scriptPurpose.name) {
@@ -2524,6 +2711,12 @@ export const isPlutusDataScriptInfo: IsPlutusData<ScriptInfo> = {
   },
 };
 
+/**
+ * {@link TxInfo} represents a pending transaction. This is the view as seen by
+ * validator scripts, so some details are stripped out.
+ *
+ * @see {@link https://github.com/IntersectMBO/plutus/blob/1.36.0.0/plutus-ledger-api/src/PlutusLedgerApi/V3/Contexts.hs#L478-L499}
+ */
 export type TxInfo = {
   txInfoInputs: TxInInfo[];
   txInfoReferenceInputs: TxInInfo[];
@@ -2543,6 +2736,9 @@ export type TxInfo = {
   txInfoTreasuryDonation: Maybe<Lovelace>;
 };
 
+/**
+ * {@link Eq} instance for {@link TxInfo}
+ */
 export const eqTxInfo: Eq<TxInfo> = {
   eq: (l, r) => {
     return (
@@ -2634,6 +2830,9 @@ export const eqTxInfo: Eq<TxInfo> = {
   },
 };
 
+/**
+ * {@link Json} instance for {@link TxInfo}
+ */
 export const jsonTxInfo: Json<TxInfo> = {
   toJson: (txInfo) => {
     return {
@@ -2778,6 +2977,9 @@ export const jsonTxInfo: Json<TxInfo> = {
   },
 };
 
+/**
+ * {@link IsPlutusData} instance for {@link TxInfo}
+ */
 export const isPlutusDataTxInfo: IsPlutusData<TxInfo> = {
   toData: (txInfo) => {
     return {
@@ -2922,12 +3124,20 @@ export const isPlutusDataTxInfo: IsPlutusData<TxInfo> = {
   },
 };
 
+/**
+ * The context that the currently-executing script can access.
+ *
+ * @see {@link https://github.com/IntersectMBO/plutus/blob/1.36.0.0/plutus-ledger-api/src/PlutusLedgerApi/V3/Contexts.hs#L525-L533}
+ */
 export type ScriptContext = {
   scriptContextTxInfo: TxInfo;
   scriptContextRedeemer: V1Scripts.Redeemer;
   scriptContextScriptInfo: ScriptInfo;
 };
 
+/**
+ * {@link Eq} instance for {@link ScriptContext}
+ */
 export const eqScriptContext: Eq<ScriptContext> = {
   eq: (l, r) => {
     return (
@@ -2951,6 +3161,9 @@ export const eqScriptContext: Eq<ScriptContext> = {
   },
 };
 
+/**
+ * {@link Json} instance for {@link ScriptContext}
+ */
 export const jsonScriptContext: Json<ScriptContext> = {
   toJson: (scriptContext) => {
     return {
@@ -2986,6 +3199,9 @@ export const jsonScriptContext: Json<ScriptContext> = {
   },
 };
 
+/**
+ * {@link IsPlutusData} instance for {@link ScriptContext}
+ */
 export const isPlutusDataScriptContext: IsPlutusData<ScriptContext> = {
   toData: (scriptContext) => {
     return {

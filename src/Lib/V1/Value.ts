@@ -202,4 +202,7 @@ export const adaSymbol: CurrencySymbol = Uint8Array.from([]) as CurrencySymbol;
  */
 export const adaToken: TokenName = Uint8Array.from([]) as TokenName;
 
+/**
+ * @see {@link https://github.com/IntersectMBO/plutus/blob/1.36.0.0/plutus-ledger-api/src/PlutusLedgerApi/V1/Value.hs#L598}
+ */
 export type Lovelace = Integer;
