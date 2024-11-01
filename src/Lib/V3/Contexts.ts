@@ -1329,11 +1329,11 @@ export const eqCommittee: Eq<Committee> = {
 export const jsonCommittee: Json<Committee> = {
   toJson: (committee) => {
     return {
-      committee_members: AssocMap.jsonMap(
+      members: AssocMap.jsonMap(
         V1Credential.jsonCredential,
         jsonInteger,
       ).toJson(committee.committeeMembers),
-      committee_quorum: jsonInteger.toJson(committee.committeeQuorum),
+      quorum: jsonInteger.toJson(committee.committeeQuorum),
     };
   },
   fromJson: (value) => {
@@ -1427,7 +1427,7 @@ export const eqConstitution: Eq<Constitution> = {
 export const jsonConstitution: Json<Constitution> = {
   toJson: (constitution) => {
     return {
-      constitution_script: jsonMaybe(V1Scripts.jsonScriptHash).toJson(
+      script: jsonMaybe(V1Scripts.jsonScriptHash).toJson(
         constitution.constitutionScript,
       ),
     };
@@ -1608,44 +1608,44 @@ export const eqGovernanceAction: Eq<GovernanceAction> = {
   eq: (l, r) => {
     if (l.name === "ParameterChange" && r.name === "ParameterChange") {
       return (
-        eqMaybe(eqGovernanceActionId).neq(l.fields[0], r.fields[0]) ||
-        eqPlutusData.neq(l.fields[1], r.fields[1]) ||
-        eqMaybe(V1Scripts.eqScriptHash).neq(l.fields[2], r.fields[2])
+        eqMaybe(eqGovernanceActionId).eq(l.fields[0], r.fields[0]) &&
+        eqPlutusData.eq(l.fields[1], r.fields[1]) &&
+        eqMaybe(V1Scripts.eqScriptHash).eq(l.fields[2], r.fields[2])
       );
     } else if (
       l.name === "HardForkInitiation" &&
       r.name === "HardForkInitiation"
     ) {
       return (
-        eqMaybe(eqGovernanceActionId).neq(l.fields[0], r.fields[0]) ||
-        eqProtocolVersion.neq(l.fields[1], r.fields[1])
+        eqMaybe(eqGovernanceActionId).eq(l.fields[0], r.fields[0]) &&
+        eqProtocolVersion.eq(l.fields[1], r.fields[1])
       );
     } else if (
       l.name === "TreasuryWithdrawal" &&
       r.name === "TreasuryWithdrawal"
     ) {
       return (
-        AssocMap.eqMap(V1Credential.eqCredential, eqInteger).neq(
+        AssocMap.eqMap(V1Credential.eqCredential, eqInteger).eq(
           l.fields[0],
           r.fields[0],
-        ) || eqMaybe(V1Scripts.eqScriptHash).neq(l.fields[1], r.fields[1])
+        ) && eqMaybe(V1Scripts.eqScriptHash).eq(l.fields[1], r.fields[1])
       );
     } else if (l.name === "NoConfidence" && r.name === "NoConfidence") {
-      return eqMaybe(eqGovernanceActionId).neq(l.fields, r.fields);
+      return eqMaybe(eqGovernanceActionId).eq(l.fields, r.fields);
     } else if (l.name === "UpdateCommittee" && r.name === "UpdateCommittee") {
       return (
-        eqMaybe(eqGovernanceActionId).neq(l.fields[0], r.fields[0]) ||
-        eqList(V1Credential.eqCredential).neq(l.fields[1], r.fields[1]) ||
-        (AssocMap.eqMap(V1Credential.eqCredential, eqInteger).neq(
+        eqMaybe(eqGovernanceActionId).eq(l.fields[0], r.fields[0]) &&
+        eqList(V1Credential.eqCredential).eq(l.fields[1], r.fields[1]) &&
+        AssocMap.eqMap(V1Credential.eqCredential, eqInteger).eq(
           l.fields[2],
           r.fields[2],
         ) &&
-          eqRational.eq(l.fields[3], r.fields[3]))
+        eqRational.eq(l.fields[3], r.fields[3])
       );
     } else if (l.name === "NewConstitution" && r.name === "NewConstitution") {
       return (
-        eqMaybe(eqGovernanceActionId).neq(l.fields[0], r.fields[0]) ||
-        eqConstitution.neq(l.fields[1], r.fields[1])
+        eqMaybe(eqGovernanceActionId).eq(l.fields[0], r.fields[0]) &&
+        eqConstitution.eq(l.fields[1], r.fields[1])
       );
     } else return false;
   },
@@ -2866,6 +2866,10 @@ export const jsonTxInfo: Json<TxInfo> = {
       ),
       tx_certs: jsonList(jsonTxCert).toJson(txInfo.txInfoTxCerts),
       valid_range: V1Time.jsonPOSIXTimeRange.toJson(txInfo.txInfoValidRange),
+      votes: AssocMap.jsonMap(
+        jsonVoter,
+        AssocMap.jsonMap(jsonGovernanceActionId, jsonVote),
+      ).toJson(txInfo.txInfoVotes),
       wdrl: AssocMap.jsonMap(V1Credential.jsonCredential, jsonInteger).toJson(
         txInfo.txInfoWdrl,
       ),
@@ -2894,7 +2898,7 @@ export const jsonTxInfo: Json<TxInfo> = {
       value,
     );
     const txInfoTxCerts = caseFieldWithValue(
-      "tx_cert",
+      "tx_certs",
       jsonList(jsonTxCert).fromJson,
       value,
     );
@@ -2939,7 +2943,7 @@ export const jsonTxInfo: Json<TxInfo> = {
     );
 
     const txInfoProposalProcedures = caseFieldWithValue(
-      "protocol_procedure",
+      "proposal_procedures",
       jsonList(jsonProposalProcedure).fromJson,
       value,
     );
