@@ -76,6 +76,14 @@ import {
  */
 export type ColdCommitteeCredential = Credential;
 
+export const eqColdCommitteeCredential: Eq<ColdCommitteeCredential> =
+  V1Credential.eqCredential;
+export const jsonColdCommitteeCredential: Json<ColdCommitteeCredential> =
+  V1Credential.jsonCredential;
+export const isPlutusDataColdCommitteeCredential: IsPlutusData<
+  ColdCommitteeCredential
+> = V1Credential.isPlutusDataCredential;
+
 /**
  * Hot credential of a constitutional committee.
  *
@@ -83,12 +91,26 @@ export type ColdCommitteeCredential = Credential;
  */
 export type HotCommitteeCredential = Credential;
 
+export const eqHotCommitteeCredential: Eq<HotCommitteeCredential> =
+  V1Credential.eqCredential;
+export const jsonHotCommitteeCredential: Json<HotCommitteeCredential> =
+  V1Credential.jsonCredential;
+export const isPlutusDataHotCommitteeCredential: IsPlutusData<
+  HotCommitteeCredential
+> = V1Credential.isPlutusDataCredential;
+
 /**
  * Credential of a delegated representative.
  *
  * @see {@link https://github.com/IntersectMBO/plutus/blob/1.36.0.0/plutus-ledger-api/src/PlutusLedgerApi/V3/Contexts.hs#L126}
  */
 export type DRepCredential = Credential;
+
+export const eqDRepCredential: Eq<DRepCredential> = V1Credential.eqCredential;
+export const jsonDRepCredential: Json<DRepCredential> =
+  V1Credential.jsonCredential;
+export const isPlutusDataDRepCredential: IsPlutusData<DRepCredential> =
+  V1Credential.isPlutusDataCredential;
 
 /**
  * Delegated representative, or the two predefined voting options.
