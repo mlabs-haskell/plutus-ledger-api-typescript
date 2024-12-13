@@ -22,6 +22,8 @@ import {
 import type { Credential } from "../V1/Credential.js";
 import * as V1Credential from "../V1/Credential.js";
 
+import * as LbPlutusData from "../PlutusData.js";
+
 import type { Map } from "../AssocMap.js";
 import * as AssocMap from "../AssocMap.js";
 
@@ -1565,6 +1567,13 @@ export const isPlutusDataProtocolVersion: IsPlutusData<ProtocolVersion> = {
  * @see {@link https://github.com/IntersectMBO/plutus/blob/1.36.0.0/plutus-ledger-api/src/PlutusLedgerApi/V3/Contexts.hs#L365}
  */
 export type ChangedParameters = PlutusData;
+
+export const eqChangedParameters: Eq<ChangedParameters> =
+  LbPlutusData.eqPlutusData;
+export const jsonChangedParameters: Json<ChangedParameters> =
+  LbPlutusData.jsonPlutusData;
+export const isPlutusDataChangedParameters: IsPlutusData<ChangedParameters> =
+  LbPlutusData.isPlutusDataPlutusData;
 
 /**
  * @see {@link https://github.com/IntersectMBO/plutus/blob/1.36.0.0/plutus-ledger-api/src/PlutusLedgerApi/V3/Contexts.hs#L381-L403}
