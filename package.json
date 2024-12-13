@@ -9,6 +9,7 @@
     "./V1.js": "./dist/Lib/V1.js",
     "./V2.js": "./dist/Lib/V2.js",
     "./V3.js": "./dist/Lib/V3.js",
+    "./Ratio.js": "./dist/Lib/Ratio.js",
     "./PlutusData.js": "./dist/Lib/PlutusData.js",
     "./AssocMap.js": "./dist/Lib/AssocMap.js",
     "./package.json": "./package.json"
