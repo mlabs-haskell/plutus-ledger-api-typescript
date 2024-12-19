@@ -14,6 +14,7 @@ export function fcTxCert(): fc.Arbitrary<V3.TxCert> {
       tie("RegStaking"),
       tie("UnRegStaking"),
       tie("DelegStaking"),
+      tie("RegDeleg"),
       tie("RegDRep"),
       tie("UpdateDRep"),
       tie("UnRegDRep"),
@@ -34,9 +35,13 @@ export function fcTxCert(): fc.Arbitrary<V3.TxCert> {
       name: fc.constant("DelegStaking"),
       fields: fc.tuple(fcCredential(), fcDelegatee()),
     }),
+    RegDeleg: fc.record({
+      name: fc.constant("RegDeleg"),
+      fields: fc.tuple(fcCredential(), fcDelegatee(), fc.bigInt()),
+    }),
     RegDRep: fc.record({
       name: fc.constant("RegDRep"),
-      fields: fc.tuple(fcCredential(), fcDelegatee(), fc.bigInt()),
+      fields: fc.tuple(fcCredential(), fc.bigInt()),
     }),
     UpdateDRep: fc.record({
       name: fc.constant("UpdateDRep"),

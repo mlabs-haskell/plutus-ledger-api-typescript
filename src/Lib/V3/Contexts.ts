@@ -441,8 +441,12 @@ export type TxCert =
     fields: [Credential, Delegatee];
   }
   | {
+    name: "RegDeleg";
+    fields: [Credential, Delegatee, Lovelace];
+  }
+  | {
     name: "RegDRep";
-    fields: [DRepCredential, Delegatee, Lovelace];
+    fields: [DRepCredential, Lovelace];
   }
   | {
     name: "UpdateDRep";
@@ -489,11 +493,16 @@ export const eqTxCert: Eq<TxCert> = {
         V1Credential.eqCredential.eq(l.fields[0], r.fields[0]) &&
         eqDelegatee.eq(l.fields[1], r.fields[1])
       );
-    } else if (l.name === "RegDRep" && r.name === "RegDRep") {
+    } else if (l.name === "RegDeleg" && r.name === "RegDeleg") {
       return (
         V1Credential.eqCredential.eq(l.fields[0], r.fields[0]) &&
         eqDelegatee.eq(l.fields[1], r.fields[1]) &&
         eqInteger.eq(l.fields[2], r.fields[2])
+      );
+    } else if (l.name === "RegDRep" && r.name === "RegDRep") {
+      return (
+        V1Credential.eqCredential.eq(l.fields[0], r.fields[0]) &&
+        eqInteger.eq(l.fields[1], r.fields[1])
       );
     } else if (l.name === "UpdateDRep" && r.name === "UpdateDRep") {
       return V1Credential.eqCredential.eq(l.fields, r.fields);
@@ -537,11 +546,16 @@ export const eqTxCert: Eq<TxCert> = {
         V1Credential.eqCredential.neq(l.fields[0], r.fields[0]) ||
         eqDelegatee.neq(l.fields[1], r.fields[1])
       );
-    } else if (l.name === "RegDRep" && r.name === "RegDRep") {
+    } else if (l.name === "RegDeleg" && r.name === "RegDeleg") {
       return (
         V1Credential.eqCredential.neq(l.fields[0], r.fields[0]) ||
         eqDelegatee.neq(l.fields[1], r.fields[1]) ||
         eqInteger.neq(l.fields[2], r.fields[2])
+      );
+    } else if (l.name === "RegDRep" && r.name === "RegDRep") {
+      return (
+        V1Credential.eqCredential.neq(l.fields[0], r.fields[0]) ||
+        eqInteger.neq(l.fields[1], r.fields[1])
       );
     } else if (l.name === "UpdateDRep" && r.name === "UpdateDRep") {
       return V1Credential.eqCredential.neq(l.fields, r.fields);
@@ -592,11 +606,16 @@ export const jsonTxCert: Json<TxCert> = {
           V1Credential.jsonCredential.toJson(txCert.fields[0]),
           jsonDelegatee.toJson(txCert.fields[1]),
         ]);
-      case "RegDRep":
+      case "RegDeleg":
         return jsonConstructor(txCert.name, [
           V1Credential.jsonCredential.toJson(txCert.fields[0]),
           jsonDelegatee.toJson(txCert.fields[1]),
           jsonInteger.toJson(txCert.fields[2]),
+        ]);
+      case "RegDRep":
+        return jsonConstructor(txCert.name, [
+          V1Credential.jsonCredential.toJson(txCert.fields[0]),
+          jsonInteger.toJson(txCert.fields[1]),
         ]);
       case "UpdateDRep":
         return jsonConstructor(txCert.name, [
@@ -671,7 +690,7 @@ export const jsonTxCert: Json<TxCert> = {
             name: "DelegStaking",
           };
         },
-        RegDRep: (fields) => {
+        RegDeleg: (fields) => {
           if (fields.length != 3) {
             throw new JsonError(`Expected three fields`);
           }
@@ -681,6 +700,19 @@ export const jsonTxCert: Json<TxCert> = {
               V1Credential.jsonCredential.fromJson(fields[0]!),
               jsonDelegatee.fromJson(fields[1]!),
               jsonInteger.fromJson(fields[2]!),
+            ],
+            name: "RegDeleg",
+          };
+        },
+        RegDRep: (fields) => {
+          if (fields.length != 2) {
+            throw new JsonError(`Expected three fields`);
+          }
+
+          return {
+            fields: [
+              V1Credential.jsonCredential.fromJson(fields[0]!),
+              jsonInteger.fromJson(fields[1]!),
             ],
             name: "RegDRep",
           };
@@ -802,7 +834,7 @@ export const isPlutusDataTxCert: IsPlutusData<TxCert> = {
           ],
           name: "Constr",
         };
-      case "RegDRep":
+      case "RegDeleg":
         return {
           fields: [
             3n,
@@ -814,10 +846,21 @@ export const isPlutusDataTxCert: IsPlutusData<TxCert> = {
           ],
           name: "Constr",
         };
-      case "UpdateDRep":
+      case "RegDRep":
         return {
           fields: [
             4n,
+            [
+              V1Credential.isPlutusDataCredential.toData(txCert.fields[0]),
+              isPlutusDataInteger.toData(txCert.fields[1]),
+            ],
+          ],
+          name: "Constr",
+        };
+      case "UpdateDRep":
+        return {
+          fields: [
+            5n,
             [V1Credential.isPlutusDataCredential.toData(txCert.fields)],
           ],
           name: "Constr",
@@ -825,7 +868,7 @@ export const isPlutusDataTxCert: IsPlutusData<TxCert> = {
       case "UnRegDRep":
         return {
           fields: [
-            5n,
+            6n,
             [
               V1Credential.isPlutusDataCredential.toData(txCert.fields[0]),
               isPlutusDataInteger.toData(txCert.fields[1]),
@@ -836,7 +879,7 @@ export const isPlutusDataTxCert: IsPlutusData<TxCert> = {
       case "PoolRegister":
         return {
           fields: [
-            6n,
+            7n,
             [
               V1Crypto.isPlutusDataPubKeyHash.toData(txCert.fields[0]),
               V1Crypto.isPlutusDataPubKeyHash.toData(txCert.fields[1]),
@@ -848,7 +891,7 @@ export const isPlutusDataTxCert: IsPlutusData<TxCert> = {
       case "PoolRetire":
         return {
           fields: [
-            7n,
+            8n,
             [
               V1Crypto.isPlutusDataPubKeyHash.toData(txCert.fields[0]),
               isPlutusDataInteger.toData(txCert.fields[1]),
@@ -859,7 +902,7 @@ export const isPlutusDataTxCert: IsPlutusData<TxCert> = {
       case "AuthHotCommittee":
         return {
           fields: [
-            8n,
+            9n,
             [
               V1Credential.isPlutusDataCredential.toData(txCert.fields[0]),
               V1Credential.isPlutusDataCredential.toData(txCert.fields[1]),
@@ -870,7 +913,7 @@ export const isPlutusDataTxCert: IsPlutusData<TxCert> = {
       case "ResignColdCommittee":
         return {
           fields: [
-            9n,
+            10n,
             [V1Credential.isPlutusDataCredential.toData(txCert.fields)],
           ],
           name: "Constr",
@@ -912,14 +955,22 @@ export const isPlutusDataTxCert: IsPlutusData<TxCert> = {
               isPlutusDataDelegatee.fromData(fields[1]!),
               isPlutusDataInteger.fromData(fields[2]!),
             ],
+            name: "RegDeleg",
+          };
+        } else if (tag === 4n && fields.length == 2) {
+          return {
+            fields: [
+              V1Credential.isPlutusDataCredential.fromData(fields[0]!),
+              isPlutusDataInteger.fromData(fields[1]!),
+            ],
             name: "RegDRep",
           };
-        } else if (tag === 4n && fields.length == 1) {
+        } else if (tag === 5n && fields.length == 1) {
           return {
             fields: V1Credential.isPlutusDataCredential.fromData(fields[0]!),
             name: "UpdateDRep",
           };
-        } else if (tag === 5n && fields.length == 2) {
+        } else if (tag === 6n && fields.length == 2) {
           return {
             fields: [
               V1Credential.isPlutusDataCredential.fromData(fields[0]!),
@@ -927,7 +978,7 @@ export const isPlutusDataTxCert: IsPlutusData<TxCert> = {
             ],
             name: "UnRegDRep",
           };
-        } else if (tag === 6n && fields.length == 2) {
+        } else if (tag === 7n && fields.length == 2) {
           return {
             fields: [
               V1Crypto.isPlutusDataPubKeyHash.fromData(fields[0]!),
@@ -935,7 +986,7 @@ export const isPlutusDataTxCert: IsPlutusData<TxCert> = {
             ],
             name: "PoolRegister",
           };
-        } else if (tag === 7n && fields.length == 2) {
+        } else if (tag === 8n && fields.length == 2) {
           return {
             fields: [
               V1Crypto.isPlutusDataPubKeyHash.fromData(fields[0]!),
@@ -943,7 +994,7 @@ export const isPlutusDataTxCert: IsPlutusData<TxCert> = {
             ],
             name: "PoolRetire",
           };
-        } else if (tag === 8n && fields.length == 2) {
+        } else if (tag === 9n && fields.length == 2) {
           return {
             fields: [
               V1Credential.isPlutusDataCredential.fromData(fields[0]!),
@@ -951,7 +1002,7 @@ export const isPlutusDataTxCert: IsPlutusData<TxCert> = {
             ],
             name: "AuthHotCommittee",
           };
-        } else if (tag === 9n && fields.length == 1) {
+        } else if (tag === 10n && fields.length == 1) {
           return {
             fields: V1Credential.isPlutusDataCredential.fromData(fields[0]!),
             name: "ResignColdCommittee",
