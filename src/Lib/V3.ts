@@ -12,4 +12,5 @@
  */
 
 export * from "./V3/Contexts.js";
+export * from "./V3/Tx.js";
 export * from "./Prelude/Instances.js";
