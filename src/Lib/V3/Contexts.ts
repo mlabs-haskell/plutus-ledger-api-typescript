@@ -18,6 +18,7 @@ import {
   type List,
   type Maybe,
 } from "prelude";
+import * as Prelude from "prelude";
 
 import type { Credential } from "../V1/Credential.js";
 import * as V1Credential from "../V1/Credential.js";
@@ -51,10 +52,9 @@ import {
   type Rational,
 } from "../Ratio.js";
 
-import type { TxId, TxOutRef } from "../V1/Tx.js";
-import * as V1Tx from "../V1/Tx.js";
+import type { TxId, TxOutRef } from "../V3/Tx.js";
+import * as V3Tx from "../V3/Tx.js";
 
-import { type TxInInfo } from "../V2/Contexts.js";
 import * as V2Contexts from "../V2/Contexts.js";
 
 import type { TxOut } from "../V2/Tx.js";
@@ -1240,13 +1240,13 @@ export type GovernanceActionId = {
 export const eqGovernanceActionId: Eq<GovernanceActionId> = {
   eq: (l, r) => {
     return (
-      V1Tx.eqTxId.eq(l.gaidTxId, r.gaidTxId) &&
+      V3Tx.eqTxId.eq(l.gaidTxId, r.gaidTxId) &&
       eqInteger.eq(l.gaidGovActionIx, r.gaidGovActionIx)
     );
   },
   neq: (l, r) => {
     return (
-      V1Tx.eqTxId.neq(l.gaidTxId, r.gaidTxId) ||
+      V3Tx.eqTxId.neq(l.gaidTxId, r.gaidTxId) ||
       eqInteger.neq(l.gaidGovActionIx, r.gaidGovActionIx)
     );
   },
@@ -1259,7 +1259,7 @@ export const jsonGovernanceActionId: Json<GovernanceActionId> = {
   toJson: (governanceActionId) => {
     return {
       gaidGovActionIx: jsonInteger.toJson(governanceActionId.gaidGovActionIx),
-      gaidTxId: V1Tx.jsonTxId.toJson(governanceActionId.gaidTxId),
+      gaidTxId: V3Tx.jsonTxId.toJson(governanceActionId.gaidTxId),
     };
   },
   fromJson: (value) => {
@@ -1270,7 +1270,7 @@ export const jsonGovernanceActionId: Json<GovernanceActionId> = {
     );
     const gaidTxId = caseFieldWithValue(
       "gaidTxId",
-      V1Tx.jsonTxId.fromJson,
+      V3Tx.jsonTxId.fromJson,
       value,
     );
 
@@ -1291,7 +1291,7 @@ export const isPlutusDataGovernanceActionId: IsPlutusData<GovernanceActionId> =
         fields: [
           0n,
           [
-            V1Tx.isPlutusDataTxId.toData(governanceActionId.gaidTxId),
+            V3Tx.isPlutusDataTxId.toData(governanceActionId.gaidTxId),
             isPlutusDataInteger.toData(governanceActionId.gaidGovActionIx),
           ],
         ],
@@ -1307,7 +1307,7 @@ export const isPlutusDataGovernanceActionId: IsPlutusData<GovernanceActionId> =
           if (fields.length !== 2) break;
 
           return {
-            gaidTxId: V1Tx.isPlutusDataTxId.fromData(fields[0]!),
+            gaidTxId: V3Tx.isPlutusDataTxId.fromData(fields[0]!),
             gaidGovActionIx: isPlutusDataInteger.fromData(fields[1]!),
           };
         }
@@ -2191,7 +2191,7 @@ export const eqScriptPurpose: Eq<ScriptPurpose> = {
     if (l.name === "Minting" && r.name === "Minting") {
       return V1Value.eqCurrencySymbol.eq(l.fields, r.fields);
     } else if (l.name === "Spending" && r.name === "Spending") {
-      return V1Tx.eqTxOutRef.eq(l.fields, r.fields);
+      return V3Tx.eqTxOutRef.eq(l.fields, r.fields);
     } else if (l.name === "Rewarding" && r.name === "Rewarding") {
       return V1Credential.eqCredential.eq(l.fields, r.fields);
     } else if (l.name === "Certifying" && r.name === "Certifying") {
@@ -2212,7 +2212,7 @@ export const eqScriptPurpose: Eq<ScriptPurpose> = {
     if (l.name === "Minting" && r.name === "Minting") {
       return V1Value.eqCurrencySymbol.neq(l.fields, r.fields);
     } else if (l.name === "Spending" && r.name === "Spending") {
-      return V1Tx.eqTxOutRef.neq(l.fields, r.fields);
+      return V3Tx.eqTxOutRef.neq(l.fields, r.fields);
     } else if (l.name === "Rewarding" && r.name === "Rewarding") {
       return V1Credential.eqCredential.neq(l.fields, r.fields);
     } else if (l.name === "Certifying" && r.name === "Certifying") {
@@ -2243,7 +2243,7 @@ export const jsonScriptPurpose: Json<ScriptPurpose> = {
         ]);
       case "Spending":
         return jsonConstructor(scriptPurpose.name, [
-          V1Tx.jsonTxOutRef.toJson(scriptPurpose.fields),
+          V3Tx.jsonTxOutRef.toJson(scriptPurpose.fields),
         ]);
       case "Rewarding":
         return jsonConstructor(scriptPurpose.name, [
@@ -2283,7 +2283,7 @@ export const jsonScriptPurpose: Json<ScriptPurpose> = {
             throw new JsonError("Expected one field");
           }
           return {
-            fields: V1Tx.jsonTxOutRef.fromJson(fields[0]!),
+            fields: V3Tx.jsonTxOutRef.fromJson(fields[0]!),
             name: "Spending",
           };
         },
@@ -2355,7 +2355,7 @@ export const isPlutusDataScriptPurpose: IsPlutusData<ScriptPurpose> = {
         return {
           fields: [
             1n,
-            [V1Tx.isPlutusDataTxOutRef.toData(scriptPurpose.fields)],
+            [V3Tx.isPlutusDataTxOutRef.toData(scriptPurpose.fields)],
           ],
           name: "Constr",
         };
@@ -2408,7 +2408,7 @@ export const isPlutusDataScriptPurpose: IsPlutusData<ScriptPurpose> = {
           };
         } else if (tag === 1n && fields.length === 1) {
           return {
-            fields: V1Tx.isPlutusDataTxOutRef.fromData(fields[0]!),
+            fields: V3Tx.isPlutusDataTxOutRef.fromData(fields[0]!),
             name: "Spending",
           };
         } else if (tag === 2n && fields.length === 1) {
@@ -2468,7 +2468,7 @@ export const eqScriptInfo: Eq<ScriptInfo> = {
       return V1Value.eqCurrencySymbol.eq(l.fields, r.fields);
     } else if (l.name === "Spending" && r.name === "Spending") {
       return (
-        V1Tx.eqTxOutRef.eq(l.fields[0], r.fields[0]) &&
+        V3Tx.eqTxOutRef.eq(l.fields[0], r.fields[0]) &&
         eqMaybe(V1Scripts.eqDatum).eq(l.fields[1], r.fields[1])
       );
     } else if (l.name === "Rewarding" && r.name === "Rewarding") {
@@ -2492,7 +2492,7 @@ export const eqScriptInfo: Eq<ScriptInfo> = {
       return V1Value.eqCurrencySymbol.neq(l.fields, r.fields);
     } else if (l.name === "Spending" && r.name === "Spending") {
       return (
-        V1Tx.eqTxOutRef.neq(l.fields[0], r.fields[0]) ||
+        V3Tx.eqTxOutRef.neq(l.fields[0], r.fields[0]) ||
         eqMaybe(V1Scripts.eqDatum).neq(l.fields[1], r.fields[1])
       );
     } else if (l.name === "Rewarding" && r.name === "Rewarding") {
@@ -2525,7 +2525,7 @@ export const jsonScriptInfo: Json<ScriptInfo> = {
         ]);
       case "Spending":
         return jsonConstructor(scriptPurpose.name, [
-          V1Tx.jsonTxOutRef.toJson(scriptPurpose.fields[0]),
+          V3Tx.jsonTxOutRef.toJson(scriptPurpose.fields[0]),
           jsonMaybe(V1Scripts.jsonDatum).toJson(scriptPurpose.fields[1]),
         ]);
       case "Rewarding":
@@ -2567,7 +2567,7 @@ export const jsonScriptInfo: Json<ScriptInfo> = {
           }
           return {
             fields: [
-              V1Tx.jsonTxOutRef.fromJson(fields[0]!),
+              V3Tx.jsonTxOutRef.fromJson(fields[0]!),
               jsonMaybe(V1Scripts.jsonDatum).fromJson(fields[1]!),
             ],
             name: "Spending",
@@ -2642,7 +2642,7 @@ export const isPlutusDataScriptInfo: IsPlutusData<ScriptInfo> = {
           fields: [
             1n,
             [
-              V1Tx.isPlutusDataTxOutRef.toData(scriptPurpose.fields[0]),
+              V3Tx.isPlutusDataTxOutRef.toData(scriptPurpose.fields[0]),
               isPlutusDataMaybe(V1Scripts.isPlutusDataDatum).toData(
                 scriptPurpose.fields[1],
               ),
@@ -2700,7 +2700,7 @@ export const isPlutusDataScriptInfo: IsPlutusData<ScriptInfo> = {
         } else if (tag === 1n && fields.length === 2) {
           return {
             fields: [
-              V1Tx.isPlutusDataTxOutRef.fromData(fields[0]!),
+              V3Tx.isPlutusDataTxOutRef.fromData(fields[0]!),
               isPlutusDataMaybe(V1Scripts.isPlutusDataDatum).fromData(
                 fields[1]!,
               ),
@@ -2799,7 +2799,7 @@ export const eqTxInfo: Eq<TxInfo> = {
         l.txInfoData,
         r.txInfoData,
       ) &&
-      V1Tx.eqTxId.eq(l.txInfoId, r.txInfoId) &&
+      V3Tx.eqTxId.eq(l.txInfoId, r.txInfoId) &&
       AssocMap.eqMap(eqVoter, AssocMap.eqMap(eqGovernanceActionId, eqVote)).eq(
         l.txInfoVotes,
         r.txInfoVotes,
@@ -2843,7 +2843,7 @@ export const eqTxInfo: Eq<TxInfo> = {
         l.txInfoData,
         r.txInfoData,
       ) ||
-      V1Tx.eqTxId.neq(l.txInfoId, r.txInfoId) ||
+      V3Tx.eqTxId.neq(l.txInfoId, r.txInfoId) ||
       AssocMap.eqMap(eqVoter, AssocMap.eqMap(eqGovernanceActionId, eqVote)).neq(
         l.txInfoVotes,
         r.txInfoVotes,
@@ -2875,7 +2875,7 @@ export const jsonTxInfo: Json<TxInfo> = {
         V1Scripts.jsonDatum,
       ).toJson(txInfo.txInfoData),
       fee: jsonInteger.toJson(txInfo.txInfoFee),
-      id: V1Tx.jsonTxId.toJson(txInfo.txInfoId),
+      id: V3Tx.jsonTxId.toJson(txInfo.txInfoId),
       inputs: jsonList(V2Contexts.jsonTxInInfo).toJson(txInfo.txInfoInputs),
       mint: V1Value.jsonValue.toJson(txInfo.txInfoMint),
       outputs: jsonList(V2Tx.jsonTxOut).toJson(txInfo.txInfoOutputs),
@@ -2962,7 +2962,7 @@ export const jsonTxInfo: Json<TxInfo> = {
       value,
     );
 
-    const txInfoId = caseFieldWithValue("id", V1Tx.jsonTxId.fromJson, value);
+    const txInfoId = caseFieldWithValue("id", V3Tx.jsonTxId.fromJson, value);
 
     const txInfoVotes = caseFieldWithValue(
       "votes",
@@ -3047,7 +3047,7 @@ export const isPlutusDataTxInfo: IsPlutusData<TxInfo> = {
             V1Scripts.isPlutusDataDatumHash,
             V1Scripts.isPlutusDataDatum,
           ).toData(txInfo.txInfoData),
-          V1Tx.isPlutusDataTxId.toData(txInfo.txInfoId),
+          V3Tx.isPlutusDataTxId.toData(txInfo.txInfoId),
           AssocMap.isPlutusDataMap(
             isPlutusDataVoter,
             AssocMap.isPlutusDataMap(
@@ -3110,7 +3110,7 @@ export const isPlutusDataTxInfo: IsPlutusData<TxInfo> = {
             V1Scripts.isPlutusDataDatumHash,
             V1Scripts.isPlutusDataDatum,
           ).fromData(plutusData.fields[1][10]!);
-          const txInfoId = V1Tx.isPlutusDataTxId.fromData(
+          const txInfoId = V3Tx.isPlutusDataTxId.fromData(
             plutusData.fields[1][11]!,
           );
           const txInfoVotes = AssocMap.isPlutusDataMap(
@@ -3156,6 +3156,95 @@ export const isPlutusDataTxInfo: IsPlutusData<TxInfo> = {
         break;
     }
     throw new IsPlutusDataError("Unexpected data");
+  },
+};
+
+/**
+ * {@link TxInInfo} is an input of a pending transaction.
+ *
+ * @see {@link https://github.com/input-output-hk/plutus/blob/1.16.0.0/plutus-ledger-api/src/PlutusLedgerApi/V2/Contexts.hs#L58-L62}
+ */
+export type TxInInfo = { txInInfoOutRef: TxOutRef; txInInfoResolved: TxOut };
+
+/**
+ * {@link Eq} instance for {@link TxInInfo}
+ */
+export const eqTxInInfo: Eq<TxInInfo> = {
+  eq: (l, r) => {
+    return (
+      V3Tx.eqTxOutRef.eq(l.txInInfoOutRef, r.txInInfoOutRef) &&
+      V2Tx.eqTxOut.eq(l.txInInfoResolved, r.txInInfoResolved)
+    );
+  },
+  neq: (l, r) => {
+    return (
+      V3Tx.eqTxOutRef.neq(l.txInInfoOutRef, r.txInInfoOutRef) ||
+      V2Tx.eqTxOut.neq(l.txInInfoResolved, r.txInInfoResolved)
+    );
+  },
+};
+
+/**
+ * {@link Json} instance for {@link TxInInfo}
+ */
+export const jsonTxInInfo: Json<TxInInfo> = {
+  toJson: (txininfo) => {
+    return {
+      output: V2Tx.jsonTxOut.toJson(txininfo.txInInfoResolved),
+      reference: V3Tx.jsonTxOutRef.toJson(txininfo.txInInfoOutRef),
+    };
+  },
+  fromJson: (value) => {
+    const outref = Prelude.caseFieldWithValue(
+      "reference",
+      V3Tx.jsonTxOutRef.fromJson,
+      value,
+    );
+    const output = Prelude.caseFieldWithValue(
+      "output",
+      V2Tx.jsonTxOut.fromJson,
+      value,
+    );
+    return { txInInfoOutRef: outref, txInInfoResolved: output };
+  },
+};
+
+/**
+ * {@link IsPlutusData} instance for {@link TxInInfo}
+ */
+export const isPlutusDataTxInInfo: IsPlutusData<TxInInfo> = {
+  toData: (txininfo) => {
+    return {
+      fields: [
+        0n,
+        [
+          V3Tx.isPlutusDataTxOutRef.toData(txininfo.txInInfoOutRef),
+          V2Tx.isPlutusDataTxOut.toData(txininfo.txInInfoResolved),
+        ],
+      ],
+      name: "Constr",
+    };
+  },
+
+  fromData: (plutusData) => {
+    switch (plutusData.name) {
+      case "Constr":
+        if (plutusData.fields[0] === 0n && plutusData.fields[1].length === 2) {
+          return {
+            txInInfoOutRef: V3Tx.isPlutusDataTxOutRef.fromData(
+              plutusData.fields[1][0]!,
+            ),
+            txInInfoResolved: V2Tx.isPlutusDataTxOut.fromData(
+              plutusData.fields[1][1]!,
+            ),
+          };
+        }
+        break;
+
+      default:
+        break;
+    }
+    throw new IsPlutusDataError("Invalid data");
   },
 };
 
