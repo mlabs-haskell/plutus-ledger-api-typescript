@@ -1373,7 +1373,7 @@ export const isPlutusDataGovernanceActionId: IsPlutusData<GovernanceActionId> =
  */
 export type Committee = {
   committeeMembers: Map<ColdCommitteeCredential, Integer>;
-  committeeQuorum: Integer;
+  committeeQuorum: Rational;
 };
 
 /**
@@ -1385,7 +1385,7 @@ export const eqCommittee: Eq<Committee> = {
       AssocMap.eqMap(V1Credential.eqCredential, eqInteger).eq(
         l.committeeMembers,
         r.committeeMembers,
-      ) && eqInteger.eq(l.committeeQuorum, r.committeeQuorum)
+      ) && eqRational.eq(l.committeeQuorum, r.committeeQuorum)
     );
   },
   neq: (l, r) => {
@@ -1393,7 +1393,7 @@ export const eqCommittee: Eq<Committee> = {
       AssocMap.eqMap(V1Credential.eqCredential, eqInteger).neq(
         l.committeeMembers,
         r.committeeMembers,
-      ) || eqInteger.neq(l.committeeQuorum, r.committeeQuorum)
+      ) || eqRational.neq(l.committeeQuorum, r.committeeQuorum)
     );
   },
 };
@@ -1408,7 +1408,7 @@ export const jsonCommittee: Json<Committee> = {
         V1Credential.jsonCredential,
         jsonInteger,
       ).toJson(committee.committeeMembers),
-      quorum: jsonInteger.toJson(committee.committeeQuorum),
+      quorum: jsonRational.toJson(committee.committeeQuorum),
     };
   },
   fromJson: (value) => {
@@ -1419,7 +1419,7 @@ export const jsonCommittee: Json<Committee> = {
     );
     const committeeQuorum = caseFieldWithValue(
       "quorum",
-      jsonInteger.fromJson,
+      jsonRational.fromJson,
       value,
     );
     return {
@@ -1442,7 +1442,7 @@ export const isPlutusDataCommittee: IsPlutusData<Committee> = {
             V1Credential.isPlutusDataCredential,
             isPlutusDataInteger,
           ).toData(committee.committeeMembers),
-          isPlutusDataInteger.toData(committee.committeeQuorum),
+          isPlutusDataRational.toData(committee.committeeQuorum),
         ],
       ],
       name: "Constr",
@@ -1461,7 +1461,7 @@ export const isPlutusDataCommittee: IsPlutusData<Committee> = {
             V1Credential.isPlutusDataCredential,
             isPlutusDataInteger,
           ).fromData(fields[0]!),
-          committeeQuorum: isPlutusDataInteger.fromData(fields[1]!),
+          committeeQuorum: isPlutusDataRational.fromData(fields[1]!),
         };
       }
       default:

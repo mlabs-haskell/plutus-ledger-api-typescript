@@ -5,11 +5,12 @@ import fc from "fast-check";
 import { fcAssocMap } from "../AssocMap-test.js";
 import { fcCredential } from "../V1/CredentialInstances-test.js";
 import { eqCredential } from "../../Lib/V1.js";
+import { fcRational } from "../RatioInstances-test.js";
 
 export function fcCommittee(): fc.Arbitrary<V3.Committee> {
   return fc.record({
     committeeMembers: fcAssocMap(eqCredential, fcCredential(), fc.bigUint()),
-    committeeQuorum: fc.bigUint(),
+    committeeQuorum: fcRational(),
   });
 }
 
