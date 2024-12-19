@@ -1,5 +1,5 @@
 /**
- * @see {@link https://github.com/input-output-hk/plutus/blob/1.16.0.0/plutus-ledger-api/src/PlutusLedgerApi/V1/Tx.hs}
+ * @see {@link https://github.com/input-output-hk/plutus/blob/1.36.0.0/plutus-ledger-api/src/PlutusLedgerApi/V1/Tx.hs}
  */
 
 import type { Eq, Integer, Json, Maybe } from "prelude";
