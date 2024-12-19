@@ -1,6 +1,6 @@
 {
   "name": "plutus-ledger-api",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Plutus Ledger API types",
   "type": "module",
   "exports": {
