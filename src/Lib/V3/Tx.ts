@@ -50,7 +50,7 @@ export const jsonTxId: Json<TxId> = {
 /**
  * {@link IsPlutusData} instance for {@link TxId}
  *
- * Note this includes the `0` tag.
+ * Note this uses a more efficient encoding, without the Constr
  */
 export const isPlutusDataTxId: IsPlutusData<TxId> = {
   toData: (txid) => {
