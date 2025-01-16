@@ -4,11 +4,12 @@
  * @module plutus-ledger-api/Ratio.js
  */
 import {
-  caseFieldWithValue,
   type Eq,
   eqInteger,
   type Integer,
+  isJsonArray,
   type Json,
+  JsonError,
   jsonInteger,
 } from "prelude";
 import type { IsPlutusData } from "./PlutusData.js";
@@ -50,26 +51,25 @@ export const eqRational: Eq<Rational> = {
  */
 export const jsonRational: Json<Rational> = {
   toJson: (rational) => {
-    return {
-      numerator: jsonInteger.toJson(rational.numerator),
-      denominator: jsonInteger.toJson(rational.denominator),
-    };
+    return [
+      jsonInteger.toJson(rational.numerator),
+      jsonInteger.toJson(rational.denominator),
+    ];
   },
   fromJson: (value) => {
-    const numerator = caseFieldWithValue(
-      "numerator",
-      jsonInteger.fromJson,
-      value,
-    );
-    const denominator = caseFieldWithValue(
-      "denominator",
-      jsonInteger.fromJson,
-      value,
-    );
+    if (!isJsonArray(value)) {
+      throw new JsonError("JSON Value is not an array");
+    }
+
+    if (
+      value.length !== 2 || value[0] === undefined || value[1] === undefined
+    ) {
+      throw new JsonError("JSON Array length must be exactly 2");
+    }
 
     return {
-      numerator,
-      denominator,
+      numerator: jsonInteger.fromJson(value[0]),
+      denominator: jsonInteger.fromJson(value[1]),
     };
   },
 };
