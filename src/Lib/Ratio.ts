@@ -61,15 +61,13 @@ export const jsonRational: Json<Rational> = {
       throw new JsonError("JSON Value is not an array");
     }
 
-    if (
-      value.length !== 2 || value[0] === undefined || value[1] === undefined
-    ) {
+    if (value.length !== 2) {
       throw new JsonError("JSON Array length must be exactly 2");
     }
 
     return {
-      numerator: jsonInteger.fromJson(value[0]),
-      denominator: jsonInteger.fromJson(value[1]),
+      numerator: jsonInteger.fromJson(value[0]!),
+      denominator: jsonInteger.fromJson(value[1]!),
     };
   },
 };

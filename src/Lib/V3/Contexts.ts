@@ -55,7 +55,7 @@ import {
 import type { TxId, TxOutRef } from "../V3/Tx.js";
 import * as V3Tx from "../V3/Tx.js";
 
-import * as V2Contexts from "../V2/Contexts.js";
+import * as V3Contexts from "../V3/Contexts.js";
 
 import type { TxOut } from "../V2/Tx.js";
 import * as V2Tx from "../V2/Tx.js";
@@ -2824,8 +2824,8 @@ export type TxInfo = {
 export const eqTxInfo: Eq<TxInfo> = {
   eq: (l, r) => {
     return (
-      eqList(V2Contexts.eqTxInInfo).eq(l.txInfoInputs, r.txInfoInputs) &&
-      eqList(V2Contexts.eqTxInInfo).eq(
+      eqList(V3Contexts.eqTxInInfo).eq(l.txInfoInputs, r.txInfoInputs) &&
+      eqList(V3Contexts.eqTxInInfo).eq(
         l.txInfoReferenceInputs,
         r.txInfoReferenceInputs,
       ) &&
@@ -2868,8 +2868,8 @@ export const eqTxInfo: Eq<TxInfo> = {
   },
   neq: (l, r) => {
     return (
-      eqList(V2Contexts.eqTxInInfo).neq(l.txInfoInputs, r.txInfoInputs) ||
-      eqList(V2Contexts.eqTxInInfo).neq(
+      eqList(V3Contexts.eqTxInInfo).neq(l.txInfoInputs, r.txInfoInputs) ||
+      eqList(V3Contexts.eqTxInInfo).neq(
         l.txInfoReferenceInputs,
         r.txInfoReferenceInputs,
       ) ||
@@ -2927,7 +2927,7 @@ export const jsonTxInfo: Json<TxInfo> = {
       ).toJson(txInfo.txInfoData),
       fee: jsonInteger.toJson(txInfo.txInfoFee),
       id: V3Tx.jsonTxId.toJson(txInfo.txInfoId),
-      inputs: jsonList(V2Contexts.jsonTxInInfo).toJson(txInfo.txInfoInputs),
+      inputs: jsonList(V3Contexts.jsonTxInInfo).toJson(txInfo.txInfoInputs),
       mint: V1Value.jsonValue.toJson(txInfo.txInfoMint),
       outputs: jsonList(V2Tx.jsonTxOut).toJson(txInfo.txInfoOutputs),
       proposal_procedures: jsonList(jsonProposalProcedure).toJson(
@@ -2937,7 +2937,7 @@ export const jsonTxInfo: Json<TxInfo> = {
         jsonScriptPurpose,
         V1Scripts.jsonRedeemer,
       ).toJson(txInfo.txInfoRedeemers),
-      reference_inputs: jsonList(V2Contexts.jsonTxInInfo).toJson(
+      reference_inputs: jsonList(V3Contexts.jsonTxInInfo).toJson(
         txInfo.txInfoReferenceInputs,
       ),
       signatories: jsonList(V1Crypto.jsonPubKeyHash).toJson(
@@ -2960,12 +2960,12 @@ export const jsonTxInfo: Json<TxInfo> = {
   fromJson: (value) => {
     const txInfoInputs = caseFieldWithValue(
       "inputs",
-      jsonList(V2Contexts.jsonTxInInfo).fromJson,
+      jsonList(V3Contexts.jsonTxInInfo).fromJson,
       value,
     );
     const txInfoReferenceInputs = caseFieldWithValue(
       "reference_inputs",
-      jsonList(V2Contexts.jsonTxInInfo).fromJson,
+      jsonList(V3Contexts.jsonTxInInfo).fromJson,
       value,
     );
     const txInfoOutputs = caseFieldWithValue(
@@ -3072,10 +3072,10 @@ export const isPlutusDataTxInfo: IsPlutusData<TxInfo> = {
       fields: [
         0n,
         [
-          isPlutusDataList(V2Contexts.isPlutusDataTxInInfo).toData(
+          isPlutusDataList(V3Contexts.isPlutusDataTxInInfo).toData(
             txInfo.txInfoInputs,
           ),
-          isPlutusDataList(V2Contexts.isPlutusDataTxInInfo).toData(
+          isPlutusDataList(V3Contexts.isPlutusDataTxInInfo).toData(
             txInfo.txInfoReferenceInputs,
           ),
           isPlutusDataList(V2Tx.isPlutusDataTxOut).toData(txInfo.txInfoOutputs),
@@ -3126,10 +3126,10 @@ export const isPlutusDataTxInfo: IsPlutusData<TxInfo> = {
       case "Constr": {
         if (plutusData.fields[0] === 0n && plutusData.fields[1].length === 16) {
           const txInfoInputs = isPlutusDataList(
-            V2Contexts.isPlutusDataTxInInfo,
+            V3Contexts.isPlutusDataTxInInfo,
           ).fromData(plutusData.fields[1][0]!);
           const txInfoReferenceInputs = isPlutusDataList(
-            V2Contexts.isPlutusDataTxInInfo,
+            V3Contexts.isPlutusDataTxInInfo,
           ).fromData(plutusData.fields[1][1]!);
           const txInfoOutputs = isPlutusDataList(
             V2Tx.isPlutusDataTxOut,
