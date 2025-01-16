@@ -1502,14 +1502,14 @@ export const eqConstitution: Eq<Constitution> = {
 export const jsonConstitution: Json<Constitution> = {
   toJson: (constitution) => {
     return {
-      script: jsonMaybe(V1Scripts.jsonScriptHash).toJson(
+      constitution_script: jsonMaybe(V1Scripts.jsonScriptHash).toJson(
         constitution.constitutionScript,
       ),
     };
   },
   fromJson: (value) => {
     const constitutionScript = caseFieldWithValue(
-      "script",
+      "constitution_script",
       jsonMaybe(V1Scripts.jsonScriptHash).fromJson,
       value,
     );
