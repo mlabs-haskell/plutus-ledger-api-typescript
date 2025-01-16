@@ -1309,18 +1309,18 @@ export const eqGovernanceActionId: Eq<GovernanceActionId> = {
 export const jsonGovernanceActionId: Json<GovernanceActionId> = {
   toJson: (governanceActionId) => {
     return {
-      gaidGovActionIx: jsonInteger.toJson(governanceActionId.gaidGovActionIx),
-      gaidTxId: V3Tx.jsonTxId.toJson(governanceActionId.gaidTxId),
+      gov_action_id: jsonInteger.toJson(governanceActionId.gaidGovActionIx),
+      tx_id: V3Tx.jsonTxId.toJson(governanceActionId.gaidTxId),
     };
   },
   fromJson: (value) => {
     const gaidGovActionIx = caseFieldWithValue(
-      "gaidGovActionIx",
+      "gov_action_id",
       jsonInteger.fromJson,
       value,
     );
     const gaidTxId = caseFieldWithValue(
-      "gaidTxId",
+      "tx_id",
       V3Tx.jsonTxId.fromJson,
       value,
     );
