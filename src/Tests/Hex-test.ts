@@ -3,6 +3,7 @@ import * as LbHex from "../Lib/Hex.js";
 import { describe, it } from "node:test";
 import * as assert from "node:assert/strict";
 import fc from "fast-check";
+import { Buffer } from "node:buffer";
 
 /**
  * Random generator for hex strings
