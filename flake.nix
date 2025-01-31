@@ -9,7 +9,7 @@
 
     prelude-typescript =
       {
-        url = "github:mlabs-haskell/prelude-typescript";
+        url = "github:mlabs-haskell/prelude-typescript/v1.0.2";
         inputs = {
           nixpkgs.follows = "nixpkgs";
           flake-lang.follows = "flake-lang";
