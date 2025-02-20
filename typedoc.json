@@ -4,6 +4,7 @@
     "./src/Lib/Prelude/Instances.ts",
     "./src/Lib/V1.ts",
     "./src/Lib/V2.ts",
+    "./src/Lib/V3.ts",
     "./src/Lib/PlutusData.ts",
     "./src/Lib/AssocMap.ts"
   ],
