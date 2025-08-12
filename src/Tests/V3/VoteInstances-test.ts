@@ -5,15 +5,24 @@ import fc from "fast-check";
 
 export function fcVote(): fc.Arbitrary<V3.Vote> {
   return fc.oneof(
-    fc.record({
-      name: fc.constant("VoteNo"),
-    }),
-    fc.record({
-      name: fc.constant("VoteYes"),
-    }),
-    fc.record({
-      name: fc.constant("Abstain"),
-    }),
+    fc.record(
+      {
+        name: fc.constant("VoteNo"),
+      },
+      { noNullPrototype: true },
+    ),
+    fc.record(
+      {
+        name: fc.constant("VoteYes"),
+      },
+      { noNullPrototype: true },
+    ),
+    fc.record(
+      {
+        name: fc.constant("Abstain"),
+      },
+      { noNullPrototype: true },
+    ),
   ) as fc.Arbitrary<V3.Vote>;
 }
 

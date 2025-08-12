@@ -20,22 +20,37 @@ export function fcScriptPurpose(): fc.Arbitrary<V1.ScriptPurpose> {
       tie("Rewarding"),
       tie("Certifying"),
     ),
-    Minting: fc.record({
-      name: fc.constant("Minting"),
-      fields: TestValue.fcCurrencySymbol(),
-    }),
-    Spending: fc.record({
-      name: fc.constant("Spending"),
-      fields: TestTxOutRef.fcTxOutRef(),
-    }),
-    Rewarding: fc.record({
-      name: fc.constant("Rewarding"),
-      fields: TestStakingCredential.fcStakingCredential(),
-    }),
-    Certifying: fc.record({
-      name: fc.constant("Certifying"),
-      fields: TestDCert.fcDCert(),
-    }),
+    Minting: fc.record(
+      {
+        name: fc.constant("Minting"),
+        fields: TestValue.fcCurrencySymbol(),
+      },
+      { noNullPrototype: true },
+    ),
+
+    Spending: fc.record(
+      {
+        name: fc.constant("Spending"),
+        fields: TestTxOutRef.fcTxOutRef(),
+      },
+      { noNullPrototype: true },
+    ),
+
+    Rewarding: fc.record(
+      {
+        name: fc.constant("Rewarding"),
+        fields: TestStakingCredential.fcStakingCredential(),
+      },
+      { noNullPrototype: true },
+    ),
+
+    Certifying: fc.record(
+      {
+        name: fc.constant("Certifying"),
+        fields: TestDCert.fcDCert(),
+      },
+      { noNullPrototype: true },
+    ),
   }));
 
   return scriptPurpose as fc.Arbitrary<V1.ScriptPurpose>;

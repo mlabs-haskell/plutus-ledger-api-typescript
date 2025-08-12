@@ -16,12 +16,15 @@ import * as TestMaybe from "../Prelude/MaybeInstances-test.js";
 import * as TestScriptHash from "../V1/ScriptHashInstances-test.js";
 
 export function fcTxOut(): fc.Arbitrary<V2.TxOut> {
-  return fc.record({
-    txOutAddress: TestAddress.fcAddress(),
-    txOutValue: TestValue.fcValue(),
-    txOutDatum: TestOutputDatum.fcOutputDatum(),
-    txOutReferenceScript: TestMaybe.fcMaybe(TestScriptHash.fcScriptHash()),
-  }) as fc.Arbitrary<V2.TxOut>;
+  return fc.record(
+    {
+      txOutAddress: TestAddress.fcAddress(),
+      txOutValue: TestValue.fcValue(),
+      txOutDatum: TestOutputDatum.fcOutputDatum(),
+      txOutReferenceScript: TestMaybe.fcMaybe(TestScriptHash.fcScriptHash()),
+    },
+    { noNullPrototype: true },
+  ) as fc.Arbitrary<V2.TxOut>;
 }
 
 const pubKeyHash1 = Prelude.fromJust(
@@ -134,13 +137,9 @@ describe("TxOut tests", () => {
 
     it(`eq is not neq property based tests`, () => {
       fc.assert(
-        fc.property(
-          fcTxOut(),
-          fcTxOut(),
-          (l, r) => {
-            TestUtils.negationTest(dict, l, r);
-          },
-        ),
+        fc.property(fcTxOut(), fcTxOut(), (l, r) => {
+          TestUtils.negationTest(dict, l, r);
+        }),
         { examples: [] },
       );
     });
@@ -168,40 +167,35 @@ describe("TxOut tests", () => {
 
     it(`toJson/fromJson property based tests`, () => {
       fc.assert(
-        fc.property(
-          fcTxOut(),
-          (data) => {
-            TestUtils.toJsonFromJsonRoundTrip(V2.jsonTxOut, data);
-          },
-        ),
+        fc.property(fcTxOut(), (data) => {
+          TestUtils.toJsonFromJsonRoundTrip(V2.jsonTxOut, data);
+        }),
         { examples: [] },
       );
     });
   });
 
   describe("IsPlutusData TxOut tests", () => {
-    TestUtils.isPlutusDataIt(
-      V2.isPlutusDataTxOut,
-      txOut1,
-      {
-        name: "Constr",
-        fields: [0n, [
+    TestUtils.isPlutusDataIt(V2.isPlutusDataTxOut, txOut1, {
+      name: "Constr",
+      fields: [
+        0n,
+        [
           V1.isPlutusDataAddress.toData(address1),
           V1.isPlutusDataValue.toData(value1),
           V2.isPlutusDataOutputDatum.toData(outputDatum1),
           V1.isPlutusDataMaybe(V1.isPlutusDataScriptHash).toData({
             name: "Nothing",
           }),
-        ]],
-      },
-    );
+        ],
+      ],
+    });
 
-    TestUtils.isPlutusDataIt(
-      V2.isPlutusDataTxOut,
-      txOut2,
-      {
-        name: "Constr",
-        fields: [0n, [
+    TestUtils.isPlutusDataIt(V2.isPlutusDataTxOut, txOut2, {
+      name: "Constr",
+      fields: [
+        0n,
+        [
           V1.isPlutusDataAddress.toData(address1),
           V1.isPlutusDataValue.toData(value1),
           V2.isPlutusDataOutputDatum.toData(outputDatum1),
@@ -209,21 +203,15 @@ describe("TxOut tests", () => {
             name: "Just",
             fields: scriptHash1,
           }),
-        ]],
-      },
-    );
+        ],
+      ],
+    });
 
     it(`toData/fromData property based tests`, () => {
       fc.assert(
-        fc.property(
-          fcTxOut(),
-          (data) => {
-            TestUtils.isPlutusDataRoundTrip(
-              V2.isPlutusDataTxOut,
-              data,
-            );
-          },
-        ),
+        fc.property(fcTxOut(), (data) => {
+          TestUtils.isPlutusDataRoundTrip(V2.isPlutusDataTxOut, data);
+        }),
         { examples: [] },
       );
     });

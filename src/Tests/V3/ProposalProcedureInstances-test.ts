@@ -4,13 +4,17 @@ import * as TestUtils from "../TestUtils.js";
 import fc from "fast-check";
 import { fcCredential } from "../V1/CredentialInstances-test.js";
 import { fcGovernanceAction } from "./GovernanceActionInstances-test.js";
+import { bigUint } from "../TestUtils.js";
 
 export function fcProposalProcedure(): fc.Arbitrary<V3.ProposalProcedure> {
-  return fc.record({
-    ppDeposit: fc.bigUint(),
-    ppReturnAddr: fcCredential(),
-    ppGovernanceAction: fcGovernanceAction(),
-  });
+  return fc.record(
+    {
+      ppDeposit: bigUint(),
+      ppReturnAddr: fcCredential(),
+      ppGovernanceAction: fcGovernanceAction(),
+    },
+    { noNullPrototype: true },
+  );
 }
 
 describe("ProposalProcedure tests", () => {

@@ -12,16 +12,26 @@ export function fcExtended<A>(
 ): fc.Arbitrary<V1.Extended<A>> {
   const { extended } = fc.letrec((tie) => ({
     extended: fc.oneof({}, tie("NegInf"), tie("PosInf"), tie("Finite")),
-    NegInf: fc.record({
-      name: fc.constant("NegInf"),
-    }),
-    PosInf: fc.record({
-      name: fc.constant("PosInf"),
-    }),
-    Finite: fc.record({
-      name: fc.constant("Finite"),
-      fields: arb,
-    }),
+    NegInf: fc.record(
+      {
+        name: fc.constant("NegInf"),
+      },
+      { noNullPrototype: true },
+    ),
+    PosInf: fc.record(
+      {
+        name: fc.constant("PosInf"),
+      },
+      { noNullPrototype: true },
+    ),
+
+    Finite: fc.record(
+      {
+        name: fc.constant("Finite"),
+        fields: arb,
+      },
+      { noNullPrototype: true },
+    ),
   }));
 
   return extended as fc.Arbitrary<V1.Extended<A>>;
@@ -42,10 +52,13 @@ export function fcUpperBound<A>(
 export function fcInterval<A>(
   arb: fc.Arbitrary<A>,
 ): fc.Arbitrary<V1.Interval<A>> {
-  return fc.record({
-    ivFrom: fcLowerBound(arb),
-    ivTo: fcUpperBound(arb),
-  });
+  return fc.record(
+    {
+      ivFrom: fcLowerBound(arb),
+      ivTo: fcUpperBound(arb),
+    },
+    { noNullPrototype: true },
+  );
 }
 
 describe("Extended tests", () => {
@@ -58,23 +71,43 @@ describe("Extended tests", () => {
     TestUtils.eqIt(dict, { name: "PosInf" }, { name: "PosInf" }, true);
     TestUtils.neqIt(dict, { name: "PosInf" }, { name: "PosInf" }, false);
 
-    TestUtils.eqIt(dict, { name: "Finite", fields: 0n }, {
-      name: "Finite",
-      fields: 0n,
-    }, true);
-    TestUtils.neqIt(dict, { name: "Finite", fields: 0n }, {
-      name: "Finite",
-      fields: 0n,
-    }, false);
+    TestUtils.eqIt(
+      dict,
+      { name: "Finite", fields: 0n },
+      {
+        name: "Finite",
+        fields: 0n,
+      },
+      true,
+    );
+    TestUtils.neqIt(
+      dict,
+      { name: "Finite", fields: 0n },
+      {
+        name: "Finite",
+        fields: 0n,
+      },
+      false,
+    );
 
-    TestUtils.eqIt(dict, { name: "Finite", fields: 69n }, {
-      name: "Finite",
-      fields: 69n,
-    }, true);
-    TestUtils.neqIt(dict, { name: "Finite", fields: 69n }, {
-      name: "Finite",
-      fields: 69n,
-    }, false);
+    TestUtils.eqIt(
+      dict,
+      { name: "Finite", fields: 69n },
+      {
+        name: "Finite",
+        fields: 69n,
+      },
+      true,
+    );
+    TestUtils.neqIt(
+      dict,
+      { name: "Finite", fields: 69n },
+      {
+        name: "Finite",
+        fields: 69n,
+      },
+      false,
+    );
 
     // Different Extended
     TestUtils.eqIt(dict, { name: "NegInf" }, { name: "PosInf" }, false);
@@ -83,14 +116,24 @@ describe("Extended tests", () => {
     TestUtils.eqIt(dict, { name: "PosInf" }, { name: "NegInf" }, false);
     TestUtils.neqIt(dict, { name: "PosInf" }, { name: "NegInf" }, true);
 
-    TestUtils.eqIt(dict, { name: "Finite", fields: -69n }, {
-      name: "Finite",
-      fields: 0n,
-    }, false);
-    TestUtils.neqIt(dict, { name: "Finite", fields: -69n }, {
-      name: "Finite",
-      fields: 0n,
-    }, true);
+    TestUtils.eqIt(
+      dict,
+      { name: "Finite", fields: -69n },
+      {
+        name: "Finite",
+        fields: 0n,
+      },
+      false,
+    );
+    TestUtils.neqIt(
+      dict,
+      { name: "Finite", fields: -69n },
+      {
+        name: "Finite",
+        fields: 0n,
+      },
+      true,
+    );
 
     TestUtils.eqIt(
       dict,
@@ -133,30 +176,39 @@ describe("Extended tests", () => {
   });
 
   describe("Json Extended tests", () => {
-    TestUtils.toJsonAndFromJsonIt(V1.jsonExtended(Prelude.jsonInteger), {
-      name: "NegInf",
-    }, { name: "NegInf", fields: [] });
+    TestUtils.toJsonAndFromJsonIt(
+      V1.jsonExtended(Prelude.jsonInteger),
+      {
+        name: "NegInf",
+      },
+      { name: "NegInf", fields: [] },
+    );
 
-    TestUtils.toJsonAndFromJsonIt(V1.jsonExtended(Prelude.jsonInteger), {
-      name: "PosInf",
-    }, { name: "PosInf", fields: [] });
+    TestUtils.toJsonAndFromJsonIt(
+      V1.jsonExtended(Prelude.jsonInteger),
+      {
+        name: "PosInf",
+      },
+      { name: "PosInf", fields: [] },
+    );
 
-    TestUtils.toJsonAndFromJsonIt(V1.jsonExtended(Prelude.jsonInteger), {
-      name: "Finite",
-      fields: 69n,
-    }, { name: "Finite", fields: [new Prelude.Scientific(69n)] });
+    TestUtils.toJsonAndFromJsonIt(
+      V1.jsonExtended(Prelude.jsonInteger),
+      {
+        name: "Finite",
+        fields: 69n,
+      },
+      { name: "Finite", fields: [new Prelude.Scientific(69n)] },
+    );
 
     it(`toJson/fromJson property based tests`, () => {
       fc.assert(
-        fc.property(
-          fcExtended(fc.bigInt()),
-          (data) => {
-            TestUtils.toJsonFromJsonRoundTrip(
-              V1.jsonExtended(Prelude.jsonInteger),
-              data,
-            );
-          },
-        ),
+        fc.property(fcExtended(fc.bigInt()), (data) => {
+          TestUtils.toJsonFromJsonRoundTrip(
+            V1.jsonExtended(Prelude.jsonInteger),
+            data,
+          );
+        }),
         { examples: [] },
       );
     });
@@ -181,15 +233,12 @@ describe("Extended tests", () => {
 
     it(`toData/fromData property based tests`, () => {
       fc.assert(
-        fc.property(
-          fcExtended(fc.bigInt()),
-          (data) => {
-            TestUtils.isPlutusDataRoundTrip(
-              V1.isPlutusDataExtended(V1.isPlutusDataInteger),
-              data,
-            );
-          },
-        ),
+        fc.property(fcExtended(fc.bigInt()), (data) => {
+          TestUtils.isPlutusDataRoundTrip(
+            V1.isPlutusDataExtended(V1.isPlutusDataInteger),
+            data,
+          );
+        }),
         { examples: [] },
       );
     });
@@ -207,10 +256,12 @@ describe("LowerBound tests", () => {
       [{ name: "NegInf" }, true],
       true,
     );
-    TestUtils.neqIt(dict, [{ name: "NegInf" }, true], [
-      { name: "NegInf" },
-      true,
-    ], false);
+    TestUtils.neqIt(
+      dict,
+      [{ name: "NegInf" }, true],
+      [{ name: "NegInf" }, true],
+      false,
+    );
 
     TestUtils.eqIt(
       dict,
@@ -218,83 +269,165 @@ describe("LowerBound tests", () => {
       [{ name: "PosInf" }, true],
       true,
     );
-    TestUtils.neqIt(dict, [{ name: "PosInf" }, true], [
-      { name: "PosInf" },
+    TestUtils.neqIt(
+      dict,
+      [{ name: "PosInf" }, true],
+      [{ name: "PosInf" }, true],
+      false,
+    );
+
+    TestUtils.eqIt(
+      dict,
+      [{ name: "Finite", fields: 69n }, true],
+      [
+        {
+          name: "Finite",
+          fields: 69n,
+        },
+        true,
+      ],
       true,
-    ], false);
-
-    TestUtils.eqIt(dict, [{ name: "Finite", fields: 69n }, true], [{
-      name: "Finite",
-      fields: 69n,
-    }, true], true);
-    TestUtils.neqIt(dict, [{ name: "Finite", fields: 69n }, true], [{
-      name: "Finite",
-      fields: 69n,
-    }, true], false);
-
-    TestUtils.eqIt(dict, [{ name: "NegInf" }, false], [
-      { name: "NegInf" },
+    );
+    TestUtils.neqIt(
+      dict,
+      [{ name: "Finite", fields: 69n }, true],
+      [
+        {
+          name: "Finite",
+          fields: 69n,
+        },
+        true,
+      ],
       false,
-    ], true);
-    TestUtils.neqIt(dict, [{ name: "NegInf" }, false], [
-      { name: "NegInf" },
-      false,
-    ], false);
+    );
 
-    TestUtils.eqIt(dict, [{ name: "PosInf" }, false], [
-      { name: "PosInf" },
+    TestUtils.eqIt(
+      dict,
+      [{ name: "NegInf" }, false],
+      [{ name: "NegInf" }, false],
+      true,
+    );
+    TestUtils.neqIt(
+      dict,
+      [{ name: "NegInf" }, false],
+      [{ name: "NegInf" }, false],
       false,
-    ], true);
-    TestUtils.neqIt(dict, [{ name: "PosInf" }, false], [
-      { name: "PosInf" },
-      false,
-    ], false);
+    );
 
-    TestUtils.eqIt(dict, [{ name: "Finite", fields: 69n }, false], [{
-      name: "Finite",
-      fields: 69n,
-    }, false], true);
-    TestUtils.neqIt(dict, [{ name: "Finite", fields: 69n }, false], [{
-      name: "Finite",
-      fields: 69n,
-    }, false], false);
+    TestUtils.eqIt(
+      dict,
+      [{ name: "PosInf" }, false],
+      [{ name: "PosInf" }, false],
+      true,
+    );
+    TestUtils.neqIt(
+      dict,
+      [{ name: "PosInf" }, false],
+      [{ name: "PosInf" }, false],
+      false,
+    );
+
+    TestUtils.eqIt(
+      dict,
+      [{ name: "Finite", fields: 69n }, false],
+      [
+        {
+          name: "Finite",
+          fields: 69n,
+        },
+        false,
+      ],
+      true,
+    );
+    TestUtils.neqIt(
+      dict,
+      [{ name: "Finite", fields: 69n }, false],
+      [
+        {
+          name: "Finite",
+          fields: 69n,
+        },
+        false,
+      ],
+      false,
+    );
 
     // Different LowerBound
-    TestUtils.eqIt(dict, [{ name: "Finite", fields: 69n }, true], [{
-      name: "Finite",
-      fields: 70n,
-    }, true], false);
-    TestUtils.neqIt(dict, [{ name: "Finite", fields: 69n }, true], [{
-      name: "Finite",
-      fields: 70n,
-    }, true], true);
+    TestUtils.eqIt(
+      dict,
+      [{ name: "Finite", fields: 69n }, true],
+      [
+        {
+          name: "Finite",
+          fields: 70n,
+        },
+        true,
+      ],
+      false,
+    );
+    TestUtils.neqIt(
+      dict,
+      [{ name: "Finite", fields: 69n }, true],
+      [
+        {
+          name: "Finite",
+          fields: 70n,
+        },
+        true,
+      ],
+      true,
+    );
 
-    TestUtils.eqIt(dict, [{ name: "Finite", fields: 70n }, false], [{
-      name: "Finite",
-      fields: 70n,
-    }, true], false);
-    TestUtils.neqIt(dict, [{ name: "Finite", fields: 70n }, false], [{
-      name: "Finite",
-      fields: 70n,
-    }, true], true);
+    TestUtils.eqIt(
+      dict,
+      [{ name: "Finite", fields: 70n }, false],
+      [
+        {
+          name: "Finite",
+          fields: 70n,
+        },
+        true,
+      ],
+      false,
+    );
+    TestUtils.neqIt(
+      dict,
+      [{ name: "Finite", fields: 70n }, false],
+      [
+        {
+          name: "Finite",
+          fields: 70n,
+        },
+        true,
+      ],
+      true,
+    );
 
-    TestUtils.eqIt(dict, [{ name: "PosInf" }, false], [
-      { name: "PosInf" },
+    TestUtils.eqIt(
+      dict,
+      [{ name: "PosInf" }, false],
+      [{ name: "PosInf" }, true],
+      false,
+    );
+    TestUtils.neqIt(
+      dict,
+      [{ name: "PosInf" }, false],
+      [{ name: "PosInf" }, true],
       true,
-    ], false);
-    TestUtils.neqIt(dict, [{ name: "PosInf" }, false], [
-      { name: "PosInf" },
-      true,
-    ], true);
+    );
 
-    TestUtils.eqIt(dict, [{ name: "NegInf" }, false], [
-      { name: "NegInf" },
+    TestUtils.eqIt(
+      dict,
+      [{ name: "NegInf" }, false],
+      [{ name: "NegInf" }, true],
+      false,
+    );
+    TestUtils.neqIt(
+      dict,
+      [{ name: "NegInf" }, false],
+      [{ name: "NegInf" }, true],
       true,
-    ], false);
-    TestUtils.neqIt(dict, [{ name: "NegInf" }, false], [
-      { name: "NegInf" },
-      true,
-    ], true);
+    );
 
     it(`eq is not neq property based tests`, () => {
       fc.assert(
@@ -311,49 +444,88 @@ describe("LowerBound tests", () => {
   });
 
   describe("Json LowerBound tests", () => {
-    TestUtils.toJsonAndFromJsonIt(V1.jsonLowerBound(Prelude.jsonInteger), [{
-      name: "NegInf",
-    }, true], { bound: { name: "NegInf", fields: [] }, closed: true });
+    TestUtils.toJsonAndFromJsonIt(
+      V1.jsonLowerBound(Prelude.jsonInteger),
+      [
+        {
+          name: "NegInf",
+        },
+        true,
+      ],
+      { bound: { name: "NegInf", fields: [] }, closed: true },
+    );
 
-    TestUtils.toJsonAndFromJsonIt(V1.jsonLowerBound(Prelude.jsonInteger), [{
-      name: "PosInf",
-    }, true], { bound: { name: "PosInf", fields: [] }, closed: true });
+    TestUtils.toJsonAndFromJsonIt(
+      V1.jsonLowerBound(Prelude.jsonInteger),
+      [
+        {
+          name: "PosInf",
+        },
+        true,
+      ],
+      { bound: { name: "PosInf", fields: [] }, closed: true },
+    );
 
-    TestUtils.toJsonAndFromJsonIt(V1.jsonLowerBound(Prelude.jsonInteger), [{
-      name: "NegInf",
-    }, false], { bound: { name: "NegInf", fields: [] }, closed: false });
+    TestUtils.toJsonAndFromJsonIt(
+      V1.jsonLowerBound(Prelude.jsonInteger),
+      [
+        {
+          name: "NegInf",
+        },
+        false,
+      ],
+      { bound: { name: "NegInf", fields: [] }, closed: false },
+    );
 
-    TestUtils.toJsonAndFromJsonIt(V1.jsonLowerBound(Prelude.jsonInteger), [{
-      name: "PosInf",
-    }, false], { bound: { name: "PosInf", fields: [] }, closed: false });
+    TestUtils.toJsonAndFromJsonIt(
+      V1.jsonLowerBound(Prelude.jsonInteger),
+      [
+        {
+          name: "PosInf",
+        },
+        false,
+      ],
+      { bound: { name: "PosInf", fields: [] }, closed: false },
+    );
 
-    TestUtils.toJsonAndFromJsonIt(V1.jsonLowerBound(Prelude.jsonInteger), [{
-      name: "Finite",
-      fields: 69n,
-    }, true], {
-      bound: { name: "Finite", fields: [new Prelude.Scientific(69n)] },
-      closed: true,
-    });
+    TestUtils.toJsonAndFromJsonIt(
+      V1.jsonLowerBound(Prelude.jsonInteger),
+      [
+        {
+          name: "Finite",
+          fields: 69n,
+        },
+        true,
+      ],
+      {
+        bound: { name: "Finite", fields: [new Prelude.Scientific(69n)] },
+        closed: true,
+      },
+    );
 
-    TestUtils.toJsonAndFromJsonIt(V1.jsonLowerBound(Prelude.jsonInteger), [{
-      name: "Finite",
-      fields: 69n,
-    }, false], {
-      bound: { name: "Finite", fields: [new Prelude.Scientific(69n)] },
-      closed: false,
-    });
+    TestUtils.toJsonAndFromJsonIt(
+      V1.jsonLowerBound(Prelude.jsonInteger),
+      [
+        {
+          name: "Finite",
+          fields: 69n,
+        },
+        false,
+      ],
+      {
+        bound: { name: "Finite", fields: [new Prelude.Scientific(69n)] },
+        closed: false,
+      },
+    );
 
     it(`toJson/fromJson property based tests`, () => {
       fc.assert(
-        fc.property(
-          fcLowerBound(fc.bigInt()),
-          (data) => {
-            TestUtils.toJsonFromJsonRoundTrip(
-              V1.jsonLowerBound(Prelude.jsonInteger),
-              data,
-            );
-          },
-        ),
+        fc.property(fcLowerBound(fc.bigInt()), (data) => {
+          TestUtils.toJsonFromJsonRoundTrip(
+            V1.jsonLowerBound(Prelude.jsonInteger),
+            data,
+          );
+        }),
         { examples: [] },
       );
     });
@@ -365,12 +537,15 @@ describe("LowerBound tests", () => {
       [{ name: "NegInf" }, true],
       {
         name: "Constr",
-        fields: [0n, [
-          V1.isPlutusDataExtended(V1.isPlutusDataInteger).toData({
-            name: "NegInf",
-          }),
-          V1.isPlutusDataBool.toData(true),
-        ]],
+        fields: [
+          0n,
+          [
+            V1.isPlutusDataExtended(V1.isPlutusDataInteger).toData({
+              name: "NegInf",
+            }),
+            V1.isPlutusDataBool.toData(true),
+          ],
+        ],
       },
     );
     TestUtils.isPlutusDataIt(
@@ -378,12 +553,15 @@ describe("LowerBound tests", () => {
       [{ name: "NegInf" }, false],
       {
         name: "Constr",
-        fields: [0n, [
-          V1.isPlutusDataExtended(V1.isPlutusDataInteger).toData({
-            name: "NegInf",
-          }),
-          V1.isPlutusDataBool.toData(false),
-        ]],
+        fields: [
+          0n,
+          [
+            V1.isPlutusDataExtended(V1.isPlutusDataInteger).toData({
+              name: "NegInf",
+            }),
+            V1.isPlutusDataBool.toData(false),
+          ],
+        ],
       },
     );
 
@@ -392,13 +570,16 @@ describe("LowerBound tests", () => {
       [{ name: "Finite", fields: 69n }, true],
       {
         name: "Constr",
-        fields: [0n, [
-          V1.isPlutusDataExtended(V1.isPlutusDataInteger).toData({
-            name: "Finite",
-            fields: 69n,
-          }),
-          V1.isPlutusDataBool.toData(true),
-        ]],
+        fields: [
+          0n,
+          [
+            V1.isPlutusDataExtended(V1.isPlutusDataInteger).toData({
+              name: "Finite",
+              fields: 69n,
+            }),
+            V1.isPlutusDataBool.toData(true),
+          ],
+        ],
       },
     );
     TestUtils.isPlutusDataIt(
@@ -406,13 +587,16 @@ describe("LowerBound tests", () => {
       [{ name: "Finite", fields: 69n }, false],
       {
         name: "Constr",
-        fields: [0n, [
-          V1.isPlutusDataExtended(V1.isPlutusDataInteger).toData({
-            name: "Finite",
-            fields: 69n,
-          }),
-          V1.isPlutusDataBool.toData(false),
-        ]],
+        fields: [
+          0n,
+          [
+            V1.isPlutusDataExtended(V1.isPlutusDataInteger).toData({
+              name: "Finite",
+              fields: 69n,
+            }),
+            V1.isPlutusDataBool.toData(false),
+          ],
+        ],
       },
     );
 
@@ -421,12 +605,15 @@ describe("LowerBound tests", () => {
       [{ name: "PosInf" }, true],
       {
         name: "Constr",
-        fields: [0n, [
-          V1.isPlutusDataExtended(V1.isPlutusDataInteger).toData({
-            name: "PosInf",
-          }),
-          V1.isPlutusDataBool.toData(true),
-        ]],
+        fields: [
+          0n,
+          [
+            V1.isPlutusDataExtended(V1.isPlutusDataInteger).toData({
+              name: "PosInf",
+            }),
+            V1.isPlutusDataBool.toData(true),
+          ],
+        ],
       },
     );
     TestUtils.isPlutusDataIt(
@@ -434,26 +621,26 @@ describe("LowerBound tests", () => {
       [{ name: "PosInf" }, false],
       {
         name: "Constr",
-        fields: [0n, [
-          V1.isPlutusDataExtended(V1.isPlutusDataInteger).toData({
-            name: "PosInf",
-          }),
-          V1.isPlutusDataBool.toData(false),
-        ]],
+        fields: [
+          0n,
+          [
+            V1.isPlutusDataExtended(V1.isPlutusDataInteger).toData({
+              name: "PosInf",
+            }),
+            V1.isPlutusDataBool.toData(false),
+          ],
+        ],
       },
     );
 
     it(`toData/fromData property based tests`, () => {
       fc.assert(
-        fc.property(
-          fcLowerBound(fc.bigInt()),
-          (data) => {
-            TestUtils.isPlutusDataRoundTrip(
-              V1.isPlutusDataLowerBound(V1.isPlutusDataInteger),
-              data,
-            );
-          },
-        ),
+        fc.property(fcLowerBound(fc.bigInt()), (data) => {
+          TestUtils.isPlutusDataRoundTrip(
+            V1.isPlutusDataLowerBound(V1.isPlutusDataInteger),
+            data,
+          );
+        }),
         { examples: [] },
       );
     });
@@ -472,10 +659,12 @@ describe("UpperBound tests", () => {
       [{ name: "NegInf" }, true],
       true,
     );
-    TestUtils.neqIt(dict, [{ name: "NegInf" }, true], [
-      { name: "NegInf" },
-      true,
-    ], false);
+    TestUtils.neqIt(
+      dict,
+      [{ name: "NegInf" }, true],
+      [{ name: "NegInf" }, true],
+      false,
+    );
 
     TestUtils.eqIt(
       dict,
@@ -483,83 +672,165 @@ describe("UpperBound tests", () => {
       [{ name: "PosInf" }, true],
       true,
     );
-    TestUtils.neqIt(dict, [{ name: "PosInf" }, true], [
-      { name: "PosInf" },
+    TestUtils.neqIt(
+      dict,
+      [{ name: "PosInf" }, true],
+      [{ name: "PosInf" }, true],
+      false,
+    );
+
+    TestUtils.eqIt(
+      dict,
+      [{ name: "Finite", fields: 69n }, true],
+      [
+        {
+          name: "Finite",
+          fields: 69n,
+        },
+        true,
+      ],
       true,
-    ], false);
-
-    TestUtils.eqIt(dict, [{ name: "Finite", fields: 69n }, true], [{
-      name: "Finite",
-      fields: 69n,
-    }, true], true);
-    TestUtils.neqIt(dict, [{ name: "Finite", fields: 69n }, true], [{
-      name: "Finite",
-      fields: 69n,
-    }, true], false);
-
-    TestUtils.eqIt(dict, [{ name: "NegInf" }, false], [
-      { name: "NegInf" },
+    );
+    TestUtils.neqIt(
+      dict,
+      [{ name: "Finite", fields: 69n }, true],
+      [
+        {
+          name: "Finite",
+          fields: 69n,
+        },
+        true,
+      ],
       false,
-    ], true);
-    TestUtils.neqIt(dict, [{ name: "NegInf" }, false], [
-      { name: "NegInf" },
-      false,
-    ], false);
+    );
 
-    TestUtils.eqIt(dict, [{ name: "PosInf" }, false], [
-      { name: "PosInf" },
+    TestUtils.eqIt(
+      dict,
+      [{ name: "NegInf" }, false],
+      [{ name: "NegInf" }, false],
+      true,
+    );
+    TestUtils.neqIt(
+      dict,
+      [{ name: "NegInf" }, false],
+      [{ name: "NegInf" }, false],
       false,
-    ], true);
-    TestUtils.neqIt(dict, [{ name: "PosInf" }, false], [
-      { name: "PosInf" },
-      false,
-    ], false);
+    );
 
-    TestUtils.eqIt(dict, [{ name: "Finite", fields: 69n }, false], [{
-      name: "Finite",
-      fields: 69n,
-    }, false], true);
-    TestUtils.neqIt(dict, [{ name: "Finite", fields: 69n }, false], [{
-      name: "Finite",
-      fields: 69n,
-    }, false], false);
+    TestUtils.eqIt(
+      dict,
+      [{ name: "PosInf" }, false],
+      [{ name: "PosInf" }, false],
+      true,
+    );
+    TestUtils.neqIt(
+      dict,
+      [{ name: "PosInf" }, false],
+      [{ name: "PosInf" }, false],
+      false,
+    );
+
+    TestUtils.eqIt(
+      dict,
+      [{ name: "Finite", fields: 69n }, false],
+      [
+        {
+          name: "Finite",
+          fields: 69n,
+        },
+        false,
+      ],
+      true,
+    );
+    TestUtils.neqIt(
+      dict,
+      [{ name: "Finite", fields: 69n }, false],
+      [
+        {
+          name: "Finite",
+          fields: 69n,
+        },
+        false,
+      ],
+      false,
+    );
 
     // Different UpperBound
-    TestUtils.eqIt(dict, [{ name: "Finite", fields: 69n }, true], [{
-      name: "Finite",
-      fields: 70n,
-    }, true], false);
-    TestUtils.neqIt(dict, [{ name: "Finite", fields: 69n }, true], [{
-      name: "Finite",
-      fields: 70n,
-    }, true], true);
+    TestUtils.eqIt(
+      dict,
+      [{ name: "Finite", fields: 69n }, true],
+      [
+        {
+          name: "Finite",
+          fields: 70n,
+        },
+        true,
+      ],
+      false,
+    );
+    TestUtils.neqIt(
+      dict,
+      [{ name: "Finite", fields: 69n }, true],
+      [
+        {
+          name: "Finite",
+          fields: 70n,
+        },
+        true,
+      ],
+      true,
+    );
 
-    TestUtils.eqIt(dict, [{ name: "Finite", fields: 70n }, false], [{
-      name: "Finite",
-      fields: 70n,
-    }, true], false);
-    TestUtils.neqIt(dict, [{ name: "Finite", fields: 70n }, false], [{
-      name: "Finite",
-      fields: 70n,
-    }, true], true);
+    TestUtils.eqIt(
+      dict,
+      [{ name: "Finite", fields: 70n }, false],
+      [
+        {
+          name: "Finite",
+          fields: 70n,
+        },
+        true,
+      ],
+      false,
+    );
+    TestUtils.neqIt(
+      dict,
+      [{ name: "Finite", fields: 70n }, false],
+      [
+        {
+          name: "Finite",
+          fields: 70n,
+        },
+        true,
+      ],
+      true,
+    );
 
-    TestUtils.eqIt(dict, [{ name: "PosInf" }, false], [
-      { name: "PosInf" },
+    TestUtils.eqIt(
+      dict,
+      [{ name: "PosInf" }, false],
+      [{ name: "PosInf" }, true],
+      false,
+    );
+    TestUtils.neqIt(
+      dict,
+      [{ name: "PosInf" }, false],
+      [{ name: "PosInf" }, true],
       true,
-    ], false);
-    TestUtils.neqIt(dict, [{ name: "PosInf" }, false], [
-      { name: "PosInf" },
-      true,
-    ], true);
+    );
 
-    TestUtils.eqIt(dict, [{ name: "NegInf" }, false], [
-      { name: "NegInf" },
+    TestUtils.eqIt(
+      dict,
+      [{ name: "NegInf" }, false],
+      [{ name: "NegInf" }, true],
+      false,
+    );
+    TestUtils.neqIt(
+      dict,
+      [{ name: "NegInf" }, false],
+      [{ name: "NegInf" }, true],
       true,
-    ], false);
-    TestUtils.neqIt(dict, [{ name: "NegInf" }, false], [
-      { name: "NegInf" },
-      true,
-    ], true);
+    );
 
     it(`eq is not neq property based tests`, () => {
       fc.assert(
@@ -576,49 +847,88 @@ describe("UpperBound tests", () => {
   });
 
   describe("Json UpperBound tests", () => {
-    TestUtils.toJsonAndFromJsonIt(V1.jsonUpperBound(Prelude.jsonInteger), [{
-      name: "NegInf",
-    }, true], { bound: { name: "NegInf", fields: [] }, closed: true });
+    TestUtils.toJsonAndFromJsonIt(
+      V1.jsonUpperBound(Prelude.jsonInteger),
+      [
+        {
+          name: "NegInf",
+        },
+        true,
+      ],
+      { bound: { name: "NegInf", fields: [] }, closed: true },
+    );
 
-    TestUtils.toJsonAndFromJsonIt(V1.jsonUpperBound(Prelude.jsonInteger), [{
-      name: "PosInf",
-    }, true], { bound: { name: "PosInf", fields: [] }, closed: true });
+    TestUtils.toJsonAndFromJsonIt(
+      V1.jsonUpperBound(Prelude.jsonInteger),
+      [
+        {
+          name: "PosInf",
+        },
+        true,
+      ],
+      { bound: { name: "PosInf", fields: [] }, closed: true },
+    );
 
-    TestUtils.toJsonAndFromJsonIt(V1.jsonUpperBound(Prelude.jsonInteger), [{
-      name: "NegInf",
-    }, false], { bound: { name: "NegInf", fields: [] }, closed: false });
+    TestUtils.toJsonAndFromJsonIt(
+      V1.jsonUpperBound(Prelude.jsonInteger),
+      [
+        {
+          name: "NegInf",
+        },
+        false,
+      ],
+      { bound: { name: "NegInf", fields: [] }, closed: false },
+    );
 
-    TestUtils.toJsonAndFromJsonIt(V1.jsonUpperBound(Prelude.jsonInteger), [{
-      name: "PosInf",
-    }, false], { bound: { name: "PosInf", fields: [] }, closed: false });
+    TestUtils.toJsonAndFromJsonIt(
+      V1.jsonUpperBound(Prelude.jsonInteger),
+      [
+        {
+          name: "PosInf",
+        },
+        false,
+      ],
+      { bound: { name: "PosInf", fields: [] }, closed: false },
+    );
 
-    TestUtils.toJsonAndFromJsonIt(V1.jsonUpperBound(Prelude.jsonInteger), [{
-      name: "Finite",
-      fields: 69n,
-    }, true], {
-      bound: { name: "Finite", fields: [new Prelude.Scientific(69n)] },
-      closed: true,
-    });
+    TestUtils.toJsonAndFromJsonIt(
+      V1.jsonUpperBound(Prelude.jsonInteger),
+      [
+        {
+          name: "Finite",
+          fields: 69n,
+        },
+        true,
+      ],
+      {
+        bound: { name: "Finite", fields: [new Prelude.Scientific(69n)] },
+        closed: true,
+      },
+    );
 
-    TestUtils.toJsonAndFromJsonIt(V1.jsonUpperBound(Prelude.jsonInteger), [{
-      name: "Finite",
-      fields: 69n,
-    }, false], {
-      bound: { name: "Finite", fields: [new Prelude.Scientific(69n)] },
-      closed: false,
-    });
+    TestUtils.toJsonAndFromJsonIt(
+      V1.jsonUpperBound(Prelude.jsonInteger),
+      [
+        {
+          name: "Finite",
+          fields: 69n,
+        },
+        false,
+      ],
+      {
+        bound: { name: "Finite", fields: [new Prelude.Scientific(69n)] },
+        closed: false,
+      },
+    );
 
     it(`toJson/fromJson property based tests`, () => {
       fc.assert(
-        fc.property(
-          fcUpperBound(fc.bigInt()),
-          (data) => {
-            TestUtils.toJsonFromJsonRoundTrip(
-              V1.jsonUpperBound(Prelude.jsonInteger),
-              data,
-            );
-          },
-        ),
+        fc.property(fcUpperBound(fc.bigInt()), (data) => {
+          TestUtils.toJsonFromJsonRoundTrip(
+            V1.jsonUpperBound(Prelude.jsonInteger),
+            data,
+          );
+        }),
         { examples: [] },
       );
     });
@@ -630,12 +940,15 @@ describe("UpperBound tests", () => {
       [{ name: "NegInf" }, true],
       {
         name: "Constr",
-        fields: [0n, [
-          V1.isPlutusDataExtended(V1.isPlutusDataInteger).toData({
-            name: "NegInf",
-          }),
-          V1.isPlutusDataBool.toData(true),
-        ]],
+        fields: [
+          0n,
+          [
+            V1.isPlutusDataExtended(V1.isPlutusDataInteger).toData({
+              name: "NegInf",
+            }),
+            V1.isPlutusDataBool.toData(true),
+          ],
+        ],
       },
     );
     TestUtils.isPlutusDataIt(
@@ -643,12 +956,15 @@ describe("UpperBound tests", () => {
       [{ name: "NegInf" }, false],
       {
         name: "Constr",
-        fields: [0n, [
-          V1.isPlutusDataExtended(V1.isPlutusDataInteger).toData({
-            name: "NegInf",
-          }),
-          V1.isPlutusDataBool.toData(false),
-        ]],
+        fields: [
+          0n,
+          [
+            V1.isPlutusDataExtended(V1.isPlutusDataInteger).toData({
+              name: "NegInf",
+            }),
+            V1.isPlutusDataBool.toData(false),
+          ],
+        ],
       },
     );
 
@@ -657,13 +973,16 @@ describe("UpperBound tests", () => {
       [{ name: "Finite", fields: 69n }, true],
       {
         name: "Constr",
-        fields: [0n, [
-          V1.isPlutusDataExtended(V1.isPlutusDataInteger).toData({
-            name: "Finite",
-            fields: 69n,
-          }),
-          V1.isPlutusDataBool.toData(true),
-        ]],
+        fields: [
+          0n,
+          [
+            V1.isPlutusDataExtended(V1.isPlutusDataInteger).toData({
+              name: "Finite",
+              fields: 69n,
+            }),
+            V1.isPlutusDataBool.toData(true),
+          ],
+        ],
       },
     );
     TestUtils.isPlutusDataIt(
@@ -671,13 +990,16 @@ describe("UpperBound tests", () => {
       [{ name: "Finite", fields: 69n }, false],
       {
         name: "Constr",
-        fields: [0n, [
-          V1.isPlutusDataExtended(V1.isPlutusDataInteger).toData({
-            name: "Finite",
-            fields: 69n,
-          }),
-          V1.isPlutusDataBool.toData(false),
-        ]],
+        fields: [
+          0n,
+          [
+            V1.isPlutusDataExtended(V1.isPlutusDataInteger).toData({
+              name: "Finite",
+              fields: 69n,
+            }),
+            V1.isPlutusDataBool.toData(false),
+          ],
+        ],
       },
     );
 
@@ -686,12 +1008,15 @@ describe("UpperBound tests", () => {
       [{ name: "PosInf" }, true],
       {
         name: "Constr",
-        fields: [0n, [
-          V1.isPlutusDataExtended(V1.isPlutusDataInteger).toData({
-            name: "PosInf",
-          }),
-          V1.isPlutusDataBool.toData(true),
-        ]],
+        fields: [
+          0n,
+          [
+            V1.isPlutusDataExtended(V1.isPlutusDataInteger).toData({
+              name: "PosInf",
+            }),
+            V1.isPlutusDataBool.toData(true),
+          ],
+        ],
       },
     );
     TestUtils.isPlutusDataIt(
@@ -699,26 +1024,26 @@ describe("UpperBound tests", () => {
       [{ name: "PosInf" }, false],
       {
         name: "Constr",
-        fields: [0n, [
-          V1.isPlutusDataExtended(V1.isPlutusDataInteger).toData({
-            name: "PosInf",
-          }),
-          V1.isPlutusDataBool.toData(false),
-        ]],
+        fields: [
+          0n,
+          [
+            V1.isPlutusDataExtended(V1.isPlutusDataInteger).toData({
+              name: "PosInf",
+            }),
+            V1.isPlutusDataBool.toData(false),
+          ],
+        ],
       },
     );
 
     it(`toData/fromData property based tests`, () => {
       fc.assert(
-        fc.property(
-          fcUpperBound(fc.bigInt()),
-          (data) => {
-            TestUtils.isPlutusDataRoundTrip(
-              V1.isPlutusDataUpperBound(V1.isPlutusDataInteger),
-              data,
-            );
-          },
-        ),
+        fc.property(fcUpperBound(fc.bigInt()), (data) => {
+          TestUtils.isPlutusDataRoundTrip(
+            V1.isPlutusDataUpperBound(V1.isPlutusDataInteger),
+            data,
+          );
+        }),
         { examples: [] },
       );
     });
@@ -756,36 +1081,56 @@ describe("Interval tests", () => {
       false,
     );
 
-    TestUtils.eqIt(dict, {
-      ivFrom: [{ name: "Finite", fields: 69n }, true],
-      ivTo: [{ name: "PosInf" }, true],
-    }, {
-      ivFrom: [{ name: "Finite", fields: 69n }, true],
-      ivTo: [{ name: "PosInf" }, true],
-    }, true);
-    TestUtils.neqIt(dict, {
-      ivFrom: [{ name: "Finite", fields: 69n }, true],
-      ivTo: [{ name: "PosInf" }, true],
-    }, {
-      ivFrom: [{ name: "Finite", fields: 69n }, true],
-      ivTo: [{ name: "PosInf" }, true],
-    }, false);
+    TestUtils.eqIt(
+      dict,
+      {
+        ivFrom: [{ name: "Finite", fields: 69n }, true],
+        ivTo: [{ name: "PosInf" }, true],
+      },
+      {
+        ivFrom: [{ name: "Finite", fields: 69n }, true],
+        ivTo: [{ name: "PosInf" }, true],
+      },
+      true,
+    );
+    TestUtils.neqIt(
+      dict,
+      {
+        ivFrom: [{ name: "Finite", fields: 69n }, true],
+        ivTo: [{ name: "PosInf" }, true],
+      },
+      {
+        ivFrom: [{ name: "Finite", fields: 69n }, true],
+        ivTo: [{ name: "PosInf" }, true],
+      },
+      false,
+    );
 
     // Different Interval
-    TestUtils.eqIt(dict, {
-      ivFrom: [{ name: "NegInf" }, true],
-      ivTo: [{ name: "NegInf" }, true],
-    }, {
-      ivFrom: [{ name: "NegInf" }, true],
-      ivTo: [{ name: "NegInf" }, false],
-    }, false);
-    TestUtils.neqIt(dict, {
-      ivFrom: [{ name: "NegInf" }, true],
-      ivTo: [{ name: "NegInf" }, true],
-    }, {
-      ivFrom: [{ name: "NegInf" }, true],
-      ivTo: [{ name: "NegInf" }, false],
-    }, true);
+    TestUtils.eqIt(
+      dict,
+      {
+        ivFrom: [{ name: "NegInf" }, true],
+        ivTo: [{ name: "NegInf" }, true],
+      },
+      {
+        ivFrom: [{ name: "NegInf" }, true],
+        ivTo: [{ name: "NegInf" }, false],
+      },
+      false,
+    );
+    TestUtils.neqIt(
+      dict,
+      {
+        ivFrom: [{ name: "NegInf" }, true],
+        ivTo: [{ name: "NegInf" }, true],
+      },
+      {
+        ivFrom: [{ name: "NegInf" }, true],
+        ivTo: [{ name: "NegInf" }, false],
+      },
+      true,
+    );
 
     TestUtils.eqIt(
       dict,
@@ -800,20 +1145,30 @@ describe("Interval tests", () => {
       true,
     );
 
-    TestUtils.eqIt(dict, {
-      ivFrom: [{ name: "Finite", fields: 69n }, true],
-      ivTo: [{ name: "PosInf" }, true],
-    }, {
-      ivFrom: [{ name: "Finite", fields: 68n }, true],
-      ivTo: [{ name: "PosInf" }, true],
-    }, false);
-    TestUtils.neqIt(dict, {
-      ivFrom: [{ name: "Finite", fields: 69n }, true],
-      ivTo: [{ name: "PosInf" }, true],
-    }, {
-      ivFrom: [{ name: "Finite", fields: 68n }, true],
-      ivTo: [{ name: "PosInf" }, true],
-    }, true);
+    TestUtils.eqIt(
+      dict,
+      {
+        ivFrom: [{ name: "Finite", fields: 69n }, true],
+        ivTo: [{ name: "PosInf" }, true],
+      },
+      {
+        ivFrom: [{ name: "Finite", fields: 68n }, true],
+        ivTo: [{ name: "PosInf" }, true],
+      },
+      false,
+    );
+    TestUtils.neqIt(
+      dict,
+      {
+        ivFrom: [{ name: "Finite", fields: 69n }, true],
+        ivTo: [{ name: "PosInf" }, true],
+      },
+      {
+        ivFrom: [{ name: "Finite", fields: 68n }, true],
+        ivTo: [{ name: "PosInf" }, true],
+      },
+      true,
+    );
 
     it(`eq is not neq property based tests`, () => {
       fc.assert(
@@ -830,30 +1185,34 @@ describe("Interval tests", () => {
   });
 
   describe("Json Interval tests", () => {
-    TestUtils.toJsonAndFromJsonIt(V1.jsonInterval(Prelude.jsonInteger), {
-      ivFrom: [{ name: "PosInf" }, true],
-      ivTo: [{ name: "NegInf" }, true],
-    }, {
-      from: V1.jsonLowerBound(Prelude.jsonInteger).toJson([{
-        name: "PosInf",
-      }, true]),
-      to: V1.jsonUpperBound(Prelude.jsonInteger).toJson([
-        { name: "NegInf" },
-        true,
-      ]),
-    });
+    TestUtils.toJsonAndFromJsonIt(
+      V1.jsonInterval(Prelude.jsonInteger),
+      {
+        ivFrom: [{ name: "PosInf" }, true],
+        ivTo: [{ name: "NegInf" }, true],
+      },
+      {
+        from: V1.jsonLowerBound(Prelude.jsonInteger).toJson([
+          {
+            name: "PosInf",
+          },
+          true,
+        ]),
+        to: V1.jsonUpperBound(Prelude.jsonInteger).toJson([
+          { name: "NegInf" },
+          true,
+        ]),
+      },
+    );
 
     it(`toJson/fromJson property based tests`, () => {
       fc.assert(
-        fc.property(
-          fcInterval(fc.bigInt()),
-          (data) => {
-            TestUtils.toJsonFromJsonRoundTrip(
-              V1.jsonInterval(Prelude.jsonInteger),
-              data,
-            );
-          },
-        ),
+        fc.property(fcInterval(fc.bigInt()), (data) => {
+          TestUtils.toJsonFromJsonRoundTrip(
+            V1.jsonInterval(Prelude.jsonInteger),
+            data,
+          );
+        }),
         { examples: [] },
       );
     });
@@ -865,29 +1224,29 @@ describe("Interval tests", () => {
       { ivFrom: [{ name: "PosInf" }, true], ivTo: [{ name: "NegInf" }, true] },
       {
         name: "Constr",
-        fields: [0n, [
-          V1.isPlutusDataLowerBound(V1.isPlutusDataInteger).toData([
-            { name: "PosInf" },
-            true,
-          ]),
-          V1.isPlutusDataUpperBound(V1.isPlutusDataInteger).toData([
-            { name: "NegInf" },
-            true,
-          ]),
-        ]],
+        fields: [
+          0n,
+          [
+            V1.isPlutusDataLowerBound(V1.isPlutusDataInteger).toData([
+              { name: "PosInf" },
+              true,
+            ]),
+            V1.isPlutusDataUpperBound(V1.isPlutusDataInteger).toData([
+              { name: "NegInf" },
+              true,
+            ]),
+          ],
+        ],
       },
     );
     it(`toData/fromData property based tests`, () => {
       fc.assert(
-        fc.property(
-          fcInterval(fc.bigInt()),
-          (data) => {
-            TestUtils.isPlutusDataRoundTrip(
-              V1.isPlutusDataInterval(V1.isPlutusDataInteger),
-              data,
-            );
-          },
-        ),
+        fc.property(fcInterval(fc.bigInt()), (data) => {
+          TestUtils.isPlutusDataRoundTrip(
+            V1.isPlutusDataInterval(V1.isPlutusDataInteger),
+            data,
+          );
+        }),
         { examples: [] },
       );
     });

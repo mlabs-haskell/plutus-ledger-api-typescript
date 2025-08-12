@@ -12,13 +12,20 @@ export function fcMaybe<A>(
 ): fc.Arbitrary<Prelude.Maybe<A>> {
   const { maybe } = fc.letrec((tie) => ({
     maybe: fc.oneof({}, tie("Just"), tie("Nothing")),
-    Just: fc.record({
-      name: fc.constant("Just"),
-      fields: arb,
-    }),
-    Nothing: fc.record({
-      name: fc.constant("Nothing"),
-    }),
+    Just: fc.record(
+      {
+        name: fc.constant("Just"),
+        fields: arb,
+      },
+      { noNullPrototype: true },
+    ),
+
+    Nothing: fc.record(
+      {
+        name: fc.constant("Nothing"),
+      },
+      { noNullPrototype: true },
+    ),
   }));
 
   return maybe as fc.Arbitrary<Prelude.Maybe<A>>;
@@ -36,17 +43,9 @@ describe("Maybe tests", () => {
   describe("Eq Maybe tests", () => {
     it(`eq is not neq property based tests`, () => {
       fc.assert(
-        fc.property(
-          fcMaybe(fc.bigInt()),
-          fcMaybe(fc.bigInt()),
-          (l, r) => {
-            TestUtils.negationTest(
-              Prelude.eqMaybe(Prelude.eqInteger),
-              l,
-              r,
-            );
-          },
-        ),
+        fc.property(fcMaybe(fc.bigInt()), fcMaybe(fc.bigInt()), (l, r) => {
+          TestUtils.negationTest(Prelude.eqMaybe(Prelude.eqInteger), l, r);
+        }),
         { examples: [] },
       );
     });
@@ -72,30 +71,24 @@ describe("Maybe tests", () => {
   describe("Json Maybe tests", () => {
     it(`toJson/fromJson property based tests`, () => {
       fc.assert(
-        fc.property(
-          fcMaybe(fc.bigInt()),
-          (data) => {
-            TestUtils.toJsonFromJsonRoundTrip(
-              Prelude.jsonMaybe(Prelude.jsonInteger),
-              data,
-            );
-          },
-        ),
+        fc.property(fcMaybe(fc.bigInt()), (data) => {
+          TestUtils.toJsonFromJsonRoundTrip(
+            Prelude.jsonMaybe(Prelude.jsonInteger),
+            data,
+          );
+        }),
         { examples: [] },
       );
     });
 
     it(`toJson/fromJson property based tests`, () => {
       fc.assert(
-        fc.property(
-          fcMaybe(fc.array(fc.string())),
-          (data) => {
-            TestUtils.toJsonFromJsonRoundTrip(
-              Prelude.jsonMaybe(Prelude.jsonList(Prelude.jsonText)),
-              data,
-            );
-          },
-        ),
+        fc.property(fcMaybe(fc.array(fc.string())), (data) => {
+          TestUtils.toJsonFromJsonRoundTrip(
+            Prelude.jsonMaybe(Prelude.jsonList(Prelude.jsonText)),
+            data,
+          );
+        }),
         { examples: [] },
       );
     });
@@ -103,16 +96,12 @@ describe("Maybe tests", () => {
 
   describe("IsPlutusData Maybe tests", () => {
     TestUtils.isPlutusDataIt(
-      PreludeInstances.isPlutusDataMaybe(
-        PreludeInstances.isPlutusDataInteger,
-      ),
+      PreludeInstances.isPlutusDataMaybe(PreludeInstances.isPlutusDataInteger),
       { name: "Nothing" },
       { name: "Constr", fields: [1n, []] },
     );
     TestUtils.isPlutusDataIt(
-      PreludeInstances.isPlutusDataMaybe(
-        PreludeInstances.isPlutusDataInteger,
-      ),
+      PreludeInstances.isPlutusDataMaybe(PreludeInstances.isPlutusDataInteger),
       { name: "Just", fields: 69n },
       {
         name: "Constr",
@@ -122,17 +111,14 @@ describe("Maybe tests", () => {
 
     it(`toData/fromData property based tests`, () => {
       fc.assert(
-        fc.property(
-          fcMaybe(fc.bigInt()),
-          (data) => {
-            TestUtils.isPlutusDataRoundTrip(
-              PreludeInstances.isPlutusDataMaybe(
-                PreludeInstances.isPlutusDataInteger,
-              ),
-              data,
-            );
-          },
-        ),
+        fc.property(fcMaybe(fc.bigInt()), (data) => {
+          TestUtils.isPlutusDataRoundTrip(
+            PreludeInstances.isPlutusDataMaybe(
+              PreludeInstances.isPlutusDataInteger,
+            ),
+            data,
+          );
+        }),
         { examples: [] },
       );
     });

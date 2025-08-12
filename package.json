@@ -1,6 +1,6 @@
 {
   "name": "plutus-ledger-api",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Plutus Ledger API types",
   "type": "module",
   "exports": {
@@ -26,10 +26,10 @@
     "./.extra-dependencies/**/*"
   ],
   "devDependencies": {
-    "@types/node": "^20.8.10",
-    "fast-check": "^3.14.0",
-    "typedoc": "^0.25.4",
-    "typescript": "^5.2.2"
+    "@types/node": "^24.2.1",
+    "fast-check": "^4.2.0",
+    "typedoc": "^0.28.10",
+    "typescript": "^5.9.2"
   },
   "dependencies": {
     "prelude": "file:.extra-dependencies/prelude"

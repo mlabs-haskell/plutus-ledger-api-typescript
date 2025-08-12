@@ -22,34 +22,38 @@ import { fcTxId } from "../V1/TxIdInstances-test.js";
 import { fcGovernanceActionId } from "./GovernanceActionIdInstances-test.js";
 import { fcVote } from "./VoteInstances-test.js";
 import { fcMaybe } from "../Prelude/MaybeInstances-test.js";
+import { bigUint } from "../TestUtils.js";
 
 export function fcTxInfo(): fc.Arbitrary<V3.TxInfo> {
-  return fc.record({
-    txInfoInputs: fc.array(fcTxInInfo()),
-    txInfoReferenceInputs: fc.array(fcTxInInfo()),
-    txInfoOutputs: fc.array(fcTxOut()),
-    txInfoFee: fc.bigUint(),
-    txInfoMint: fcValue(),
-    txInfoTxCerts: fc.array(fcTxCert()),
-    txInfoWdrl: fcAssocMap(eqCredential, fcCredential(), fc.bigInt()),
-    txInfoValidRange: fcInterval(fc.bigInt()),
-    txInfoSignatories: fc.array(fcPubKeyHash()),
-    txInfoRedeemers: fcAssocMap(
-      V3.eqScriptPurpose,
-      fcScriptPurpose(),
-      fcRedeemer(),
-    ),
-    txInfoData: fcAssocMap(eqDatumHash, fcDatumHash(), fcDatum()),
-    txInfoId: fcTxId(),
-    txInfoVotes: fcAssocMap(
-      V3.eqVoter,
-      fcVoter(),
-      fcAssocMap(V3.eqGovernanceActionId, fcGovernanceActionId(), fcVote()),
-    ),
-    txInfoProposalProcedures: fc.array(fcProposalProcedure()),
-    txInfoCurrentTreasuryAmount: fcMaybe(fc.bigUint()),
-    txInfoTreasuryDonation: fcMaybe(fc.bigUint()),
-  });
+  return fc.record(
+    {
+      txInfoInputs: fc.array(fcTxInInfo()),
+      txInfoReferenceInputs: fc.array(fcTxInInfo()),
+      txInfoOutputs: fc.array(fcTxOut()),
+      txInfoFee: bigUint(),
+      txInfoMint: fcValue(),
+      txInfoTxCerts: fc.array(fcTxCert()),
+      txInfoWdrl: fcAssocMap(eqCredential, fcCredential(), fc.bigInt()),
+      txInfoValidRange: fcInterval(fc.bigInt()),
+      txInfoSignatories: fc.array(fcPubKeyHash()),
+      txInfoRedeemers: fcAssocMap(
+        V3.eqScriptPurpose,
+        fcScriptPurpose(),
+        fcRedeemer(),
+      ),
+      txInfoData: fcAssocMap(eqDatumHash, fcDatumHash(), fcDatum()),
+      txInfoId: fcTxId(),
+      txInfoVotes: fcAssocMap(
+        V3.eqVoter,
+        fcVoter(),
+        fcAssocMap(V3.eqGovernanceActionId, fcGovernanceActionId(), fcVote()),
+      ),
+      txInfoProposalProcedures: fc.array(fcProposalProcedure()),
+      txInfoCurrentTreasuryAmount: fcMaybe(bigUint()),
+      txInfoTreasuryDonation: fcMaybe(bigUint()),
+    },
+    { noNullPrototype: true },
+  );
 }
 
 describe("TxInfo tests", () => {

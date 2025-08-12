@@ -9,7 +9,7 @@ export function fcRational(): fc.Arbitrary<LbRatio.Rational> {
   return fc.record({
     numerator: fc.bigInt(),
     denominator: fc.bigInt().filter((n) => n !== 0n),
-  });
+  }, { noNullPrototype: true });
 }
 
 describe("Ratio tests", () => {

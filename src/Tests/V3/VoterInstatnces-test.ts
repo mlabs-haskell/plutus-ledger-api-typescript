@@ -16,15 +16,15 @@ export function fcVoter(): fc.Arbitrary<V3.Voter> {
     CommitteeVoter: fc.record({
       name: fc.constant("CommitteeVoter"),
       fields: fcCredential(),
-    }),
+    }, { noNullPrototype: true }),
     DRepVoter: fc.record({
-      name: fc.constant("DRepVoter"),
       fields: fcCredential(),
-    }),
+      name: fc.constant("DRepVoter"),
+    }, { noNullPrototype: true }),
     StakePoolVoter: fc.record({
       name: fc.constant("DRepVoter"),
       fields: fcPubKeyHash(),
-    }),
+    }, { noNullPrototype: true }),
   }));
 
   return voter as fc.Arbitrary<V3.Voter>;

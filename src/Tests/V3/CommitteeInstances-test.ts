@@ -6,12 +6,16 @@ import { fcAssocMap } from "../AssocMap-test.js";
 import { fcCredential } from "../V1/CredentialInstances-test.js";
 import { eqCredential } from "../../Lib/V1.js";
 import { fcRational } from "../RatioInstances-test.js";
+import { bigUint } from "../TestUtils.js";
 
 export function fcCommittee(): fc.Arbitrary<V3.Committee> {
-  return fc.record({
-    committeeMembers: fcAssocMap(eqCredential, fcCredential(), fc.bigUint()),
-    committeeQuorum: fcRational(),
-  });
+  return fc.record(
+    {
+      committeeMembers: fcAssocMap(eqCredential, fcCredential(), bigUint()),
+      committeeQuorum: fcRational(),
+    },
+    { noNullPrototype: true },
+  );
 }
 
 describe("Eq Committee tests", () => {

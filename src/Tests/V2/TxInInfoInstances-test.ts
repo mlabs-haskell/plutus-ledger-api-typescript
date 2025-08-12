@@ -13,10 +13,13 @@ import * as TestTxOutRef from "../V1/TxOutRefInstances-test.js";
 import * as TestTxOut from "./TxOutInstances-test.js";
 
 export function fcTxInInfo(): fc.Arbitrary<V2.TxInInfo> {
-  return fc.record({
-    txInInfoOutRef: TestTxOutRef.fcTxOutRef(),
-    txInInfoResolved: TestTxOut.fcTxOut(),
-  }) as fc.Arbitrary<V2.TxInInfo>;
+  return fc.record(
+    {
+      txInInfoOutRef: TestTxOutRef.fcTxOutRef(),
+      txInInfoResolved: TestTxOut.fcTxOut(),
+    },
+    { noNullPrototype: true },
+  ) as fc.Arbitrary<V2.TxInInfo>;
 }
 
 const pubKeyHash1 = Prelude.fromJust(
@@ -144,13 +147,9 @@ describe("TxInInfo tests", () => {
 
     it(`eq is not neq property based tests`, () => {
       fc.assert(
-        fc.property(
-          fcTxInInfo(),
-          fcTxInInfo(),
-          (l, r) => {
-            TestUtils.negationTest(dict, l, r);
-          },
-        ),
+        fc.property(fcTxInInfo(), fcTxInInfo(), (l, r) => {
+          TestUtils.negationTest(dict, l, r);
+        }),
         { examples: [] },
       );
     });
@@ -169,53 +168,42 @@ describe("TxInInfo tests", () => {
 
     it(`toJson/fromJson property based tests`, () => {
       fc.assert(
-        fc.property(
-          fcTxInInfo(),
-          (data) => {
-            TestUtils.toJsonFromJsonRoundTrip(V2.jsonTxInInfo, data);
-          },
-        ),
+        fc.property(fcTxInInfo(), (data) => {
+          TestUtils.toJsonFromJsonRoundTrip(V2.jsonTxInInfo, data);
+        }),
         { examples: [] },
       );
     });
   });
 
   describe("IsPlutusData TxInInfo tests", () => {
-    TestUtils.isPlutusDataIt(
-      V2.isPlutusDataTxInInfo,
-      txInInfo1,
-      {
-        name: "Constr",
-        fields: [0n, [
+    TestUtils.isPlutusDataIt(V2.isPlutusDataTxInInfo, txInInfo1, {
+      name: "Constr",
+      fields: [
+        0n,
+        [
           V1.isPlutusDataTxOutRef.toData(txOutRef1),
           V2.isPlutusDataTxOut.toData(txOut1),
-        ]],
-      },
-    );
+        ],
+      ],
+    });
 
-    TestUtils.isPlutusDataIt(
-      V2.isPlutusDataTxInInfo,
-      txInInfo2,
-      {
-        name: "Constr",
-        fields: [0n, [
+    TestUtils.isPlutusDataIt(V2.isPlutusDataTxInInfo, txInInfo2, {
+      name: "Constr",
+      fields: [
+        0n,
+        [
           V1.isPlutusDataTxOutRef.toData(txOutRef2),
           V2.isPlutusDataTxOut.toData(txOut1),
-        ]],
-      },
-    );
+        ],
+      ],
+    });
 
     it(`toData/fromData property based tests`, () => {
       fc.assert(
-        fc.property(
-          fcTxInInfo(),
-          (data) => {
-            TestUtils.isPlutusDataRoundTrip(
-              V2.isPlutusDataTxInInfo,
-              data,
-            );
-          },
-        ),
+        fc.property(fcTxInInfo(), (data) => {
+          TestUtils.isPlutusDataRoundTrip(V2.isPlutusDataTxInInfo, data);
+        }),
         { examples: [] },
       );
     });

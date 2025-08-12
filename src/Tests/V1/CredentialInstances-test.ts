@@ -172,11 +172,11 @@ export function fcCredential(): fc.Arbitrary<V1.Credential> {
     PubKeyCredential: fc.record({
       name: fc.constant("PubKeyCredential"),
       fields: TestPubKeyHash.fcPubKeyHash(),
-    }),
+    }, { noNullPrototype: true }),
     ScriptCredential: fc.record({
       name: fc.constant("ScriptCredential"),
       fields: TestScriptHash.fcScriptHash(),
-    }),
+    }, { noNullPrototype: true }),
   }));
 
   return credential as fc.Arbitrary<V1.Credential>;

@@ -12,6 +12,7 @@ import { eqCredential } from "../../Lib/V1.js";
 import { fcCredential } from "../V1/CredentialInstances-test.js";
 import { fcConstitution } from "./ConstitutionInstances-test.js";
 import { fcRational } from "../RatioInstances-test.js";
+import { bigUint } from "../TestUtils.js";
 
 export function fcGovernanceAction(): fc.Arbitrary<V3.GovernanceAction> {
   const { governanceAction } = fc.letrec((tie) => ({
@@ -25,43 +26,64 @@ export function fcGovernanceAction(): fc.Arbitrary<V3.GovernanceAction> {
       tie("NewConstitution"),
       tie("InfoAction"),
     ),
-    ParameterChange: fc.record({
-      name: fc.constant("ParameterChange"),
-      fields: fc.tuple(
-        fcMaybe(fcGovernanceActionId()),
-        fcPlutusData(),
-        fcMaybe(fcScriptHash()),
-      ),
-    }),
-    HardForkInitiation: fc.record({
-      name: fc.constant("HardForkInitiation"),
-      fields: fc.tuple(fcMaybe(fcGovernanceActionId()), fcProtocolVersion()),
-    }),
-    TreasuryWithdrawal: fc.record({
-      name: fc.constant("TreasuryWithdrawal"),
-      fields: fc.tuple(
-        fcAssocMap(eqCredential, fcCredential(), fc.bigInt()),
-        fcMaybe(fcScriptHash()),
-      ),
-    }),
-    NoConfidence: fc.record({
-      name: fc.constant("NoConfidence"),
-      fields: fcMaybe(fcGovernanceActionId()),
-    }),
-    UpdateCommittee: fc.record({
-      name: fc.constant("UpdateCommittee"),
-      fields: fc.tuple(
-        fcMaybe(fcGovernanceActionId()),
-        fc.array(fcCredential()),
-        fcAssocMap(eqCredential, fcCredential(), fc.bigUint()),
-        fcRational(),
-      ),
-    }),
-    NewConstitution: fc.record({
-      name: fc.constant("NewConstitution"),
-      fields: fc.tuple(fcMaybe(fcGovernanceActionId()), fcConstitution()),
-    }),
-    InfoAction: fc.record({ name: fc.constant("InfoAction") }),
+    ParameterChange: fc.record(
+      {
+        name: fc.constant("ParameterChange"),
+        fields: fc.tuple(
+          fcMaybe(fcGovernanceActionId()),
+          fcPlutusData(),
+          fcMaybe(fcScriptHash()),
+        ),
+      },
+      { noNullPrototype: true },
+    ),
+    HardForkInitiation: fc.record(
+      {
+        name: fc.constant("HardForkInitiation"),
+        fields: fc.tuple(fcMaybe(fcGovernanceActionId()), fcProtocolVersion()),
+      },
+      { noNullPrototype: true },
+    ),
+    TreasuryWithdrawal: fc.record(
+      {
+        name: fc.constant("TreasuryWithdrawal"),
+        fields: fc.tuple(
+          fcAssocMap(eqCredential, fcCredential(), fc.bigInt()),
+          fcMaybe(fcScriptHash()),
+        ),
+      },
+      { noNullPrototype: true },
+    ),
+    NoConfidence: fc.record(
+      {
+        name: fc.constant("NoConfidence"),
+        fields: fcMaybe(fcGovernanceActionId()),
+      },
+      { noNullPrototype: true },
+    ),
+    UpdateCommittee: fc.record(
+      {
+        name: fc.constant("UpdateCommittee"),
+        fields: fc.tuple(
+          fcMaybe(fcGovernanceActionId()),
+          fc.array(fcCredential()),
+          fcAssocMap(eqCredential, fcCredential(), bigUint()),
+          fcRational(),
+        ),
+      },
+      { noNullPrototype: true },
+    ),
+    NewConstitution: fc.record(
+      {
+        name: fc.constant("NewConstitution"),
+        fields: fc.tuple(fcMaybe(fcGovernanceActionId()), fcConstitution()),
+      },
+      { noNullPrototype: true },
+    ),
+    InfoAction: fc.record(
+      { name: fc.constant("InfoAction") },
+      { noNullPrototype: true },
+    ),
   }));
 
   return governanceAction as fc.Arbitrary<V3.GovernanceAction>;

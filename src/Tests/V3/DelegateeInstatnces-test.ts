@@ -8,18 +8,27 @@ import { fcDRep } from "./DRepInstances-test.js";
 export function fcDelegatee(): fc.Arbitrary<V3.Delegatee> {
   const { delegatee } = fc.letrec((tie) => ({
     delegatee: fc.oneof({}, tie("Stake"), tie("Vote"), tie("StakeVote")),
-    Stake: fc.record({
-      name: fc.constant("Stake"),
-      fields: fcPubKeyHash(),
-    }),
-    Vote: fc.record({
-      name: fc.constant("Vote"),
-      fields: fcDRep(),
-    }),
-    StakeVote: fc.record({
-      name: fc.constant("StakeVote"),
-      fields: fc.tuple(fcPubKeyHash(), fcDRep()),
-    }),
+    Stake: fc.record(
+      {
+        name: fc.constant("Stake"),
+        fields: fcPubKeyHash(),
+      },
+      { noNullPrototype: true },
+    ),
+    Vote: fc.record(
+      {
+        name: fc.constant("Vote"),
+        fields: fcDRep(),
+      },
+      { noNullPrototype: true },
+    ),
+    StakeVote: fc.record(
+      {
+        name: fc.constant("StakeVote"),
+        fields: fc.tuple(fcPubKeyHash(), fcDRep()),
+      },
+      { noNullPrototype: true },
+    ),
   }));
 
   return delegatee as fc.Arbitrary<V3.Delegatee>;

@@ -12,16 +12,25 @@ export function fcDRep(): fc.Arbitrary<V3.DRep> {
       tie("AlwaysAbstain"),
       tie("AlwaysNoConfidence"),
     ),
-    DRep: fc.record({
-      name: fc.constant("DRep"),
-      fields: fcCredential(),
-    }),
-    AlwaysAbstain: fc.record({
-      name: fc.constant("AlwaysAbstain"),
-    }),
-    AlwaysNoConfidence: fc.record({
-      name: fc.constant("AlwaysNoConfidence"),
-    }),
+    DRep: fc.record(
+      {
+        name: fc.constant("DRep"),
+        fields: fcCredential(),
+      },
+      { noNullPrototype: true },
+    ),
+    AlwaysAbstain: fc.record(
+      {
+        name: fc.constant("AlwaysAbstain"),
+      },
+      { noNullPrototype: true },
+    ),
+    AlwaysNoConfidence: fc.record(
+      {
+        name: fc.constant("AlwaysNoConfidence"),
+      },
+      { noNullPrototype: true },
+    ),
   }));
 
   return dRep as fc.Arbitrary<V3.DRep>;

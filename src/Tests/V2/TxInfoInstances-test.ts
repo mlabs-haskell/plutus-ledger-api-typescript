@@ -23,32 +23,35 @@ import * as TestRedeemer from "../V1/RedeemerInstances-test.js";
 import * as TestAssocMap from "../AssocMap-test.js";
 
 export function fcTxInfo(): fc.Arbitrary<V2.TxInfo> {
-  return fc.record({
-    txInfoInputs: fc.array(TestTxInInfo.fcTxInInfo()),
-    txInfoReferenceInputs: fc.array(TestTxInInfo.fcTxInInfo()),
-    txInfoOutputs: fc.array(TestTxOut.fcTxOut()),
-    txInfoFee: TestValue.fcValue(),
-    txInfoMint: TestValue.fcValue(),
-    txInfoDCert: fc.array(TestDCert.fcDCert()),
-    txInfoWdrl: TestAssocMap.fcAssocMap(
-      V1.eqStakingCredential,
-      TestStakingCredential.fcStakingCredential(),
-      fc.bigInt(),
-    ),
-    txInfoValidRange: TestInterval.fcInterval(fc.bigInt()),
-    txInfoSignatories: fc.array(TestPubKeyHash.fcPubKeyHash()),
-    txInfoRedeemers: TestAssocMap.fcAssocMap(
-      V1.eqScriptPurpose,
-      TestScriptPurpose.fcScriptPurpose(),
-      TestRedeemer.fcRedeemer(),
-    ),
-    txInfoData: TestAssocMap.fcAssocMap(
-      V1.eqDatumHash,
-      TestDatumHash.fcDatumHash(),
-      TestDatum.fcDatum(),
-    ),
-    txInfoId: TestTxId.fcTxId(),
-  });
+  return fc.record(
+    {
+      txInfoInputs: fc.array(TestTxInInfo.fcTxInInfo()),
+      txInfoReferenceInputs: fc.array(TestTxInInfo.fcTxInInfo()),
+      txInfoOutputs: fc.array(TestTxOut.fcTxOut()),
+      txInfoFee: TestValue.fcValue(),
+      txInfoMint: TestValue.fcValue(),
+      txInfoDCert: fc.array(TestDCert.fcDCert()),
+      txInfoWdrl: TestAssocMap.fcAssocMap(
+        V1.eqStakingCredential,
+        TestStakingCredential.fcStakingCredential(),
+        fc.bigInt(),
+      ),
+      txInfoValidRange: TestInterval.fcInterval(fc.bigInt()),
+      txInfoSignatories: fc.array(TestPubKeyHash.fcPubKeyHash()),
+      txInfoRedeemers: TestAssocMap.fcAssocMap(
+        V1.eqScriptPurpose,
+        TestScriptPurpose.fcScriptPurpose(),
+        TestRedeemer.fcRedeemer(),
+      ),
+      txInfoData: TestAssocMap.fcAssocMap(
+        V1.eqDatumHash,
+        TestDatumHash.fcDatumHash(),
+        TestDatum.fcDatum(),
+      ),
+      txInfoId: TestTxId.fcTxId(),
+    },
+    { noNullPrototype: true },
+  );
 }
 
 describe("TxInfo tests", () => {

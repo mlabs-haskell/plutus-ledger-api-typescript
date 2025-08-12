@@ -8,10 +8,13 @@ import * as TestScriptPurpose from "./ScriptPurposeInstances-test.js";
 import * as TestTxInfo from "./TxInfoInstances-test.js";
 
 export function fcScriptContext(): fc.Arbitrary<V1.ScriptContext> {
-  return fc.record({
-    scriptContextTxInfo: TestTxInfo.fcTxInfo(),
-    scriptContextPurpose: TestScriptPurpose.fcScriptPurpose(),
-  });
+  return fc.record(
+    {
+      scriptContextTxInfo: TestTxInfo.fcTxInfo(),
+      scriptContextPurpose: TestScriptPurpose.fcScriptPurpose(),
+    },
+    { noNullPrototype: true },
+  );
 }
 
 describe("ScriptContext tests", () => {
