@@ -14,12 +14,14 @@ export function fcDCert(): fc.Arbitrary<V1.DCert> {
         name: fc.constant("DelegRegKey"),
         fields: TestStakingCredential.fcStakingCredential(),
       },
+      { noNullPrototype: true },
     ),
     fc.record(
       {
         name: fc.constant("DelegDeRegKey"),
         fields: TestStakingCredential.fcStakingCredential(),
       },
+      { noNullPrototype: true },
     ),
     fc.record(
       {
@@ -29,6 +31,7 @@ export function fcDCert(): fc.Arbitrary<V1.DCert> {
           TestPubKeyHash.fcPubKeyHash(),
         ),
       },
+      { noNullPrototype: true },
     ),
     fc.record(
       {
@@ -38,19 +41,17 @@ export function fcDCert(): fc.Arbitrary<V1.DCert> {
           TestPubKeyHash.fcPubKeyHash(),
         ),
       },
+      { noNullPrototype: true },
     ),
     fc.record(
       {
         name: fc.constant("PoolRetire"),
         fields: fc.tuple(TestPubKeyHash.fcPubKeyHash(), fc.bigInt()),
       },
+      { noNullPrototype: true },
     ),
-    fc.record(
-      { name: fc.constant("Genesis") },
-    ),
-    fc.record(
-      { name: fc.constant("Mir") },
-    ),
+    fc.record({ name: fc.constant("Genesis") }, { noNullPrototype: true }),
+    fc.record({ name: fc.constant("Mir") }, { noNullPrototype: true }),
   ) as fc.Arbitrary<V1.DCert>;
 }
 
@@ -62,13 +63,9 @@ describe("DCert tests", () => {
 
     it(`eq is not neq property based tests`, () => {
       fc.assert(
-        fc.property(
-          fcDCert(),
-          fcDCert(),
-          (l, r) => {
-            TestUtils.negationTest(dict, l, r);
-          },
-        ),
+        fc.property(fcDCert(), fcDCert(), (l, r) => {
+          TestUtils.negationTest(dict, l, r);
+        }),
         {
           examples: [],
         },
@@ -79,12 +76,9 @@ describe("DCert tests", () => {
   describe("Json DCert tests", () => {
     it(`toJson/fromJson property based tests`, () => {
       fc.assert(
-        fc.property(
-          fcDCert(),
-          (data) => {
-            TestUtils.toJsonFromJsonRoundTrip(V1.jsonDCert, data);
-          },
-        ),
+        fc.property(fcDCert(), (data) => {
+          TestUtils.toJsonFromJsonRoundTrip(V1.jsonDCert, data);
+        }),
         {
           examples: [],
         },
@@ -95,15 +89,9 @@ describe("DCert tests", () => {
   describe("IsPlutusData DCert tests", () => {
     it(`toData/fromData property based tests`, () => {
       fc.assert(
-        fc.property(
-          fcDCert(),
-          (data) => {
-            TestUtils.isPlutusDataRoundTrip(
-              V1.isPlutusDataDCert,
-              data,
-            );
-          },
-        ),
+        fc.property(fcDCert(), (data) => {
+          TestUtils.isPlutusDataRoundTrip(V1.isPlutusDataDCert, data);
+        }),
         {
           examples: [],
         },

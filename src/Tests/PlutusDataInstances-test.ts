@@ -16,32 +16,51 @@ export function fcPlutusData(): fc.Arbitrary<LbPlutusData.PlutusData> {
       tie("Map"),
       tie("List"),
     ),
-    Constr: fc.record({
-      name: fc.constant("Constr"),
-      fields: fc.tuple(fc.bigInt(), fc.array(tie("plutusData"))),
-    }),
-    Map: fc.record({
-      name: fc.constant("Map"),
-      fields: fc.array(fc.tuple(tie("plutusData"), tie("plutusData")))
-        .map((arr) => {
-          return LbAssocMap.fromListSafe(
-            LbPlutusData.eqPlutusData,
-            arr as [LbPlutusData.PlutusData, LbPlutusData.PlutusData][],
-          );
-        }),
-    }),
-    List: fc.record({
-      name: fc.constant("List"),
-      fields: fc.array(tie("plutusData")),
-    }),
-    Bytes: fc.record({
-      name: fc.constant("Bytes"),
-      fields: fc.uint8Array(),
-    }),
-    Integer: fc.record({
-      name: fc.constant("Integer"),
-      fields: fc.bigInt(),
-    }),
+    Constr: fc.record(
+      {
+        name: fc.constant("Constr"),
+        fields: fc.tuple(fc.bigInt(), fc.array(tie("plutusData"))),
+      },
+      { noNullPrototype: true },
+    ),
+    Map: fc.record(
+      {
+        name: fc.constant("Map"),
+        fields: fc
+          .array(fc.tuple(tie("plutusData"), tie("plutusData")))
+          .map((arr) => {
+            return LbAssocMap.fromListSafe(
+              LbPlutusData.eqPlutusData,
+              arr as [LbPlutusData.PlutusData, LbPlutusData.PlutusData][],
+            );
+          }),
+      },
+      { noNullPrototype: true },
+    ),
+
+    List: fc.record(
+      {
+        name: fc.constant("List"),
+        fields: fc.array(tie("plutusData")),
+      },
+      { noNullPrototype: true },
+    ),
+
+    Bytes: fc.record(
+      {
+        name: fc.constant("Bytes"),
+        fields: fc.uint8Array(),
+      },
+      { noNullPrototype: true },
+    ),
+
+    Integer: fc.record(
+      {
+        name: fc.constant("Integer"),
+        fields: fc.bigInt(),
+      },
+      { noNullPrototype: true },
+    ),
   }));
 
   return plutusData as fc.Arbitrary<LbPlutusData.PlutusData>;
@@ -97,14 +116,24 @@ describe("PlutusData tests", () => {
 
   describe("Eq PlutusData tests", () => {
     const dict = LbPlutusData.eqPlutusData;
-    TestUtils.eqIt(dict, { name: "Constr", fields: [0n, []] }, {
-      name: "Constr",
-      fields: [0n, []],
-    }, true);
-    TestUtils.neqIt(dict, { name: "Constr", fields: [0n, []] }, {
-      name: "Constr",
-      fields: [0n, []],
-    }, false);
+    TestUtils.eqIt(
+      dict,
+      { name: "Constr", fields: [0n, []] },
+      {
+        name: "Constr",
+        fields: [0n, []],
+      },
+      true,
+    );
+    TestUtils.neqIt(
+      dict,
+      { name: "Constr", fields: [0n, []] },
+      {
+        name: "Constr",
+        fields: [0n, []],
+      },
+      false,
+    );
 
     TestUtils.eqIt(
       dict,
@@ -119,32 +148,62 @@ describe("PlutusData tests", () => {
       false,
     );
 
-    TestUtils.eqIt(dict, { name: "Integer", fields: 1n }, {
-      name: "Integer",
-      fields: 1n,
-    }, true);
-    TestUtils.neqIt(dict, { name: "Integer", fields: 1n }, {
-      name: "Integer",
-      fields: 1n,
-    }, false);
+    TestUtils.eqIt(
+      dict,
+      { name: "Integer", fields: 1n },
+      {
+        name: "Integer",
+        fields: 1n,
+      },
+      true,
+    );
+    TestUtils.neqIt(
+      dict,
+      { name: "Integer", fields: 1n },
+      {
+        name: "Integer",
+        fields: 1n,
+      },
+      false,
+    );
 
-    TestUtils.eqIt(dict, { name: "Bytes", fields: Uint8Array.from([0xff]) }, {
-      name: "Bytes",
-      fields: Uint8Array.from([0xff]),
-    }, true);
-    TestUtils.neqIt(dict, { name: "Bytes", fields: Uint8Array.from([0xff]) }, {
-      name: "Bytes",
-      fields: Uint8Array.from([0xff]),
-    }, false);
+    TestUtils.eqIt(
+      dict,
+      { name: "Bytes", fields: Uint8Array.from([0xff]) },
+      {
+        name: "Bytes",
+        fields: Uint8Array.from([0xff]),
+      },
+      true,
+    );
+    TestUtils.neqIt(
+      dict,
+      { name: "Bytes", fields: Uint8Array.from([0xff]) },
+      {
+        name: "Bytes",
+        fields: Uint8Array.from([0xff]),
+      },
+      false,
+    );
 
-    TestUtils.eqIt(dict, { name: "Bytes", fields: Uint8Array.from([0xff]) }, {
-      name: "Integer",
-      fields: 1n,
-    }, false);
-    TestUtils.neqIt(dict, { name: "Bytes", fields: Uint8Array.from([0xff]) }, {
-      name: "Integer",
-      fields: 1n,
-    }, true);
+    TestUtils.eqIt(
+      dict,
+      { name: "Bytes", fields: Uint8Array.from([0xff]) },
+      {
+        name: "Integer",
+        fields: 1n,
+      },
+      false,
+    );
+    TestUtils.neqIt(
+      dict,
+      { name: "Bytes", fields: Uint8Array.from([0xff]) },
+      {
+        name: "Integer",
+        fields: 1n,
+      },
+      true,
+    );
 
     TestUtils.eqIt(
       dict,
@@ -185,60 +244,126 @@ describe("PlutusData tests", () => {
       true,
     );
 
-    TestUtils.eqIt(dict, { name: "Map", fields: [] }, {
-      name: "Map",
-      fields: [],
-    }, true);
-    TestUtils.neqIt(dict, { name: "Map", fields: [] }, {
-      name: "Map",
-      fields: [],
-    }, false);
-
-    TestUtils.eqIt(dict, {
-      name: "Map",
-      fields: [[{ name: "Integer", fields: 0n }, { name: "List", fields: [] }]],
-    }, {
-      name: "Map",
-      fields: [[{ name: "Integer", fields: 0n }, { name: "List", fields: [] }]],
-    }, true);
-    TestUtils.neqIt(dict, {
-      name: "Map",
-      fields: [[{ name: "Integer", fields: 0n }, { name: "List", fields: [] }]],
-    }, {
-      name: "Map",
-      fields: [[{ name: "Integer", fields: 0n }, { name: "List", fields: [] }]],
-    }, false);
-
-    TestUtils.eqIt(dict, {
-      name: "Map",
-      fields: [[{ name: "Integer", fields: 0n }, { name: "List", fields: [] }]],
-    }, {
-      name: "Map",
-      fields: [[{ name: "Integer", fields: -1n }, {
-        name: "List",
+    TestUtils.eqIt(
+      dict,
+      { name: "Map", fields: [] },
+      {
+        name: "Map",
         fields: [],
-      }]],
-    }, false);
-    TestUtils.neqIt(dict, {
-      name: "Map",
-      fields: [[{ name: "Integer", fields: 0n }, { name: "List", fields: [] }]],
-    }, {
-      name: "Map",
-      fields: [[{ name: "Integer", fields: -1n }, {
-        name: "List",
+      },
+      true,
+    );
+    TestUtils.neqIt(
+      dict,
+      { name: "Map", fields: [] },
+      {
+        name: "Map",
         fields: [],
-      }]],
-    }, true);
+      },
+      false,
+    );
+
+    TestUtils.eqIt(
+      dict,
+      {
+        name: "Map",
+        fields: [
+          [
+            { name: "Integer", fields: 0n },
+            { name: "List", fields: [] },
+          ],
+        ],
+      },
+      {
+        name: "Map",
+        fields: [
+          [
+            { name: "Integer", fields: 0n },
+            { name: "List", fields: [] },
+          ],
+        ],
+      },
+      true,
+    );
+    TestUtils.neqIt(
+      dict,
+      {
+        name: "Map",
+        fields: [
+          [
+            { name: "Integer", fields: 0n },
+            { name: "List", fields: [] },
+          ],
+        ],
+      },
+      {
+        name: "Map",
+        fields: [
+          [
+            { name: "Integer", fields: 0n },
+            { name: "List", fields: [] },
+          ],
+        ],
+      },
+      false,
+    );
+
+    TestUtils.eqIt(
+      dict,
+      {
+        name: "Map",
+        fields: [
+          [
+            { name: "Integer", fields: 0n },
+            { name: "List", fields: [] },
+          ],
+        ],
+      },
+      {
+        name: "Map",
+        fields: [
+          [
+            { name: "Integer", fields: -1n },
+            {
+              name: "List",
+              fields: [],
+            },
+          ],
+        ],
+      },
+      false,
+    );
+    TestUtils.neqIt(
+      dict,
+      {
+        name: "Map",
+        fields: [
+          [
+            { name: "Integer", fields: 0n },
+            { name: "List", fields: [] },
+          ],
+        ],
+      },
+      {
+        name: "Map",
+        fields: [
+          [
+            { name: "Integer", fields: -1n },
+            {
+              name: "List",
+              fields: [],
+            },
+          ],
+        ],
+      },
+      true,
+    );
 
     it(`eq is not neq property based tests`, () => {
       fc.assert(
-        fc.property(
-          fcPlutusData(),
-          fcPlutusData(),
-          (l, r) => {
-            TestUtils.negationTest(dict, l, r);
-          },
-        ),
+        fc.property(fcPlutusData(), fcPlutusData(), (l, r) => {
+          TestUtils.negationTest(dict, l, r);
+        }),
         { examples: [] },
       );
     });
@@ -247,7 +372,12 @@ describe("PlutusData tests", () => {
   describe("Json PubKeyHash tests", () => {
     TestUtils.toJsonFromJsonRoundTripIt(LbPlutusData.jsonPlutusData, {
       name: "Map",
-      fields: [[{ name: "Integer", fields: 0n }, { name: "List", fields: [] }]],
+      fields: [
+        [
+          { name: "Integer", fields: 0n },
+          { name: "List", fields: [] },
+        ],
+      ],
     });
 
     TestUtils.toJsonFromJsonRoundTripIt(LbPlutusData.jsonPlutusData, {
@@ -267,15 +397,9 @@ describe("PlutusData tests", () => {
 
     it(`toJson/fromJson property based tests`, () => {
       fc.assert(
-        fc.property(
-          fcPlutusData(),
-          (data) => {
-            TestUtils.toJsonFromJsonRoundTrip(
-              LbPlutusData.jsonPlutusData,
-              data,
-            );
-          },
-        ),
+        fc.property(fcPlutusData(), (data) => {
+          TestUtils.toJsonFromJsonRoundTrip(LbPlutusData.jsonPlutusData, data);
+        }),
         { examples: [] },
       );
     });
@@ -284,15 +408,12 @@ describe("PlutusData tests", () => {
   describe("IsPlutusData PlutusData tests", () => {
     it(`IsPlutusData property based tests`, () => {
       fc.assert(
-        fc.property(
-          fcPlutusData(),
-          (data) => {
-            TestUtils.isPlutusDataRoundTrip(
-              LbPlutusData.isPlutusDataPlutusData,
-              data,
-            );
-          },
-        ),
+        fc.property(fcPlutusData(), (data) => {
+          TestUtils.isPlutusDataRoundTrip(
+            LbPlutusData.isPlutusDataPlutusData,
+            data,
+          );
+        }),
         { examples: [] },
       );
     });

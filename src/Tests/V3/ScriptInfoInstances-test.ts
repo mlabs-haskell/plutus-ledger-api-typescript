@@ -10,6 +10,7 @@ import { fcMaybe } from "../Prelude/MaybeInstances-test.js";
 import { fcDatum } from "../V1/DatumInstances-test.js";
 import { fcProposalProcedure } from "./ProposalProcedureInstances-test.js";
 import { fcTxCert } from "./TxCertInstances-test.js";
+import { bigUint } from "../TestUtils.js";
 
 export function fcScriptInfo(): fc.Arbitrary<V3.ScriptInfo> {
   const { scriptPurpose } = fc.letrec((tie) => ({
@@ -22,30 +23,48 @@ export function fcScriptInfo(): fc.Arbitrary<V3.ScriptInfo> {
       tie("Voting"),
       tie("Proposing"),
     ),
-    Minting: fc.record({
-      name: fc.constant("Minting"),
-      fields: fcCurrencySymbol(),
-    }),
-    Spending: fc.record({
-      name: fc.constant("Spending"),
-      fields: fc.tuple(fcTxOutRef(), fcMaybe(fcDatum())),
-    }),
-    Rewarding: fc.record({
-      name: fc.constant("Rewarding"),
-      fields: fcCredential(),
-    }),
-    Certifying: fc.record({
-      name: fc.constant("Certifying"),
-      fields: fc.tuple(fc.bigUint(), fcTxCert()),
-    }),
-    Voting: fc.record({
-      name: fc.constant("Voting"),
-      fields: fcVoter(),
-    }),
-    Proposing: fc.record({
-      name: fc.constant("Proposing"),
-      fields: fc.tuple(fc.bigUint(), fcProposalProcedure()),
-    }),
+    Minting: fc.record(
+      {
+        name: fc.constant("Minting"),
+        fields: fcCurrencySymbol(),
+      },
+      { noNullPrototype: true },
+    ),
+    Spending: fc.record(
+      {
+        name: fc.constant("Spending"),
+        fields: fc.tuple(fcTxOutRef(), fcMaybe(fcDatum())),
+      },
+      { noNullPrototype: true },
+    ),
+    Rewarding: fc.record(
+      {
+        name: fc.constant("Rewarding"),
+        fields: fcCredential(),
+      },
+      { noNullPrototype: true },
+    ),
+    Certifying: fc.record(
+      {
+        name: fc.constant("Certifying"),
+        fields: fc.tuple(bigUint(), fcTxCert()),
+      },
+      { noNullPrototype: true },
+    ),
+    Voting: fc.record(
+      {
+        name: fc.constant("Voting"),
+        fields: fcVoter(),
+      },
+      { noNullPrototype: true },
+    ),
+    Proposing: fc.record(
+      {
+        name: fc.constant("Proposing"),
+        fields: fc.tuple(bigUint(), fcProposalProcedure()),
+      },
+      { noNullPrototype: true },
+    ),
   }));
 
   return scriptPurpose as fc.Arbitrary<V3.ScriptInfo>;

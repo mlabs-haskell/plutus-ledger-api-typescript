@@ -7,6 +7,11 @@ import type { Bool, Eq, Json } from "prelude";
 
 import { it } from "node:test";
 import * as assert from "node:assert/strict";
+import fc from "fast-check";
+
+export function bigUint(max: bigint = (1n << 256n) - 1n): fc.Arbitrary<bigint> {
+  return fc.bigInt({ min: 0n, max });
+}
 
 /**
  * Wraps `JSON.stringify` but allows printing bigints

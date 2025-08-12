@@ -119,12 +119,15 @@ const address4: V1.Address = {
 };
 
 export function fcAddress(): fc.Arbitrary<V1.Address> {
-  return fc.record({
-    addressCredential: TestCredential.fcCredential(),
-    addressStakingCredential: TestMaybe.fcMaybe(
-      TestStakingCredential.fcStakingCredential(),
-    ),
-  }) as fc.Arbitrary<V1.Address>;
+  return fc.record(
+    {
+      addressCredential: TestCredential.fcCredential(),
+      addressStakingCredential: TestMaybe.fcMaybe(
+        TestStakingCredential.fcStakingCredential(),
+      ),
+    },
+    { noNullPrototype: true },
+  ) as fc.Arbitrary<V1.Address>;
 }
 
 describe("Address tests", () => {
@@ -168,13 +171,9 @@ describe("Address tests", () => {
 
     it(`eq is not neq property based tests`, () => {
       fc.assert(
-        fc.property(
-          fcAddress(),
-          fcAddress(),
-          (l, r) => {
-            TestUtils.negationTest(dict, l, r);
-          },
-        ),
+        fc.property(fcAddress(), fcAddress(), (l, r) => {
+          TestUtils.negationTest(dict, l, r);
+        }),
         {
           examples: [
             [address1, address1],
@@ -192,110 +191,104 @@ describe("Address tests", () => {
   describe("Json Address tests", () => {
     TestUtils.toJsonAndFromJsonIt(V1.jsonAddress, address1, {
       credential: V1.jsonCredential.toJson(credential1),
-      staking_credential: Prelude.jsonMaybe(V1.jsonStakingCredential)
-        .toJson({ name: "Just", fields: stakingCredential1 }),
+      staking_credential: Prelude.jsonMaybe(V1.jsonStakingCredential).toJson({
+        name: "Just",
+        fields: stakingCredential1,
+      }),
     });
 
     TestUtils.toJsonAndFromJsonIt(V1.jsonAddress, address2, {
       credential: V1.jsonCredential.toJson(credential1),
-      staking_credential: Prelude.jsonMaybe(V1.jsonStakingCredential)
-        .toJson({ name: "Just", fields: stakingCredential2 }),
+      staking_credential: Prelude.jsonMaybe(V1.jsonStakingCredential).toJson({
+        name: "Just",
+        fields: stakingCredential2,
+      }),
     });
 
     TestUtils.toJsonAndFromJsonIt(V1.jsonAddress, address3, {
       credential: V1.jsonCredential.toJson(credential1),
-      staking_credential: Prelude.jsonMaybe(V1.jsonStakingCredential)
-        .toJson({ name: "Just", fields: stakingCredential3 }),
+      staking_credential: Prelude.jsonMaybe(V1.jsonStakingCredential).toJson({
+        name: "Just",
+        fields: stakingCredential3,
+      }),
     });
 
     TestUtils.toJsonAndFromJsonIt(V1.jsonAddress, address4, {
       credential: V1.jsonCredential.toJson(credential1),
-      staking_credential: Prelude.jsonMaybe(V1.jsonStakingCredential)
-        .toJson({ name: "Nothing" }),
+      staking_credential: Prelude.jsonMaybe(V1.jsonStakingCredential).toJson({
+        name: "Nothing",
+      }),
     });
 
     it(`toJson/fromJson property based tests`, () => {
       fc.assert(
-        fc.property(
-          fcAddress(),
-          (data) => {
-            TestUtils.toJsonFromJsonRoundTrip(V1.jsonAddress, data);
-          },
-        ),
+        fc.property(fcAddress(), (data) => {
+          TestUtils.toJsonFromJsonRoundTrip(V1.jsonAddress, data);
+        }),
         { examples: [[address1], [address2], [address3], [address4]] },
       );
     });
   });
 
   describe("IsPlutusData Address tests", () => {
-    TestUtils.isPlutusDataIt(
-      V1.isPlutusDataAddress,
-      address1,
-      {
-        name: "Constr",
-        fields: [0n, [
+    TestUtils.isPlutusDataIt(V1.isPlutusDataAddress, address1, {
+      name: "Constr",
+      fields: [
+        0n,
+        [
           V1.isPlutusDataCredential.toData(credential1),
           V1.isPlutusDataMaybe(V1.isPlutusDataStakingCredential).toData({
             name: "Just",
             fields: stakingCredential1,
           }),
-        ]],
-      },
-    );
-    TestUtils.isPlutusDataIt(
-      V1.isPlutusDataAddress,
-      address2,
-      {
-        name: "Constr",
-        fields: [0n, [
+        ],
+      ],
+    });
+    TestUtils.isPlutusDataIt(V1.isPlutusDataAddress, address2, {
+      name: "Constr",
+      fields: [
+        0n,
+        [
           V1.isPlutusDataCredential.toData(credential1),
           V1.isPlutusDataMaybe(V1.isPlutusDataStakingCredential).toData({
             name: "Just",
             fields: stakingCredential2,
           }),
-        ]],
-      },
-    );
+        ],
+      ],
+    });
 
-    TestUtils.isPlutusDataIt(
-      V1.isPlutusDataAddress,
-      address3,
-      {
-        name: "Constr",
-        fields: [0n, [
+    TestUtils.isPlutusDataIt(V1.isPlutusDataAddress, address3, {
+      name: "Constr",
+      fields: [
+        0n,
+        [
           V1.isPlutusDataCredential.toData(credential1),
           V1.isPlutusDataMaybe(V1.isPlutusDataStakingCredential).toData({
             name: "Just",
             fields: stakingCredential3,
           }),
-        ]],
-      },
-    );
-    TestUtils.isPlutusDataIt(
-      V1.isPlutusDataAddress,
-      address4,
-      {
-        name: "Constr",
-        fields: [0n, [
+        ],
+      ],
+    });
+    TestUtils.isPlutusDataIt(V1.isPlutusDataAddress, address4, {
+      name: "Constr",
+      fields: [
+        0n,
+        [
           V1.isPlutusDataCredential.toData(credential1),
           V1.isPlutusDataMaybe(V1.isPlutusDataStakingCredential).toData({
             name: "Nothing",
           }),
-        ]],
-      },
-    );
+        ],
+      ],
+    });
 
     it(`toData/fromData property based tests`, () => {
       fc.assert(
-        fc.property(
-          fcAddress(),
-          (data) => {
-            TestUtils.isPlutusDataRoundTrip(
-              V1.isPlutusDataAddress,
-              data,
-            );
-          },
-        ),
+        fc.property(fcAddress(), (data) => {
+          TestUtils.isPlutusDataRoundTrip(V1.isPlutusDataAddress, data);
+        }),
         { examples: [[address1], [address2], [address3], [address4]] },
       );
     });

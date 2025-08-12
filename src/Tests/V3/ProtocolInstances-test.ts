@@ -4,7 +4,10 @@ import * as TestUtils from "../TestUtils.js";
 import fc from "fast-check";
 
 export function fcProtocolVersion(): fc.Arbitrary<V3.ProtocolVersion> {
-  return fc.record({ pvMajor: fc.bigInt(), pvMinor: fc.bigInt() });
+  return fc.record(
+    { pvMajor: fc.bigInt(), pvMinor: fc.bigInt() },
+    { noNullPrototype: true },
+  );
 }
 
 describe("ProtocolVersion tests", () => {

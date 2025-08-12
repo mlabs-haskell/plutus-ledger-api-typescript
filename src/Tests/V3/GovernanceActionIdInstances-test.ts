@@ -3,12 +3,16 @@ import { describe, it } from "node:test";
 import * as TestUtils from "../TestUtils.js";
 import fc from "fast-check";
 import { fcTxId } from "../V1/TxIdInstances-test.js";
+import { bigUint } from "../TestUtils.js";
 
 export function fcGovernanceActionId(): fc.Arbitrary<V3.GovernanceActionId> {
-  return fc.record({
-    gaidTxId: fcTxId(),
-    gaidGovActionIx: fc.bigUint(),
-  });
+  return fc.record(
+    {
+      gaidTxId: fcTxId(),
+      gaidGovActionIx: bigUint(),
+    },
+    { noNullPrototype: true },
+  );
 }
 
 describe("GovernanceActionId tests", () => {

@@ -7,11 +7,14 @@ import { fcRedeemer } from "../V1/RedeemerInstances-test.js";
 import { fcScriptInfo } from "./ScriptInfoInstances-test.js";
 
 export function fcScriptContext(): fc.Arbitrary<V3.ScriptContext> {
-  return fc.record({
-    scriptContextTxInfo: fcTxInfo(),
-    scriptContextRedeemer: fcRedeemer(),
-    scriptContextScriptInfo: fcScriptInfo(),
-  });
+  return fc.record(
+    {
+      scriptContextTxInfo: fcTxInfo(),
+      scriptContextRedeemer: fcRedeemer(),
+      scriptContextScriptInfo: fcScriptInfo(),
+    },
+    { noNullPrototype: true },
+  );
 }
 
 describe("ScriptContext tests", () => {

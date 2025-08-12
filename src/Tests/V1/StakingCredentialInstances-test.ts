@@ -102,14 +102,21 @@ const stakingCredential3: V1.StakingCredential = {
 export function fcStakingCredential(): fc.Arbitrary<V1.StakingCredential> {
   const { stakingCredential } = fc.letrec((tie) => ({
     stakingCredential: fc.oneof({}, tie("StakingHash"), tie("StakingPtr")),
-    StakingHash: fc.record({
-      name: fc.constant("StakingHash"),
-      fields: TestCredential.fcCredential(),
-    }),
-    StakingPtr: fc.record({
-      name: fc.constant("StakingPtr"),
-      fields: fc.tuple(fc.bigInt(), fc.bigInt(), fc.bigInt()),
-    }),
+    StakingHash: fc.record(
+      {
+        name: fc.constant("StakingHash"),
+        fields: TestCredential.fcCredential(),
+      },
+      { noNullPrototype: true },
+    ),
+
+    StakingPtr: fc.record(
+      {
+        name: fc.constant("StakingPtr"),
+        fields: fc.tuple(fc.bigInt(), fc.bigInt(), fc.bigInt()),
+      },
+      { noNullPrototype: true },
+    ),
   }));
 
   return stakingCredential as fc.Arbitrary<V1.StakingCredential>;
@@ -161,13 +168,9 @@ describe("StakingCredential tests", () => {
 
     it(`eq is not neq property based tests`, () => {
       fc.assert(
-        fc.property(
-          fcStakingCredential(),
-          fcStakingCredential(),
-          (l, r) => {
-            TestUtils.negationTest(dict, l, r);
-          },
-        ),
+        fc.property(fcStakingCredential(), fcStakingCredential(), (l, r) => {
+          TestUtils.negationTest(dict, l, r);
+        }),
         {
           examples: [
             [stakingCredential1, stakingCredential1],
@@ -204,27 +207,28 @@ describe("StakingCredential tests", () => {
       V1.jsonStakingCredential,
       stakingCredential3,
       {
-        fields: [{
-          "certificate_index": new Prelude.Scientific(-69n),
-          "slot_number": new Prelude.Scientific(69n),
-          "transaction_index": new Prelude.Scientific(420n),
-        }],
+        fields: [
+          {
+            certificate_index: new Prelude.Scientific(-69n),
+            slot_number: new Prelude.Scientific(69n),
+            transaction_index: new Prelude.Scientific(420n),
+          },
+        ],
         name: "StakingPtr",
       },
     );
 
     it(`toJson/fromJson property based tests`, () => {
       fc.assert(
-        fc.property(
-          fcStakingCredential(),
-          (data) => {
-            TestUtils.toJsonFromJsonRoundTrip(V1.jsonStakingCredential, data);
-          },
-        ),
+        fc.property(fcStakingCredential(), (data) => {
+          TestUtils.toJsonFromJsonRoundTrip(V1.jsonStakingCredential, data);
+        }),
         {
-          examples: [[stakingCredential1], [stakingCredential2], [
-            stakingCredential3,
-          ]],
+          examples: [
+            [stakingCredential1],
+            [stakingCredential2],
+            [stakingCredential3],
+          ],
         },
       );
     });
@@ -236,9 +240,7 @@ describe("StakingCredential tests", () => {
       stakingCredential1,
       {
         name: "Constr",
-        fields: [0n, [
-          V1.isPlutusDataCredential.toData(credential1),
-        ]],
+        fields: [0n, [V1.isPlutusDataCredential.toData(credential1)]],
       },
     );
     TestUtils.isPlutusDataIt(
@@ -246,9 +248,7 @@ describe("StakingCredential tests", () => {
       stakingCredential2,
       {
         name: "Constr",
-        fields: [0n, [
-          V1.isPlutusDataCredential.toData(credential2),
-        ]],
+        fields: [0n, [V1.isPlutusDataCredential.toData(credential2)]],
       },
     );
     TestUtils.isPlutusDataIt(
@@ -256,29 +256,31 @@ describe("StakingCredential tests", () => {
       stakingCredential3,
       {
         name: "Constr",
-        fields: [1n, [
-          V1.isPlutusDataInteger.toData(69n),
-          V1.isPlutusDataInteger.toData(420n),
-          V1.isPlutusDataInteger.toData(-69n),
-        ]],
+        fields: [
+          1n,
+          [
+            V1.isPlutusDataInteger.toData(69n),
+            V1.isPlutusDataInteger.toData(420n),
+            V1.isPlutusDataInteger.toData(-69n),
+          ],
+        ],
       },
     );
 
     it(`toData/fromData property based tests`, () => {
       fc.assert(
-        fc.property(
-          fcStakingCredential(),
-          (data) => {
-            TestUtils.isPlutusDataRoundTrip(
-              V1.isPlutusDataStakingCredential,
-              data,
-            );
-          },
-        ),
+        fc.property(fcStakingCredential(), (data) => {
+          TestUtils.isPlutusDataRoundTrip(
+            V1.isPlutusDataStakingCredential,
+            data,
+          );
+        }),
         {
-          examples: [[stakingCredential1], [stakingCredential2], [
-            stakingCredential3,
-          ]],
+          examples: [
+            [stakingCredential1],
+            [stakingCredential2],
+            [stakingCredential3],
+          ],
         },
       );
     });

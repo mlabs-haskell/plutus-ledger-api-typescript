@@ -6,9 +6,12 @@ import { fcMaybe } from "../Prelude/MaybeInstances-test.js";
 import { fcScriptHash } from "../V1/ScriptHashInstances-test.js";
 
 export function fcConstitution(): fc.Arbitrary<V3.Constitution> {
-  return fc.record({
-    constitutionScript: fcMaybe(fcScriptHash()),
-  });
+  return fc.record(
+    {
+      constitutionScript: fcMaybe(fcScriptHash()),
+    },
+    { noNullPrototype: true },
+  );
 }
 
 describe("Constitution tests", () => {

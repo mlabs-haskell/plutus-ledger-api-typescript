@@ -33,6 +33,7 @@ export function fcTxInfo(): fc.Arbitrary<V1.TxInfo> {
       ),
       txInfoId: TestTxId.fcTxId(),
     },
+    { noNullPrototype: true },
   );
 }
 
@@ -44,13 +45,9 @@ describe("TxInfo tests", () => {
 
     it(`eq is not neq property based tests`, () => {
       fc.assert(
-        fc.property(
-          fcTxInfo(),
-          fcTxInfo(),
-          (l, r) => {
-            TestUtils.negationTest(dict, l, r);
-          },
-        ),
+        fc.property(fcTxInfo(), fcTxInfo(), (l, r) => {
+          TestUtils.negationTest(dict, l, r);
+        }),
         {
           examples: [],
         },
@@ -61,12 +58,9 @@ describe("TxInfo tests", () => {
   describe("Json TxInfo tests", () => {
     it(`toJson/fromJson property based tests`, () => {
       fc.assert(
-        fc.property(
-          fcTxInfo(),
-          (data) => {
-            TestUtils.toJsonFromJsonRoundTrip(V1.jsonTxInfo, data);
-          },
-        ),
+        fc.property(fcTxInfo(), (data) => {
+          TestUtils.toJsonFromJsonRoundTrip(V1.jsonTxInfo, data);
+        }),
         {
           examples: [],
         },
@@ -77,15 +71,9 @@ describe("TxInfo tests", () => {
   describe("IsPlutusData TxInfo tests", () => {
     it(`toData/fromData property based tests`, () => {
       fc.assert(
-        fc.property(
-          fcTxInfo(),
-          (data) => {
-            TestUtils.isPlutusDataRoundTrip(
-              V1.isPlutusDataTxInfo,
-              data,
-            );
-          },
-        ),
+        fc.property(fcTxInfo(), (data) => {
+          TestUtils.isPlutusDataRoundTrip(V1.isPlutusDataTxInfo, data);
+        }),
         {
           examples: [],
         },

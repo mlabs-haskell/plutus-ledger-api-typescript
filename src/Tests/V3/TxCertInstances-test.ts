@@ -6,6 +6,7 @@ import { fcPubKeyHash } from "../V1/PubKeyHashInstances-test.js";
 import { fcCredential } from "../V1/CredentialInstances-test.js";
 import { fcMaybe } from "../Prelude/MaybeInstances-test.js";
 import { fcDelegatee } from "./DelegateeInstatnces-test.js";
+import { bigUint } from "../TestUtils.js";
 
 export function fcTxCert(): fc.Arbitrary<V3.TxCert> {
   const { txCert } = fc.letrec((tie) => ({
@@ -23,50 +24,83 @@ export function fcTxCert(): fc.Arbitrary<V3.TxCert> {
       tie("AuthHotCommittee"),
       tie("ResignColdCommittee"),
     ),
-    RegStaking: fc.record({
-      name: fc.constant("RegStaking"),
-      fields: fc.tuple(fcCredential(), fcMaybe(fc.bigUint())),
-    }),
-    UnRegStaking: fc.record({
-      name: fc.constant("UnRegStaking"),
-      fields: fc.tuple(fcCredential(), fcMaybe(fc.bigUint())),
-    }),
-    DelegStaking: fc.record({
-      name: fc.constant("DelegStaking"),
-      fields: fc.tuple(fcCredential(), fcDelegatee()),
-    }),
-    RegDeleg: fc.record({
-      name: fc.constant("RegDeleg"),
-      fields: fc.tuple(fcCredential(), fcDelegatee(), fc.bigInt()),
-    }),
-    RegDRep: fc.record({
-      name: fc.constant("RegDRep"),
-      fields: fc.tuple(fcCredential(), fc.bigInt()),
-    }),
-    UpdateDRep: fc.record({
-      name: fc.constant("UpdateDRep"),
-      fields: fcCredential(),
-    }),
-    UnRegDRep: fc.record({
-      name: fc.constant("UnRegDRep"),
-      fields: fc.tuple(fcCredential(), fc.bigInt()),
-    }),
-    PoolRegister: fc.record({
-      name: fc.constant("PoolRegister"),
-      fields: fc.tuple(fcPubKeyHash(), fcPubKeyHash()),
-    }),
-    PoolRetire: fc.record({
-      name: fc.constant("PoolRetire"),
-      fields: fc.tuple(fcPubKeyHash(), fc.bigInt()),
-    }),
-    AuthHotCommittee: fc.record({
-      name: fc.constant("AuthHotCommittee"),
-      fields: fc.tuple(fcCredential(), fcCredential()),
-    }),
-    ResignColdCommittee: fc.record({
-      name: fc.constant("ResignColdCommittee"),
-      fields: fcCredential(),
-    }),
+    RegStaking: fc.record(
+      {
+        name: fc.constant("RegStaking"),
+        fields: fc.tuple(fcCredential(), fcMaybe(bigUint())),
+      },
+      { noNullPrototype: true },
+    ),
+    UnRegStaking: fc.record(
+      {
+        name: fc.constant("UnRegStaking"),
+        fields: fc.tuple(fcCredential(), fcMaybe(bigUint())),
+      },
+      { noNullPrototype: true },
+    ),
+    DelegStaking: fc.record(
+      {
+        name: fc.constant("DelegStaking"),
+        fields: fc.tuple(fcCredential(), fcDelegatee()),
+      },
+      { noNullPrototype: true },
+    ),
+    RegDeleg: fc.record(
+      {
+        name: fc.constant("RegDeleg"),
+        fields: fc.tuple(fcCredential(), fcDelegatee(), fc.bigInt()),
+      },
+      { noNullPrototype: true },
+    ),
+    RegDRep: fc.record(
+      {
+        name: fc.constant("RegDRep"),
+        fields: fc.tuple(fcCredential(), fc.bigInt()),
+      },
+      { noNullPrototype: true },
+    ),
+    UpdateDRep: fc.record(
+      {
+        name: fc.constant("UpdateDRep"),
+        fields: fcCredential(),
+      },
+      { noNullPrototype: true },
+    ),
+    UnRegDRep: fc.record(
+      {
+        name: fc.constant("UnRegDRep"),
+        fields: fc.tuple(fcCredential(), fc.bigInt()),
+      },
+      { noNullPrototype: true },
+    ),
+    PoolRegister: fc.record(
+      {
+        name: fc.constant("PoolRegister"),
+        fields: fc.tuple(fcPubKeyHash(), fcPubKeyHash()),
+      },
+      { noNullPrototype: true },
+    ),
+    PoolRetire: fc.record(
+      {
+        name: fc.constant("PoolRetire"),
+        fields: fc.tuple(fcPubKeyHash(), fc.bigInt()),
+      },
+      { noNullPrototype: true },
+    ),
+    AuthHotCommittee: fc.record(
+      {
+        name: fc.constant("AuthHotCommittee"),
+        fields: fc.tuple(fcCredential(), fcCredential()),
+      },
+      { noNullPrototype: true },
+    ),
+    ResignColdCommittee: fc.record(
+      {
+        name: fc.constant("ResignColdCommittee"),
+        fields: fcCredential(),
+      },
+      { noNullPrototype: true },
+    ),
   }));
 
   return txCert as fc.Arbitrary<V3.TxCert>;

@@ -13,6 +13,7 @@ export function fcTxInInfo(): fc.Arbitrary<V1.TxInInfo> {
       txInInfoOutRef: TestTxOutRef.fcTxOutRef(),
       txInInfoResolved: TestTxOut.fcTxOut(),
     },
+    { noNullPrototype: true },
   ) as fc.Arbitrary<V1.TxInInfo>;
 }
 
@@ -24,13 +25,9 @@ describe("TxInInfo tests", () => {
 
     it(`eq is not neq property based tests`, () => {
       fc.assert(
-        fc.property(
-          fcTxInInfo(),
-          fcTxInInfo(),
-          (l, r) => {
-            TestUtils.negationTest(dict, l, r);
-          },
-        ),
+        fc.property(fcTxInInfo(), fcTxInInfo(), (l, r) => {
+          TestUtils.negationTest(dict, l, r);
+        }),
         {
           examples: [],
         },
@@ -41,12 +38,9 @@ describe("TxInInfo tests", () => {
   describe("Json TxInInfo tests", () => {
     it(`toJson/fromJson property based tests`, () => {
       fc.assert(
-        fc.property(
-          fcTxInInfo(),
-          (data) => {
-            TestUtils.toJsonFromJsonRoundTrip(V1.jsonTxInInfo, data);
-          },
-        ),
+        fc.property(fcTxInInfo(), (data) => {
+          TestUtils.toJsonFromJsonRoundTrip(V1.jsonTxInInfo, data);
+        }),
         {
           examples: [],
         },
@@ -57,15 +51,9 @@ describe("TxInInfo tests", () => {
   describe("IsPlutusData TxInInfo tests", () => {
     it(`toData/fromData property based tests`, () => {
       fc.assert(
-        fc.property(
-          fcTxInInfo(),
-          (data) => {
-            TestUtils.isPlutusDataRoundTrip(
-              V1.isPlutusDataTxInInfo,
-              data,
-            );
-          },
-        ),
+        fc.property(fcTxInInfo(), (data) => {
+          TestUtils.isPlutusDataRoundTrip(V1.isPlutusDataTxInInfo, data);
+        }),
         {
           examples: [],
         },
